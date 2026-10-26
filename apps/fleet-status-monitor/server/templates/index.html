@@ -1,0 +1,1337 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="description" content="私有云集群实时监控">
+  <title>私有云监控 · 云端概览</title>
+  <link rel="icon" href="data:,">
+  <!-- Design study: Apple HIG Materials; rdev/liquid-glass-react;
+       IshiakiZ/liquid-glass-web. Original, dependency-free implementation. -->
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18263c;
+      --secondary: #586b82;
+      --muted: #61728a;
+      --blue: #0878ed;
+      --green: #168452;
+      --orange: #aa650b;
+      --red: #cf4454;
+      --line: rgba(93, 119, 151, .13);
+      --spring: cubic-bezier(.2, .8, .2, 1);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: #f4f7fb; }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 9% 6%, rgba(187, 216, 252, .48), transparent 41%),
+        radial-gradient(ellipse at 92% 28%, rgba(198, 232, 235, .4), transparent 38%),
+        radial-gradient(ellipse at 52% 100%, rgba(214, 223, 244, .42), transparent 44%),
+        linear-gradient(140deg, #f7f9fc, #eff5fa 55%, #f7f8fb);
+    }
+    button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button:disabled { cursor: wait; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #0878ed; outline-offset: 4px; }
+    a { color: inherit; }
+    .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+    .liquid {
+      position: relative; isolation: isolate;
+      border: 1px solid rgba(255, 255, 255, .95);
+      box-shadow: 0 8px 30px rgba(55, 83, 123, .07), 0 1px 3px rgba(55, 83, 123, .04), inset 0 1px 0 #fff, inset 0 -1px 0 rgba(255, 255, 255, .7);
+    }
+    .liquid::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+      background: rgba(255, 255, 255, .53);
+      -webkit-backdrop-filter: blur(22px) saturate(165%);
+      backdrop-filter: blur(22px) saturate(165%);
+    }
+    .liquid::after {
+      content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+      background: radial-gradient(ellipse at var(--glass-x, 25%) var(--glass-y, 0%), rgba(255, 255, 255, .67), transparent 62%);
+      box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .9), inset -1px -1px 1px rgba(134, 171, 211, .09);
+    }
+    html[data-optics="chromium"] .liquid::before { backdrop-filter: url(#glass-refraction) blur(18px) saturate(165%); }
+    .shell { width: min(1240px, calc(100% - 80px)); margin-inline: auto; }
+    .topbar { position: sticky; top: 20px; z-index: 20; margin-top: 24px; min-height: 68px; height: auto; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-radius: 23px; flex-wrap: wrap; gap: 10px; }
+    .console-title { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .connection { display: inline-flex; align-items: center; gap: 7px; padding: 9px 11px; border-radius: 30px; color: var(--green); font-size: 13px; font-weight: 600; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+    .connection[data-state="connecting"], .connection[data-state="stale"] { color: var(--orange); }
+    .connection[data-state="error"] { color: var(--red); }
+    .icon-button { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 50%; border: 1px solid rgba(122, 152, 189, .13); background: rgba(255, 255, 255, .66); transition: transform .25s var(--spring), background .2s; }
+    .icon-button:hover { background: #fff; }
+    .icon-button:active { transform: scale(.91); }
+    .icon-button[aria-busy="true"] .icon { animation: turn .85s linear infinite; }
+    @keyframes turn { to { transform: rotate(360deg); } }
+    main { padding-top: 44px; padding-bottom: 30px; }
+    .page-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 27px; padding-inline: 4px; }
+    .eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 11px; color: #596e88; font-size: 11px; font-weight: 600; letter-spacing: 2px; }
+    .eyebrow::before { content: ""; width: 16px; height: 1px; background: #8aa4c3; }
+    h1 { margin: 0; font-size: clamp(32px, 3.5vw, 43px); font-weight: 650; letter-spacing: -1.8px; line-height: 1.2; }
+    .page-description { margin: 12px 0 0; color: var(--secondary); font-size: 14px; line-height: 1.7; }
+    .date-block { padding-bottom: 3px; text-align: right; color: var(--secondary); font-size: 13px; white-space: nowrap; }
+    .date-block time { display: block; color: #34465e; font-weight: 500; margin-bottom: 8px; }
+    .date-block span { font-size: 12px; color: var(--muted); }
+    .overview { display: grid; grid-template-columns: 1.04fr 1fr 1fr 1.12fr; border-radius: 27px; background: rgba(255, 255, 255, .76); border: 1px solid #fff; box-shadow: 0 6px 24px rgba(67, 92, 125, .035); }
+    .overview-item { position: relative; min-width: 0; padding: 23px 25px 24px; }
+    .overview-item + .overview-item::before { content: ""; position: absolute; left: 0; top: 28px; bottom: 28px; width: 1px; background: var(--line); }
+    .overview-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--secondary); font-size: 13px; }
+    .stat-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: #317bca; background: #edf4fc; }
+    .stat-icon .icon { width: 16px; height: 16px; }
+    .stat-icon.green { color: #288462; background: #edf7f1; }
+    .stat-icon.teal { color: #238b99; background: #edf7f8; }
+    .stat-icon.slate { color: #6c7fab; background: #f0f2f8; }
+    .overview-value { margin-top: 13px; height: 40px; display: flex; align-items: baseline; gap: 5px; font-size: 32px; font-weight: 600; line-height: 1.15; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+    .overview-value .unit { margin-left: 2px; font-size: 14px; color: var(--secondary); font-weight: 500; letter-spacing: 0; }
+    .overview-value .slash { margin-left: 4px; font-size: 19px; font-weight: 400; color: #66788e; letter-spacing: -.3px; }
+    .overview-note { display: flex; align-items: center; gap: 5px; margin-top: 9px; min-height: 16px; color: var(--secondary); font-size: 12px; line-height: 1.6; white-space: normal; flex-wrap: wrap; }
+    .overview-note.good { color: var(--green); }
+    .overview-note.warning { color: var(--orange); }
+    .overview-note .icon { width: 12px; height: 12px; }
+    .mini-meter { display: inline-block; width: 32px; height: 3px; background: #e3eaf3; border-radius: 10px; overflow: hidden; margin-right: 2px; }
+    .mini-meter i { display: block; width: 0; height: 100%; background: #3197d0; border-radius: inherit; transition: width .6s; }
+    .section-heading { display: flex; align-items: baseline; gap: 9px; margin: 35px 4px 16px; }
+    .section-heading h2 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -.5px; }
+    .section-heading .count { color: #63748b; font-size: 13px; }
+    .section-heading .refresh-hint { margin-left: auto; color: var(--muted); font-size: 12px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .segments { display: flex; align-items: center; width: max-content; max-width: 100%; min-width: 0; overflow-x: auto; scrollbar-width: none; padding: 4px; gap: 2px; border-radius: 20px; }
+    .segments::-webkit-scrollbar { display: none; }
+    .segment-lens { position: absolute; top: 4px; bottom: 4px; left: 0; width: 0; z-index: -1; pointer-events: none; border-radius: 15px; background: rgba(255,255,255,.91); border: 1px solid #fff; box-shadow: 0 3px 10px #54749316, inset 0 1px 0 #fff; transition: transform .4s var(--spring), width .4s var(--spring); }
+    .filter-chip { position: relative; flex-shrink: 0; border: 0; background: transparent; min-height: 37px; padding: 8px 18px; border-radius: 15px; display: flex; align-items: center; gap: 8px; color: var(--secondary); font-size: 13px; font-weight: 500; white-space: nowrap; transition: color .2s, transform .25s var(--spring); }
+    .filter-chip[aria-selected="true"] { color: var(--ink); font-weight: 600; }
+    .filter-chip:active { transform: scale(.96); }
+    .filter-count { color: #62748d; font-size: 11px; font-variant-numeric: tabular-nums; }
+    .filter-chip[aria-selected="true"] .filter-count { color: var(--blue); }
+    .view-switch { display: flex; padding: 4px; gap: 2px; border-radius: 18px; }
+    .view-button { display: grid; place-items: center; width: 37px; height: 35px; background: none; border: 1px solid transparent; border-radius: 12px; color: #7c8ea7; transition: background .2s, transform .2s var(--spring); }
+    .view-button[aria-pressed="true"] { background: #ffffffed; color: #245e96; border-color: #fff; box-shadow: 0 2px 7px #54749314; }
+    .view-button:active { transform: scale(.92); }
+    .view-button .icon { width: 17px; height: 17px; }
+    .node-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .node-card { min-width: 0; padding: 22px 22px 0; overflow: hidden; border-radius: 25px; border: 1px solid rgba(255,255,255,.95); background: rgba(255,255,255,.85); box-shadow: 0 5px 20px rgba(53, 84, 126, .035), inset 0 1px 0 #fff; transition: box-shadow .3s var(--spring), transform .3s var(--spring); }
+    @media (hover: hover) { .node-card:hover { transform: translateY(-3px); box-shadow: 0 13px 30px rgba(53, 84, 126, .09), inset 0 1px 0 #fff; } }
+    .node-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 15px; }
+    .country-flag { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; border: 1px solid #fff; background: #f1f5fa; font-size: 23px; line-height: 1; }
+    .flag-svg { display: block; width: 27px; height: 18px; border-radius: 2px; overflow: hidden; box-shadow: 0 0 0 1px #17315312; }
+    .country-flag .icon { width: 23px; height: 23px; color: #68809b; }
+    .node-status { display: inline-flex; align-items: center; gap: 6px; color: var(--green); background: #eef8f2; border: 1px solid #e4f2e9; border-radius: 20px; padding: 5px 8px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+    .node-status .status-dot { width: 4px; height: 4px; }
+    .node-status.offline { color: #a26a27; background: #fcf5ea; border-color: #f5ead8; }
+    .node-status.snapshot { color: #577a9f; background: #eef4fa; border-color: #e0eaf5; }
+    .node-card.offline { background: rgba(255,255,255,.67); }
+    .node-name { margin: 0; font-size: 17px; letter-spacing: -.5px; font-weight: 600; line-height: 1.5; }
+    .node-meters { display: grid; grid-template-columns: 1fr 1fr; gap: 23px; margin: 23px 0 21px; }
+    .meter-label { color: var(--secondary); font-size: 12px; }
+    .meter-number { display: flex; align-items: baseline; gap: 3px; margin: 7px 0 10px; font-size: 25px; letter-spacing: -.6px; line-height: 1; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .meter-number small { color: var(--muted); font-size: 12px; font-weight: 400; }
+    .meter-track { height: 4px; border-radius: 9px; overflow: hidden; background: #eaf0f6; }
+    .meter-fill { width: 0; height: 100%; border-radius: inherit; background: #56a5ef; transition: width .8s var(--spring); }
+    .meter-fill.memory { background: #64b8b4; }
+    .meter-fill.mid { background: #dba453; }
+    .meter-fill.high { background: #dc7080; }
+    .meter-detail { min-height: 16px; margin-top: 7px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .node-network { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
+    .network-label { display: flex; align-items: center; gap: 4px; color: var(--secondary); font-size: 11px; }
+    .network-label .icon { width: 12px; height: 12px; }
+    .network-value { display: block; margin-top: 7px; color: #196eb7; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.25px; }
+    .network-value.tx { color: #197c79; }
+    .network-total { margin-top: 7px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .node-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; min-height: 43px; color: #61728a; font-size: 11px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .node-footer span { display: flex; align-items: center; gap: 5px; }
+    .node-footer .icon { width: 12px; height: 12px; color: #90a0b3; }
+    .node-card.offline .network-value, .node-card.offline .meter-number { color: var(--muted); }
+    .table-surface { border: 1px solid #fff; border-radius: 24px; background: #ffffffdc; overflow: hidden; box-shadow: 0 5px 20px #35547e09; }
+    .table-scroll { width: 100%; overflow-x: auto; }
+    table { width: 100%; min-width: 1020px; border-collapse: collapse; text-align: left; font-size: 13px; font-variant-numeric: tabular-nums; }
+    th { padding: 17px 17px; border-bottom: 1px solid var(--line); color: var(--secondary); font-size: 12px; font-weight: 500; background: #f7f9fc99; white-space: nowrap; }
+    td { padding: 21px 17px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f6f9fd; }
+    .table-node { display: flex; gap: 11px; align-items: center; }
+    .table-node .country-flag { width: 33px; height: 33px; border-radius: 11px; font-size: 20px; }
+    .table-node .flag-svg { width: 24px; height: 16px; }
+    .table-name { font-size: 14px; font-weight: 600; }
+    .table-sub { margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .table-meter { min-width: 68px; }
+    .table-meter > span { display: block; margin-bottom: 8px; }
+    .table-two-line { display: grid; gap: 7px; }
+    .table-two-line small { font-size: 11px; color: var(--muted); }
+    .map-layout { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 18px; align-items: start; }
+    .map-board, .map-sidebar { border: 1px solid #fff; border-radius: 25px; background: #ffffffc9; box-shadow: 0 5px 20px #35547e09; overflow: hidden; min-width: 0; }
+    .map-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 21px 8px; }
+    .map-heading h3, .map-sidebar h3 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
+    .map-heading p { margin: 7px 0 0; color: var(--secondary); font-size: 13px; line-height: 1.6; }
+    .map-controls { display: flex; gap: 5px; flex: 0 0 auto; }
+    .map-controls button { width: 32px; height: 32px; border: 1px solid #dfe8f2; border-radius: 11px; background: #ffffffd9; display: grid; place-items: center; }
+    .map-controls button:hover { background: #edf5ff; }
+    .map-controls button:disabled { cursor: default; opacity: .4; }
+    .map-controls .icon { width: 16px; height: 16px; }
+    .map-stage { position: relative; margin: 2px 12px 0; border-radius: 18px; background: radial-gradient(ellipse at 65% 35%, #e7f2fc7a, transparent 72%), #f5f9fc; overflow: hidden; }
+    .world-map { display: block; width: 100%; aspect-ratio: 2 / 1; overflow: hidden; cursor: grab; touch-action: none; user-select: none; }
+    .world-map.dragging { cursor: grabbing; }
+    .map-grid { fill: none; stroke: #cddde9; stroke-width: .7; opacity: .45; vector-effect: non-scaling-stroke; }
+    .map-land { fill: #dce7ee; stroke: #c7d8e3; stroke-width: .5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+    .map-marker { color: #168452; cursor: pointer; outline: none; }
+    .map-marker.offline { color: #b47b33; }
+    .map-marker.snapshot { color: #6687ad; }
+    .map-marker .map-halo { fill: currentColor; opacity: .1; }
+    .map-marker .map-dot { fill: currentColor; stroke: #fff; stroke-width: 1.8; }
+    .map-marker .map-leader { fill: none; stroke: currentColor; stroke-width: .8; opacity: .5; }
+    .map-marker rect { fill: #fffffff0; stroke: #dce6ef; stroke-width: .7; }
+    .map-marker text { fill: #49617c; font-family: inherit; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
+    .map-marker.selected .map-halo, .map-marker:focus-visible .map-halo { opacity: .24; }
+    .map-marker.selected rect, .map-marker:focus-visible rect { stroke: #6597c7; fill: #f8fbff; stroke-width: 1.4; }
+    .map-marker.selected text { fill: #235c91; font-weight: 600; }
+    .map-legend { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px 21px 11px; color: var(--secondary); font-size: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .map-legend i { width: 6px; height: 6px; border-radius: 50%; background: #168452; }
+    .map-legend .offline { background: #b47b33; }
+    .map-legend .snapshot { background: #6687ad; }
+    .map-caption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 7px; padding: 0 21px 18px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .map-caption a { text-underline-offset: 3px; }
+    .map-sidebar > h3 { padding: 21px 20px 12px; }
+    .map-node-list { display: grid; gap: 3px; padding: 0 9px 12px; }
+    .map-node-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 57px; border: 1px solid transparent; border-radius: 13px; padding: 9px 10px; text-align: left; background: transparent; }
+    .map-node-item:hover { background: #f2f7fc; }
+    .map-node-item[aria-pressed="true"] { background: #edf5fe; border-color: #dce9f8; }
+    .map-node-item .country-flag { width: 32px; height: 32px; border-radius: 10px; flex: 0 0 auto; }
+    .map-node-item .flag-svg { width: 23px; height: 15px; }
+    .map-node-copy { flex: 1; min-width: 0; }
+    .map-node-copy strong { display: block; font-size: 13px; font-weight: 600; line-height: 1.6; }
+    .map-node-copy small { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .map-node-item > .status-dot { color: #168452; width: 5px; height: 5px; }
+    .map-node-item > .status-dot.offline { color: #b47b33; }
+    .map-node-item > .status-dot.snapshot { color: #6687ad; }
+    .map-detail { border-top: 1px solid var(--line); padding: 19px 20px 21px; }
+    .map-detail-title { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .map-detail-title strong { font-size: 14px; line-height: 1.6; }
+    .map-detail > p { margin: 10px 0 0; color: var(--secondary); font-size: 13px; line-height: 1.7; }
+    .map-detail-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 17px; }
+    .map-detail-metrics span { display: block; font-size: 12px; color: var(--secondary); }
+    .map-detail-metrics strong { display: block; margin-top: 6px; font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .empty-state { padding: 64px 20px; border: 1px solid #fff; border-radius: 25px; background: #ffffffb8; text-align: center; color: var(--secondary); font-size: 14px; }
+    .empty-state .icon { width: 30px; height: 30px; margin-bottom: 12px; color: #89a6c7; }
+    .empty-state p { margin: 0; line-height: 1.8; }
+    .empty-state small { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; }
+    .notice { display: flex; gap: 10px; align-items: center; margin: 0 0 18px; padding: 12px 16px; border: 1px solid #efdfb9; border-radius: 15px; color: #87632c; background: #fffbec; font-size: 13px; line-height: 1.7; }
+    .notice .icon { width: 17px; height: 17px; }
+    .notice.snapshot { color: #446b92; background: #f0f6fce8; border-color: #dce8f4; }
+    .footer { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 24px 4px 0; color: #61728a; font-size: 12px; line-height: 1.8; }
+    .footer-note { display: flex; align-items: center; gap: 5px; }
+    .footer-note .icon { width: 12px; height: 12px; }
+    .preview-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); padding: 8px 15px; border: 1px solid #dfcda6; border-radius: 20px; color: #866330; background: #fffbef; z-index: 50; font-size: 12px; box-shadow: 0 3px 12px #0000000a; white-space: nowrap; }
+    .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 1080px) {
+      .shell { width: calc(100% - 48px); }
+      .overview-item { padding: 22px 18px; }
+      .overview-value { font-size: 29px; }
+      .overview-note { font-size: 12px; }
+      .node-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .map-layout { grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; }
+      .map-heading { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 840px) {
+      .map-layout { grid-template-columns: 1fr; }
+      .map-heading { align-items: center; flex-direction: row; }
+      .map-sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+      .map-sidebar > h3 { grid-column: 1 / -1; }
+      .map-detail { border-top: 0; border-left: 1px solid var(--line); }
+    }
+    @media (max-width: 680px) {
+      .shell { width: calc(100% - 32px); }
+      .topbar { top: max(10px, env(safe-area-inset-top)); margin-top: 14px; height: 62px; padding: 9px 11px; border-radius: 21px; }
+      .console-title { font-size: 14px; }
+      .topbar-right { gap: 5px; }
+      .connection { font-size: 12px; gap: 5px; padding: 8px 7px; }
+      .icon-button { width: 35px; height: 35px; }
+      main { padding-top: 33px; }
+      .page-heading { margin-bottom: 23px; gap: 10px; padding: 0 3px; }
+      .eyebrow { font-size: 10px; letter-spacing: 1.2px; margin-bottom: 10px; }
+      h1 { font-size: 34px; letter-spacing: -1.4px; }
+      .page-description { font-size: 13px; margin-top: 10px; }
+      .date-block { padding-bottom: 2px; font-size: 12px; }
+      .date-block span { font-size: 11px; }
+      .date-block time { margin-bottom: 7px; }
+      .overview { grid-template-columns: 1fr 1fr; border-radius: 24px; }
+      .overview-item { padding: 18px 19px; }
+      .overview-item + .overview-item::before { top: 20px; bottom: 20px; }
+      .overview-item:nth-child(3)::before { display: none; }
+      .overview-item:nth-child(n+3)::after { content: ""; position: absolute; top: 0; left: 19px; right: 19px; height: 1px; background: var(--line); }
+      .overview-value { font-size: 30px; margin-top: 10px; height: 36px; }
+      .overview-label { font-size: 12px; }
+      .overview-note { margin-top: 7px; font-size: 11px; }
+      .overview-value .unit { font-size: 13px; }
+      .stat-icon { width: 25px; height: 25px; border-radius: 8px; }
+      .section-heading { margin-top: 28px; margin-bottom: 15px; }
+      .section-heading h2 { font-size: 18px; }
+      .section-heading .refresh-hint { font-size: 11px; }
+      .toolbar { gap: 9px; margin-bottom: 16px; }
+      .segments { padding: 3px; gap: 0; border-radius: 17px; }
+      .segment-lens { top: 3px; bottom: 3px; border-radius: 12px; }
+      .filter-chip { min-height: 35px; padding: 7px 10px; border-radius: 12px; gap: 5px; font-size: 12px; }
+      .filter-count { font-size: 11px; }
+      .view-switch { padding: 3px; gap: 0; border-radius: 15px; }
+      .view-button { width: 29px; height: 33px; border-radius: 11px; }
+      .view-button .icon { width: 15px; height: 15px; }
+      .node-grid { grid-template-columns: 1fr; gap: 14px; }
+      .node-card { padding: 21px 23px 0; border-radius: 24px; }
+      .node-name { font-size: 18px; }
+      .node-meters { margin-top: 22px; gap: 25px; }
+      .meter-number { font-size: 27px; }
+      .node-footer { font-size: 11px; }
+      .footer { align-items: flex-start; font-size: 11px; gap: 10px; }
+      .footer > :last-child { text-align: right; }
+      .map-board, .map-sidebar { border-radius: 24px; }
+      .map-heading { padding: 18px 16px 10px; gap: 10px; }
+      .map-heading h3 { font-size: 15px; }
+      .map-heading p { font-size: 11px; }
+      .map-controls { gap: 3px; }
+      .map-controls button { width: 29px; height: 32px; border-radius: 10px; }
+      .map-stage { margin-inline: 9px; }
+      .world-map { min-height: 210px; }
+      .map-legend { padding-inline: 16px; gap: 13px; font-size: 11px; }
+      .map-caption { padding-inline: 16px; font-size: 11px; }
+      .map-sidebar { display: block; }
+      .map-detail { border-left: 0; border-top: 1px solid var(--line); }
+    }
+    @media (max-width: 359px) {
+      .shell { width: calc(100% - 24px); }
+      .connection { padding: 8px 3px; font-size: 11px; }
+      .filter-chip { padding-inline: 7px; gap: 4px; }
+      .filter-count { display: none; }
+      .overview-item { padding: 17px 15px; }
+      .overview-note { font-size: 11px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .node-card:hover { transform: none; }
+    }
+    @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+      .liquid::before { background: #fff; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+      .overview, .node-card, .table-surface, .empty-state { background: #fff; border-color: #ccd6e3; }
+      :root { --secondary: #354a64; --muted: #4c617a; --line: #c6d1df; }
+    }
+    @media (forced-colors: active) {
+      .liquid, .overview, .node-card, .table-surface { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+      .liquid::before, .liquid::after { display: none; }
+      .filter-chip[aria-selected="true"], .view-button[aria-pressed="true"] { outline: 2px solid Highlight; }
+      .meter-fill { background: Highlight; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none">
+    <defs>
+      <filter id="glass-refraction" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency=".009 .014" numOctaves="2" seed="9" result="noise"/>
+        <feGaussianBlur in="noise" stdDeviation="2" result="soft-noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="soft-noise" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 8l4 4-4 4m-6-4h12"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 6.5a8 8 0 0 1 13 2.5M4.9 15a8 8 0 0 0 13 2.5"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M8 7h9M8 17h9"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-focus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></symbol>
+      <symbol id="flag-us" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0.000" width="30" height="1.538" fill="#b22234"/><rect y="3.077" width="30" height="1.538" fill="#b22234"/><rect y="6.154" width="30" height="1.538" fill="#b22234"/><rect y="9.231" width="30" height="1.538" fill="#b22234"/><rect y="12.308" width="30" height="1.538" fill="#b22234"/><rect y="15.385" width="30" height="1.538" fill="#b22234"/><rect y="18.462" width="30" height="1.538" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><g fill="#fff"><polygon points="1.000,0.460 1.121,0.833 1.514,0.833 1.196,1.064 1.317,1.437 1.000,1.206 0.683,1.437 0.804,1.064 0.486,0.833 0.879,0.833"/><polygon points="3.000,0.460 3.121,0.833 3.514,0.833 3.196,1.064 3.317,1.437 3.000,1.206 2.683,1.437 2.804,1.064 2.486,0.833 2.879,0.833"/><polygon points="5.000,0.460 5.121,0.833 5.514,0.833 5.196,1.064 5.317,1.437 5.000,1.206 4.683,1.437 4.804,1.064 4.486,0.833 4.879,0.833"/><polygon points="7.000,0.460 7.121,0.833 7.514,0.833 7.196,1.064 7.317,1.437 7.000,1.206 6.683,1.437 6.804,1.064 6.486,0.833 6.879,0.833"/><polygon points="9.000,0.460 9.121,0.833 9.514,0.833 9.196,1.064 9.317,1.437 9.000,1.206 8.683,1.437 8.804,1.064 8.486,0.833 8.879,0.833"/><polygon points="11.000,0.460 11.121,0.833 11.514,0.833 11.196,1.064 11.317,1.437 11.000,1.206 10.683,1.437 10.804,1.064 10.486,0.833 10.879,0.833"/><polygon points="2.000,1.560 2.121,1.933 2.514,1.933 2.196,2.164 2.317,2.537 2.000,2.306 1.683,2.537 1.804,2.164 1.486,1.933 1.879,1.933"/><polygon points="4.000,1.560 4.121,1.933 4.514,1.933 4.196,2.164 4.317,2.537 4.000,2.306 3.683,2.537 3.804,2.164 3.486,1.933 3.879,1.933"/><polygon points="6.000,1.560 6.121,1.933 6.514,1.933 6.196,2.164 6.317,2.537 6.000,2.306 5.683,2.537 5.804,2.164 5.486,1.933 5.879,1.933"/><polygon points="8.000,1.560 8.121,1.933 8.514,1.933 8.196,2.164 8.317,2.537 8.000,2.306 7.683,2.537 7.804,2.164 7.486,1.933 7.879,1.933"/><polygon points="10.000,1.560 10.121,1.933 10.514,1.933 10.196,2.164 10.317,2.537 10.000,2.306 9.683,2.537 9.804,2.164 9.486,1.933 9.879,1.933"/><polygon points="1.000,2.660 1.121,3.033 1.514,3.033 1.196,3.264 1.317,3.637 1.000,3.406 0.683,3.637 0.804,3.264 0.486,3.033 0.879,3.033"/><polygon points="3.000,2.660 3.121,3.033 3.514,3.033 3.196,3.264 3.317,3.637 3.000,3.406 2.683,3.637 2.804,3.264 2.486,3.033 2.879,3.033"/><polygon points="5.000,2.660 5.121,3.033 5.514,3.033 5.196,3.264 5.317,3.637 5.000,3.406 4.683,3.637 4.804,3.264 4.486,3.033 4.879,3.033"/><polygon points="7.000,2.660 7.121,3.033 7.514,3.033 7.196,3.264 7.317,3.637 7.000,3.406 6.683,3.637 6.804,3.264 6.486,3.033 6.879,3.033"/><polygon points="9.000,2.660 9.121,3.033 9.514,3.033 9.196,3.264 9.317,3.637 9.000,3.406 8.683,3.637 8.804,3.264 8.486,3.033 8.879,3.033"/><polygon points="11.000,2.660 11.121,3.033 11.514,3.033 11.196,3.264 11.317,3.637 11.000,3.406 10.683,3.637 10.804,3.264 10.486,3.033 10.879,3.033"/><polygon points="2.000,3.760 2.121,4.133 2.514,4.133 2.196,4.364 2.317,4.737 2.000,4.506 1.683,4.737 1.804,4.364 1.486,4.133 1.879,4.133"/><polygon points="4.000,3.760 4.121,4.133 4.514,4.133 4.196,4.364 4.317,4.737 4.000,4.506 3.683,4.737 3.804,4.364 3.486,4.133 3.879,4.133"/><polygon points="6.000,3.760 6.121,4.133 6.514,4.133 6.196,4.364 6.317,4.737 6.000,4.506 5.683,4.737 5.804,4.364 5.486,4.133 5.879,4.133"/><polygon points="8.000,3.760 8.121,4.133 8.514,4.133 8.196,4.364 8.317,4.737 8.000,4.506 7.683,4.737 7.804,4.364 7.486,4.133 7.879,4.133"/><polygon points="10.000,3.760 10.121,4.133 10.514,4.133 10.196,4.364 10.317,4.737 10.000,4.506 9.683,4.737 9.804,4.364 9.486,4.133 9.879,4.133"/><polygon points="1.000,4.860 1.121,5.233 1.514,5.233 1.196,5.464 1.317,5.837 1.000,5.606 0.683,5.837 0.804,5.464 0.486,5.233 0.879,5.233"/><polygon points="3.000,4.860 3.121,5.233 3.514,5.233 3.196,5.464 3.317,5.837 3.000,5.606 2.683,5.837 2.804,5.464 2.486,5.233 2.879,5.233"/><polygon points="5.000,4.860 5.121,5.233 5.514,5.233 5.196,5.464 5.317,5.837 5.000,5.606 4.683,5.837 4.804,5.464 4.486,5.233 4.879,5.233"/><polygon points="7.000,4.860 7.121,5.233 7.514,5.233 7.196,5.464 7.317,5.837 7.000,5.606 6.683,5.837 6.804,5.464 6.486,5.233 6.879,5.233"/><polygon points="9.000,4.860 9.121,5.233 9.514,5.233 9.196,5.464 9.317,5.837 9.000,5.606 8.683,5.837 8.804,5.464 8.486,5.233 8.879,5.233"/><polygon points="11.000,4.860 11.121,5.233 11.514,5.233 11.196,5.464 11.317,5.837 11.000,5.606 10.683,5.837 10.804,5.464 10.486,5.233 10.879,5.233"/><polygon points="2.000,5.960 2.121,6.333 2.514,6.333 2.196,6.564 2.317,6.937 2.000,6.706 1.683,6.937 1.804,6.564 1.486,6.333 1.879,6.333"/><polygon points="4.000,5.960 4.121,6.333 4.514,6.333 4.196,6.564 4.317,6.937 4.000,6.706 3.683,6.937 3.804,6.564 3.486,6.333 3.879,6.333"/><polygon points="6.000,5.960 6.121,6.333 6.514,6.333 6.196,6.564 6.317,6.937 6.000,6.706 5.683,6.937 5.804,6.564 5.486,6.333 5.879,6.333"/><polygon points="8.000,5.960 8.121,6.333 8.514,6.333 8.196,6.564 8.317,6.937 8.000,6.706 7.683,6.937 7.804,6.564 7.486,6.333 7.879,6.333"/><polygon points="10.000,5.960 10.121,6.333 10.514,6.333 10.196,6.564 10.317,6.937 10.000,6.706 9.683,6.937 9.804,6.564 9.486,6.333 9.879,6.333"/><polygon points="1.000,7.060 1.121,7.433 1.514,7.433 1.196,7.664 1.317,8.037 1.000,7.806 0.683,8.037 0.804,7.664 0.486,7.433 0.879,7.433"/><polygon points="3.000,7.060 3.121,7.433 3.514,7.433 3.196,7.664 3.317,8.037 3.000,7.806 2.683,8.037 2.804,7.664 2.486,7.433 2.879,7.433"/><polygon points="5.000,7.060 5.121,7.433 5.514,7.433 5.196,7.664 5.317,8.037 5.000,7.806 4.683,8.037 4.804,7.664 4.486,7.433 4.879,7.433"/><polygon points="7.000,7.060 7.121,7.433 7.514,7.433 7.196,7.664 7.317,8.037 7.000,7.806 6.683,8.037 6.804,7.664 6.486,7.433 6.879,7.433"/><polygon points="9.000,7.060 9.121,7.433 9.514,7.433 9.196,7.664 9.317,8.037 9.000,7.806 8.683,8.037 8.804,7.664 8.486,7.433 8.879,7.433"/><polygon points="11.000,7.060 11.121,7.433 11.514,7.433 11.196,7.664 11.317,8.037 11.000,7.806 10.683,8.037 10.804,7.664 10.486,7.433 10.879,7.433"/><polygon points="2.000,8.160 2.121,8.533 2.514,8.533 2.196,8.764 2.317,9.137 2.000,8.906 1.683,9.137 1.804,8.764 1.486,8.533 1.879,8.533"/><polygon points="4.000,8.160 4.121,8.533 4.514,8.533 4.196,8.764 4.317,9.137 4.000,8.906 3.683,9.137 3.804,8.764 3.486,8.533 3.879,8.533"/><polygon points="6.000,8.160 6.121,8.533 6.514,8.533 6.196,8.764 6.317,9.137 6.000,8.906 5.683,9.137 5.804,8.764 5.486,8.533 5.879,8.533"/><polygon points="8.000,8.160 8.121,8.533 8.514,8.533 8.196,8.764 8.317,9.137 8.000,8.906 7.683,9.137 7.804,8.764 7.486,8.533 7.879,8.533"/><polygon points="10.000,8.160 10.121,8.533 10.514,8.533 10.196,8.764 10.317,9.137 10.000,8.906 9.683,9.137 9.804,8.764 9.486,8.533 9.879,8.533"/><polygon points="1.000,9.260 1.121,9.633 1.514,9.633 1.196,9.864 1.317,10.237 1.000,10.006 0.683,10.237 0.804,9.864 0.486,9.633 0.879,9.633"/><polygon points="3.000,9.260 3.121,9.633 3.514,9.633 3.196,9.864 3.317,10.237 3.000,10.006 2.683,10.237 2.804,9.864 2.486,9.633 2.879,9.633"/><polygon points="5.000,9.260 5.121,9.633 5.514,9.633 5.196,9.864 5.317,10.237 5.000,10.006 4.683,10.237 4.804,9.864 4.486,9.633 4.879,9.633"/><polygon points="7.000,9.260 7.121,9.633 7.514,9.633 7.196,9.864 7.317,10.237 7.000,10.006 6.683,10.237 6.804,9.864 6.486,9.633 6.879,9.633"/><polygon points="9.000,9.260 9.121,9.633 9.514,9.633 9.196,9.864 9.317,10.237 9.000,10.006 8.683,10.237 8.804,9.864 8.486,9.633 8.879,9.633"/><polygon points="11.000,9.260 11.121,9.633 11.514,9.633 11.196,9.864 11.317,10.237 11.000,10.006 10.683,10.237 10.804,9.864 10.486,9.633 10.879,9.633"/></g></symbol>
+<symbol id="flag-jp" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+<symbol id="flag-sg" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="30" height="10" fill="#ed2939"/><circle cx="6.8" cy="5" r="3.6" fill="#fff"/><circle cx="8.2" cy="5" r="3.1" fill="#ed2939"/><g fill="#fff"><polygon points="11.100,1.900 11.280,2.453 11.861,2.453 11.391,2.794 11.570,3.347 11.100,3.006 10.630,3.347 10.809,2.794 10.339,2.453 10.920,2.453"/><polygon points="13.287,3.489 13.467,4.042 14.048,4.042 13.578,4.384 13.758,4.936 13.287,4.595 12.817,4.936 12.997,4.384 12.527,4.042 13.108,4.042"/><polygon points="12.452,6.061 12.632,6.614 13.213,6.614 12.743,6.955 12.922,7.508 12.452,7.166 11.982,7.508 12.161,6.955 11.691,6.614 12.272,6.614"/><polygon points="9.748,6.061 9.928,6.614 10.509,6.614 10.039,6.955 10.218,7.508 9.748,7.166 9.278,7.508 9.457,6.955 8.987,6.614 9.568,6.614"/><polygon points="8.913,3.489 9.092,4.042 9.673,4.042 9.203,4.384 9.383,4.936 8.913,4.595 8.442,4.936 8.622,4.384 8.152,4.042 8.733,4.042"/></g></symbol>
+<symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ffce00"/><rect width="30" height="13.333" fill="#d00"/><rect width="30" height="6.667" fill="#151515"/></symbol>
+<symbol id="flag-fr" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#002395"/><rect x="20" width="10" height="20" fill="#ed2939"/></symbol>
+      <symbol id="i-server" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="7" rx="2"/><path d="M8 6.5h.01M8 17.5h.01M12 6.5h4M12 17.5h4"/></symbol>
+      <symbol id="i-network" viewBox="0 0 24 24"><path d="M7 19V5m-4 4 4-4 4 4m6-4v14m-4-4 4 4 4-4"/></symbol>
+      <symbol id="i-memory" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 9h6v6H9zM9 2v3m6-3v3M9 19v3m6-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3"/></symbol>
+      <symbol id="i-transfer" viewBox="0 0 24 24"><path d="M4 8h16m-4-4 4 4-4 4M20 16H4m4-4-4 4 4 4"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V4m-6 6 6-6 6 6"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v5c0 5 3 8 8 10 5-2 8-5 8-10V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m10.2 4.1-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.8-2.9l-8-14a2 2 0 0 0-3.6 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    </defs>
+  </svg>
+  <header class="topbar shell liquid">
+    <span class="console-title" data-i18n="console_title">私有云监控</span>
+    <div class="topbar-right">
+      <div class="connection" id="connection" data-state="connecting" role="status"><span class="status-dot"></span><span id="connection-text">连接中</span></div>
+      <button class="icon-button" id="refresh-button" aria-label="刷新数据" title="刷新数据" aria-busy="false"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+      <button class="icon-button" id="logout-button" type="button" aria-label="退出登录" title="退出登录"><svg class="icon" aria-hidden="true"><use href="#i-logout"/></svg></button>
+      <button class="btn-probe-lang" id="probe-lang-btn" type="button" onclick="toggleProbeLang()" aria-label="切换中英文 / Switch Language" title="切换中英文 / Switch Language">🌐 EN</button>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="page-heading">
+      <div><p class="eyebrow">A LITTLE CLOSER TO YOUR CLOUD</p><h1 data-i18n="cluster_overview">集群概览</h1><p class="page-description" id="page-description">正在连接你的云端节点。</p></div>
+      <div class="date-block"><time id="today"></time><span data-i18n="date_sub">北京时间 · UTC+8</span></div>
+    </div>
+    <section class="overview" aria-label="全局监控概览">
+      <div class="overview-item">
+        <div class="overview-label"><span id="online-label">在线节点</span><span class="stat-icon green"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg></span></div>
+        <div class="overview-value"><span id="online-count">—</span><span class="slash" id="total-count">/ —</span></div>
+        <div class="overview-note" id="online-note">等待节点上报</div>
+      </div>
+      <div class="overview-item">
+        <div class="overview-label"><span id="rx-label">实时接收</span><span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg></span></div>
+        <div class="overview-value"><span id="rx-value">—</span><span class="unit" id="rx-unit">KB/s</span></div>
+        <div class="overview-note"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span id="tx-note">发送 —</span></div>
+      </div>
+      <div class="overview-item">
+        <div class="overview-label"><span data-i18n="ov_mem">内存使用</span><span class="stat-icon teal"><svg class="icon" aria-hidden="true"><use href="#i-memory"/></svg></span></div>
+        <div class="overview-value"><span id="memory-value">—</span><span class="unit">%</span></div>
+        <div class="overview-note"><span class="mini-meter" aria-hidden="true"><i id="memory-meter"></i></span><span id="memory-note">— / — GB</span></div>
+      </div>
+      <div class="overview-item">
+        <div class="overview-label"><span data-i18n="ov_traffic">累计流量</span><span class="stat-icon slate"><svg class="icon" aria-hidden="true"><use href="#i-transfer"/></svg></span></div>
+        <div class="overview-value"><span id="traffic-value">—</span><span class="unit" id="traffic-unit">GB</span></div>
+        <div class="overview-note" id="traffic-note">接收 — · 发送 —</div>
+      </div>
+    </section>
+    <div class="section-heading"><h2 id="nodes-heading">云端节点</h2><span class="count" id="node-count">— 台</span><span class="refresh-hint" id="update-time">每 2.5 秒自动更新</span></div>
+    <div class="toolbar">
+      <div class="segments liquid" id="region-tabs" role="tablist" aria-label="按国家筛选">
+        <span class="segment-lens" aria-hidden="true"></span>
+        <button class="filter-chip" role="tab" id="region-all" data-region="all" aria-selected="true" aria-controls="nodes-panel" tabindex="0"><span data-i18n="reg_all">全部</span><span class="filter-count" data-count="all">0</span></button>
+        <button class="filter-chip" role="tab" id="region-us" data-region="us" aria-selected="false" aria-controls="nodes-panel" tabindex="-1"><span data-i18n="reg_us">美国</span><span class="filter-count" data-count="us">0</span></button>
+        <button class="filter-chip" role="tab" id="region-jp" data-region="jp" aria-selected="false" aria-controls="nodes-panel" tabindex="-1"><span data-i18n="reg_jp">日本</span><span class="filter-count" data-count="jp">0</span></button>
+        <button class="filter-chip" role="tab" id="region-sg" data-region="sg" aria-selected="false" aria-controls="nodes-panel" tabindex="-1"><span data-i18n="reg_sg">新加坡</span><span class="filter-count" data-count="sg">0</span></button>
+        <button class="filter-chip" role="tab" id="region-de" data-region="de" aria-selected="false" aria-controls="nodes-panel" tabindex="-1"><span data-i18n="reg_de">德国</span><span class="filter-count" data-count="de">0</span></button>
+        <button class="filter-chip" role="tab" id="region-fr" data-region="fr" aria-selected="false" aria-controls="nodes-panel" tabindex="-1"><span data-i18n="reg_fr">法国</span><span class="filter-count" data-count="fr">0</span></button>
+      </div>
+      <div class="view-switch liquid" role="group" aria-label="视图选择">
+        <button class="view-button" id="view-card" aria-label="卡片视图" aria-pressed="true" title="卡片视图"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg></button>
+        <button class="view-button" id="view-table" aria-label="列表视图" aria-pressed="false" title="列表视图"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></button>
+        <button class="view-button" id="view-map" aria-label="地图视图" aria-pressed="false" title="地图视图"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></button>
+      </div>
+    </div>
+    <div class="notice" id="connection-notice" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span id="notice-text"></span></div>
+    <section id="nodes-panel" role="tabpanel" aria-labelledby="region-all">
+      <div class="node-grid" id="card-container"></div>
+      <div class="table-surface" id="table-container" hidden><div class="table-scroll" tabindex="0" role="region" aria-label="节点监控表，可横向滚动"><table><caption class="sr-only">各节点实时资源与网络状态</caption><thead><tr><th scope="col" data-i18n="th_node">节点</th><th scope="col" data-i18n="th_status">状态</th><th scope="col" data-i18n="th_cpu">CPU</th><th scope="col" data-i18n="th_mem">内存</th><th scope="col" data-i18n="th_speed">接收 / 发送</th><th scope="col" data-i18n="th_traffic">累计接收 / 发送</th><th scope="col" data-i18n="th_uptime">运行时间</th><th scope="col" data-i18n="th_load">负载</th></tr></thead><tbody id="table-body"></tbody></table></div></div>
+      <div class="map-layout" id="map-container" hidden>
+        <div class="map-board">
+          <div class="map-heading"><div><h3 data-i18n="map_world">世界地图</h3><p id="map-summary">正在获取节点位置</p></div><div class="map-controls" role="group" aria-label="地图控制">
+            <button id="map-zoom-in" type="button" aria-label="放大地图" title="放大地图"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+            <button id="map-zoom-out" type="button" aria-label="缩小地图" title="缩小地图"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <button id="map-focus" type="button" aria-label="定位所选节点" title="定位所选节点"><svg class="icon" aria-hidden="true"><use href="#i-focus"/></svg></button>
+            <button id="map-reset" type="button" aria-label="显示全图" title="显示全图"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></button>
+          </div></div>
+          <div class="map-stage"><svg id="world-map" class="world-map" viewBox="0 0 1000 500" tabindex="0" role="group" aria-label="世界节点地图，可选择标记或下方节点；放大后可拖动">
+            <g id="map-land-layer"><path class="map-grid" d="M0 83.33H1000M0 166.67H1000M0 250H1000M0 333.33H1000M0 416.67H1000M166.67 0V500M333.33 0V500M500 0V500M666.67 0V500M833.33 0V500"/>
+              <path class="map-land" fill-rule="evenodd" d="M311.8,399.6L315.4,401.2L319.3,401.9L318.1,403.3L315.4,403.5L314.0,402.5L313.1,403.6L310.7,404.5L307.7,404.2L305.7,403.3L302.8,402.9L299.3,401.4L296.4,399.9L292.6,396.8L294.9,397.4L298.8,399.2L302.5,400.2L303.9,398.9L304.8,397.0L307.4,395.9L309.3,396.2L309.3,396.2L310.4,397.5L311.8,399.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M337.4,391.9L339.6,393.2L338.8,394.2L335.0,395.0L333.8,394.0L331.4,395.3L330.0,394.0L333.3,392.4L335.7,393.1L337.4,391.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M695.2,388.1L691.0,388.3L690.9,386.8L691.3,385.6L691.5,385.1L693.3,385.9L695.9,386.3L696.0,386.8L695.2,388.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M903.9,363.3L906.6,364.3L908.1,363.9L910.2,363.4L911.9,363.5L912.1,366.8L911.2,367.8L910.9,370.0L909.9,369.3L908.0,371.2L907.4,371.1L905.7,371.0L904.0,368.6L903.6,366.8L902.0,364.3L902.1,363.1L903.9,363.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M980.6,363.7L981.2,364.8L983.2,363.7L984.0,364.9L984.0,366.0L983.0,367.3L981.2,369.4L979.8,370.5L980.8,371.8L978.6,371.8L976.3,372.9L975.5,374.7L973.9,377.5L971.8,378.8L970.4,379.6L967.8,379.5L966.0,378.6L963.0,378.4L962.5,377.4L964.0,375.3L967.5,372.6L969.3,372.0L971.3,371.0L973.7,369.5L975.3,368.1L976.6,366.0L977.6,365.3L978.0,363.8L980.0,362.5L980.6,363.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M985.0,350.4L987.0,353.4L987.1,351.5L988.4,352.2L988.8,354.3L991.0,355.2L992.9,355.4L994.5,354.4L995.9,354.7L995.2,357.2L994.4,358.8L992.2,358.7L991.5,359.6L991.8,360.8L991.3,361.3L990.3,362.8L988.9,364.7L986.8,365.8L986.3,365.1L985.1,364.7L986.7,362.4L985.8,360.9L982.8,359.7L982.9,358.7L984.9,357.8L985.4,355.6L985.3,353.8L984.1,352.0L984.2,351.5L982.9,350.3L980.7,347.9L979.5,345.9L980.6,345.7L982.1,347.2L984.2,348.0L985.0,350.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M964.2,311.6L963.2,312.2L961.6,311.5L959.7,310.2L957.9,308.7L956.0,306.8L955.6,305.8L956.8,305.9L958.4,306.8L959.6,307.8L960.5,308.6L962.8,310.3L964.2,311.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M995.5,298.2L996.4,299.0L996.0,300.4L994.3,300.8L992.7,300.5L992.5,299.2L993.5,298.3L994.8,298.6L995.5,298.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M998.2,296.7L996.5,297.3L996.1,296.2L997.5,295.6L998.4,295.5L1000.0,294.6L1000.0,296.0L998.2,296.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M0.2,295.8L0.0,296.0L0.0,294.6L0.6,294.5L0.2,295.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M966.2,295.7L965.3,296.1L964.4,294.9L964.5,294.1L966.2,295.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M964.2,291.5L964.6,293.7L963.9,293.4L963.3,293.5L962.9,292.8L962.9,290.6L964.2,291.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M639.0,287.7L639.5,291.0L640.2,292.3L639.9,293.6L639.4,294.4L638.5,292.8L638.0,293.6L638.5,295.7L638.3,296.9L637.5,297.5L637.3,299.9L636.2,303.1L634.9,306.9L633.1,312.2L632.1,316.1L630.8,319.3L628.6,319.9L626.1,321.1L624.5,320.4L622.3,319.4L621.6,317.9L621.4,315.5L620.4,313.3L620.2,311.3L620.6,309.3L621.9,308.8L621.9,307.9L623.3,305.8L623.5,304.0L622.9,302.7L622.3,300.9L622.1,298.4L623.1,296.8L623.5,295.0L624.8,294.9L626.4,294.4L627.4,293.9L628.6,293.8L630.2,292.3L632.5,290.5L633.3,289.1L633.0,288.0L634.1,288.3L635.7,286.4L635.7,284.7L636.7,283.4L637.6,284.6L638.4,285.8L639.0,287.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M898.8,288.2L899.8,290.4L901.6,289.4L902.5,290.5L903.8,291.6L903.5,292.9L904.1,295.2L904.5,296.6L905.2,297.0L906.0,299.3L905.7,300.8L906.6,302.7L909.6,304.1L911.6,305.4L913.5,306.6L913.1,307.3L914.7,309.1L915.8,312.1L916.9,311.5L918.0,312.7L918.7,312.2L919.2,315.2L921.1,316.9L922.4,317.9L924.6,320.2L925.4,322.4L925.4,324.0L925.3,325.7L926.6,328.1L926.4,330.5L925.9,331.8L925.2,334.3L925.2,335.9L924.7,337.9L923.5,340.4L921.4,341.8L920.4,343.9L919.5,345.3L918.7,347.7L917.6,349.1L916.9,351.2L916.5,353.1L916.7,354.0L915.1,354.9L912.0,355.0L909.4,356.2L908.1,357.2L906.4,358.4L904.1,357.2L902.4,356.7L902.9,355.3L901.3,355.8L898.9,357.8L896.5,357.1L894.9,356.6L893.4,356.4L890.7,355.6L888.9,353.9L888.4,351.8L887.7,350.4L886.3,349.3L883.7,348.9L884.6,347.6L883.9,345.5L882.6,347.4L880.1,347.9L881.5,346.4L882.0,344.8L883.0,343.4L882.8,341.4L880.5,343.8L878.8,344.7L877.7,346.9L875.6,345.8L875.7,344.3L873.9,342.3L872.5,341.2L873.0,340.6L869.4,338.9L867.5,338.8L864.8,337.5L859.8,337.8L856.2,338.7L853.1,339.7L850.4,339.5L847.5,340.9L845.1,341.6L844.5,343.0L843.5,344.1L841.1,344.2L839.4,344.5L836.9,343.9L834.9,344.3L833.0,344.4L831.4,345.9L830.6,345.7L829.2,346.5L827.8,347.4L825.8,347.3L824.0,347.3L821.0,345.5L819.5,345.0L819.6,343.4L821.0,343.0L821.4,342.4L821.3,341.4L821.7,339.5L821.4,337.8L819.9,335.0L819.4,333.4L819.6,331.8L818.4,330.0L818.4,329.2L817.1,328.1L816.8,325.9L815.2,323.7L814.8,322.5L816.1,323.7L815.1,321.2L816.5,322.0L817.3,323.1L817.3,321.6L815.9,319.4L815.6,318.6L815.0,317.7L815.3,316.1L815.9,315.4L816.2,314.1L815.9,312.4L817.1,310.4L817.3,312.5L818.5,310.6L820.7,309.7L822.1,308.5L824.2,307.5L825.5,307.3L826.2,307.6L828.4,306.6L830.1,306.3L830.5,305.7L831.3,305.4L832.8,305.5L835.7,304.7L837.2,303.4L837.9,302.0L839.6,300.5L839.7,299.4L839.8,297.9L841.7,295.6L842.9,298.0L844.1,297.4L843.1,296.1L843.9,294.8L845.2,295.4L845.5,293.2L847.0,291.9L847.7,290.8L849.1,290.3L849.1,289.5L850.3,289.9L850.4,289.2L851.6,288.8L853.0,288.4L855.0,289.7L856.6,291.3L858.3,291.3L860.1,291.6L859.5,290.1L860.8,287.8L862.1,287.1L861.6,286.4L862.8,284.8L864.5,283.8L865.9,284.2L868.3,283.7L868.2,282.2L866.2,281.3L867.7,280.9L869.5,281.6L871.0,282.7L873.3,283.5L874.1,283.2L875.8,284.0L877.5,283.2L878.5,283.5L879.1,282.9L880.4,284.3L879.7,285.8L878.6,286.9L877.7,287.0L878.0,288.1L877.2,289.5L876.2,290.9L876.4,291.7L878.6,293.2L880.7,294.1L882.2,295.0L884.2,296.7L885.0,296.7L886.4,297.4L886.8,298.3L889.5,299.2L891.3,298.2L891.9,296.8L892.4,295.5L892.8,294.0L893.6,291.8L893.2,290.4L893.4,289.6L893.1,288.1L893.5,286.0L894.0,285.4L893.6,284.5L894.2,283.0L894.8,281.5L894.8,280.7L895.9,279.6L896.7,281.0L896.9,282.7L897.5,283.1L897.7,284.2L898.7,285.7L898.9,287.2L898.8,288.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M950.3,279.1L951.1,280.1L949.2,280.1L948.1,278.3L949.8,279.0L950.3,279.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M835.3,278.4L834.2,278.5L830.5,276.5L833.1,276.0L834.5,276.8L835.5,277.7L835.3,278.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M946.8,277.4L945.7,277.5L944.0,277.2L943.4,276.8L943.6,275.7L945.5,276.1L946.4,276.7L946.8,277.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M949.1,276.7L948.7,277.2L946.6,274.8L946.1,273.1L947.0,273.1L948.0,275.3L949.1,276.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M845.7,278.2L843.3,278.8L842.9,278.4L843.2,277.5L844.4,275.8L847.1,274.7L847.5,274.0L849.9,273.4L851.8,273.3L852.7,273.0L853.7,273.3L852.7,274.1L849.8,275.3L847.5,276.1L845.7,278.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M827.5,272.5L828.5,273.2L830.2,273.0L830.9,274.2L827.7,274.7L825.8,275.1L824.3,275.1L825.2,273.5L826.8,273.5L827.5,272.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M841.4,272.5L841.0,274.0L836.8,274.8L833.1,274.5L833.1,273.5L835.3,272.9L837.1,273.7L838.9,273.5L841.4,272.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M944.1,273.2L944.2,273.7L942.0,272.5L940.5,271.5L939.5,270.6L939.9,270.3L941.2,271.0L943.4,272.3L944.1,273.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M937.6,270.4L937.1,270.6L935.8,269.9L934.7,268.8L934.8,268.3L936.5,269.5L937.6,270.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M801.7,268.8L807.1,269.1L807.7,268.0L812.8,269.3L813.8,271.1L818.0,271.6L821.4,273.3L818.2,274.3L815.2,273.2L812.7,273.3L809.8,273.1L807.2,272.6L804.0,271.5L801.9,271.2L800.8,271.6L795.7,270.4L795.2,269.2L792.7,269.0L794.6,266.4L798.0,266.5L800.2,267.6L801.4,267.8L801.7,268.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M874.2,267.3L872.8,269.2L872.5,267.1L873.0,266.1L873.6,265.1L874.2,265.9L874.2,267.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M933.0,268.9L932.2,269.2L931.0,268.2L929.8,266.4L929.2,264.3L929.6,264.0L929.9,264.8L930.7,265.5L932.1,267.2L933.4,268.2L933.0,268.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M922.2,265.2L920.7,265.4L920.3,266.2L918.8,266.9L917.3,267.5L915.9,267.5L913.6,266.7L912.0,266.0L912.2,265.1L914.7,265.5L916.2,265.3L916.7,264.0L917.1,263.9L917.3,265.4L918.9,265.2L919.7,264.2L921.2,263.2L920.9,261.6L922.6,261.5L923.2,262.0L923.1,263.5L922.2,265.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M853.5,259.6L852.4,260.5L850.5,260.0L850.0,258.8L852.8,258.7L853.5,259.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M862.4,258.6L863.4,260.7L861.1,259.6L858.8,259.3L857.2,259.5L855.3,259.4L855.9,257.9L859.4,257.8L862.4,258.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M925.4,262.5L924.5,263.2L924.0,261.6L923.4,260.5L922.1,259.6L920.5,258.4L918.5,257.6L919.3,256.9L920.8,257.7L921.7,258.3L922.9,259.0L924.0,260.2L925.1,261.1L925.4,262.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M872.6,253.2L873.4,257.7L876.3,259.4L878.6,256.4L881.8,254.7L884.2,254.7L886.6,255.7L888.7,256.7L891.7,257.2L896.5,259.1L901.6,260.7L903.5,262.1L905.1,263.5L905.5,265.2L910.1,266.9L910.8,268.4L908.3,268.7L908.9,270.5L911.3,272.3L913.2,275.3L914.7,275.2L914.6,276.4L916.8,276.9L915.9,277.4L918.9,278.6L918.6,279.4L916.7,279.6L916.1,278.9L913.7,278.6L910.9,278.1L908.7,276.4L907.1,274.8L905.7,272.4L902.1,271.2L899.7,272.0L898.0,272.9L898.4,275.0L896.2,275.9L894.6,275.4L891.8,275.3L889.3,273.0L886.5,272.5L885.8,273.3L882.3,273.4L883.4,271.1L885.2,270.3L884.5,267.3L883.1,265.0L877.7,262.6L875.5,262.4L871.3,259.8L870.5,261.2L869.4,261.4L868.8,260.4L868.8,259.2L866.6,257.8L869.6,256.8L871.6,256.9L871.4,256.2L867.3,256.1L866.2,254.5L863.7,254.0L862.6,252.6L866.3,251.9L867.7,251.0L872.2,252.2L872.6,253.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M847.9,246.1L845.7,248.8L843.6,249.3L840.9,248.8L836.3,248.9L833.8,249.3L833.4,251.4L835.9,253.9L837.4,252.7L842.6,251.7L842.4,253.0L841.2,252.6L840.0,254.2L837.5,255.3L840.2,258.9L839.6,259.8L842.1,263.0L842.1,264.8L840.6,265.7L839.5,264.7L840.9,262.4L838.2,263.5L837.5,262.7L837.8,261.6L835.8,260.0L836.0,257.3L834.2,258.1L834.4,261.4L834.5,265.4L832.8,265.8L831.6,264.9L832.4,262.4L831.9,259.7L830.8,259.7L829.9,257.8L831.1,256.0L831.5,253.8L832.8,249.6L833.4,248.4L835.8,246.4L838.0,247.2L841.5,247.6L844.7,247.5L847.4,245.4L847.9,246.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M857.5,246.9L857.3,249.3L855.9,249.0L855.5,250.7L856.6,252.2L855.8,252.5L854.7,250.7L853.9,247.2L854.4,245.0L855.4,244.0L855.6,245.5L857.2,245.7L857.5,246.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M793.9,266.3L790.9,266.3L788.5,264.0L785.0,261.7L783.8,260.0L781.7,257.8L780.3,255.7L778.2,251.8L775.7,249.5L774.9,247.1L773.9,244.9L771.4,243.2L769.9,240.8L767.8,239.3L764.9,236.2L764.7,234.8L766.5,234.9L770.8,235.4L773.2,238.1L775.4,240.0L776.9,241.2L779.6,244.2L782.4,244.2L784.7,246.1L786.3,248.4L788.4,249.7L787.3,252.0L788.9,252.9L789.9,253.0L790.4,255.0L791.4,256.5L793.4,256.7L794.7,258.5L794.0,262.0L793.9,266.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M827.4,244.9L830.5,247.5L827.3,247.8L826.3,249.7L826.4,252.2L823.8,254.1L823.7,256.9L822.6,261.1L822.2,260.2L819.1,261.4L818.0,259.7L816.0,259.6L814.6,258.7L811.3,259.7L810.3,258.3L808.5,258.5L806.2,258.2L805.8,254.4L804.4,253.7L803.0,251.3L802.6,248.8L803.0,246.3L804.6,244.4L806.7,245.4L808.8,244.9L809.4,242.5L810.5,242.0L813.9,241.4L815.9,239.2L817.2,237.4L818.3,236.4L820.7,234.9L822.8,232.9L824.2,230.8L825.4,230.8L826.8,232.2L826.9,233.4L828.7,234.1L831.1,235.0L830.9,236.1L829.0,236.2L829.5,237.6L827.5,238.5L825.9,241.0L827.9,243.6L827.4,244.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M851.0,226.6L851.3,228.5L851.5,230.0L850.5,232.6L849.5,229.7L848.2,231.1L849.1,233.2L848.3,234.5L845.1,232.9L844.3,230.9L845.1,229.6L843.4,228.2L842.5,229.4L841.2,229.3L839.1,230.8L838.7,230.0L839.8,227.7L841.5,226.9L843.0,225.9L844.0,227.1L846.1,226.3L846.6,225.1L848.5,225.0L848.4,222.9L850.6,224.2L850.9,225.6L851.0,226.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M725.6,232.8L723.2,233.4L721.9,231.2L721.4,227.2L722.6,222.7L724.6,224.3L725.8,226.2L727.2,229.1L726.8,232.0L725.6,232.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M330.7,221.9L328.4,222.2L327.9,222.0L328.7,221.2L328.7,220.1L330.3,219.8L330.8,219.8L330.7,221.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M844.4,221.4L843.4,222.4L842.5,224.1L841.7,224.9L839.9,223.0L840.5,222.3L841.2,221.5L841.5,219.8L843.1,219.6L842.6,221.5L844.7,218.8L844.4,221.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M829.2,224.1L825.5,226.8L826.8,224.8L828.9,223.1L830.5,221.2L832.0,218.4L832.5,220.7L830.6,222.2L829.2,224.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M838.6,217.0L840.2,217.8L842.0,217.8L841.9,219.0L840.7,220.2L838.9,221.0L838.8,219.7L839.0,218.3L838.6,217.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M848.6,216.2L849.4,219.3L847.3,218.6L847.3,219.5L848.0,221.2L846.7,221.8L846.6,219.9L845.7,219.8L845.3,218.1L846.9,218.3L846.9,217.2L845.2,215.1L847.9,215.2L848.6,216.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M837.6,213.7L836.8,216.1L835.6,214.7L834.2,212.6L836.6,212.7L837.6,213.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M837.0,198.6L838.7,199.4L839.6,198.7L839.8,199.4L839.4,200.5L840.3,202.5L839.6,204.8L838.0,205.7L837.5,208.0L838.1,210.2L839.6,210.5L840.8,210.2L844.3,211.7L844.0,213.2L844.9,213.9L844.7,215.2L842.5,213.8L841.5,212.4L840.8,213.4L839.0,211.7L836.5,212.1L835.1,211.5L835.2,210.4L836.1,209.7L835.3,209.0L834.9,210.0L833.5,208.4L833.1,207.2L833.0,204.5L834.1,205.5L834.4,201.1L835.3,198.6L837.0,198.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M317.8,199.4L317.1,200.1L315.0,200.1L313.4,200.1L313.2,199.0L313.6,198.6L315.9,198.6L317.3,198.8L317.8,199.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M286.4,200.4L285.5,200.8L284.0,200.4L282.4,199.4L282.7,198.7L283.9,198.5L284.5,198.6L286.4,198.9L287.9,199.6L288.3,200.3L286.4,200.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M298.4,194.8L300.8,195.2L301.1,194.8L303.3,194.8L305.0,195.5L305.7,195.4L306.2,196.4L307.7,196.4L307.6,197.2L308.9,197.3L310.2,198.3L309.2,199.4L307.9,198.8L306.6,198.9L305.7,198.8L305.2,199.3L304.1,199.5L303.7,198.8L302.8,199.2L301.7,201.1L301.0,200.7L300.8,199.9L299.0,199.4L297.7,199.6L296.0,199.4L294.7,199.9L293.2,199.0L293.4,198.2L296.0,198.5L298.1,198.8L299.1,198.1L297.8,196.9L297.8,195.9L296.1,195.4L296.7,194.7L298.4,194.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M806.5,198.1L804.1,199.5L801.8,198.6L801.7,196.2L803.1,194.9L806.1,194.2L807.7,194.2L808.4,195.3L807.1,196.5L806.5,198.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M67.9,197.0L67.5,197.5L66.8,197.1L66.9,196.3L66.5,195.3L66.6,195.0L67.1,194.5L66.9,194.0L67.1,193.7L67.3,193.8L68.3,194.2L68.8,194.5L69.3,194.8L70.0,195.8L69.9,196.0L68.8,196.6L67.9,197.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M66.4,192.7L65.5,192.9L65.0,192.3L64.7,192.0L64.7,191.9L65.0,191.6L66.0,191.9L66.7,192.3L66.4,192.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M64.6,191.2L64.5,191.5L63.0,191.4L63.2,191.1L64.6,191.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M62.1,190.8L61.9,190.9L61.7,190.9L60.8,190.8L60.4,190.2L60.3,190.1L61.0,189.7L61.3,189.9L62.1,190.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M57.4,188.9L57.0,189.2L56.1,188.7L56.3,188.5L56.7,188.2L57.3,188.3L57.4,188.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M278.7,186.8L279.8,187.8L282.4,187.5L283.4,188.1L285.7,189.8L287.4,191.1L288.3,191.1L290.0,191.6L289.8,192.4L291.9,192.5L293.9,193.7L293.6,194.3L291.8,194.7L289.9,194.8L288.0,194.6L284.0,194.8L285.9,193.3L284.7,192.6L283.0,192.4L282.0,191.6L281.3,190.0L279.8,190.1L277.2,189.4L276.3,188.8L272.7,188.4L271.8,187.8L272.8,187.1L270.1,187.0L268.1,188.4L266.9,188.5L266.5,189.1L265.1,189.4L264.0,189.2L265.4,188.3L266.0,187.3L267.3,186.7L268.7,186.2L270.8,185.9L271.5,185.6L273.9,185.8L276.1,185.8L278.7,186.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M284.6,184.0L283.9,184.1L283.2,182.5L282.2,181.7L282.8,180.0L283.6,180.1L284.6,182.4L284.6,184.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M836.6,186.7L835.4,189.0L833.9,186.6L833.6,184.6L835.3,181.8L837.5,179.7L838.8,180.6L838.3,182.2L836.6,186.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M283.8,176.2L280.8,176.6L280.6,175.6L281.9,175.4L283.8,175.4L283.8,176.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M286.1,176.1L285.6,178.1L285.1,177.8L285.2,176.3L283.9,175.2L283.9,174.9L286.1,176.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M874.0,155.1L874.4,156.1L872.8,157.8L871.6,156.9L870.2,157.5L869.5,159.2L867.7,158.4L867.7,157.0L869.2,155.4L870.8,155.7L872.0,154.5L874.0,155.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M596.0,150.9L594.2,152.1L594.4,152.6L594.5,152.8L591.6,154.0L590.3,153.6L589.6,152.5L590.9,152.4L591.1,152.4L591.5,151.7L593.5,151.7L596.0,150.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M565.8,150.8L567.4,151.8L569.5,151.6L571.6,151.8L571.5,152.3L573.0,151.9L572.7,152.8L568.7,153.0L568.7,152.5L565.3,152.0L565.8,150.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M543.1,143.8L542.1,146.0L542.5,146.8L541.9,148.3L539.8,147.2L538.4,146.9L534.5,145.5L534.9,144.1L538.2,144.3L541.0,144.0L543.1,143.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M525.6,135.5L527.2,137.5L526.9,141.2L525.6,141.0L524.5,141.9L523.4,141.2L523.3,137.8L522.7,136.2L524.2,136.4L525.6,135.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M891.6,146.8L890.6,149.0L891.0,150.4L889.6,152.4L886.0,153.7L881.2,153.9L877.2,157.0L875.3,156.0L875.2,153.9L870.4,154.5L867.1,155.8L863.9,155.9L866.7,157.9L864.8,162.6L863.0,163.8L861.7,162.7L862.4,160.2L860.6,159.4L859.5,157.5L862.1,156.7L863.6,154.9L866.3,153.5L868.4,151.6L873.9,150.7L876.9,151.3L879.8,146.4L881.6,147.7L885.7,144.9L887.3,143.8L889.0,140.4L888.6,137.3L889.7,135.6L892.7,135.1L894.2,138.9L894.1,141.2L891.6,144.0L891.6,146.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M526.6,132.9L525.6,135.1L524.4,134.5L523.7,132.6L524.3,131.6L526.1,130.5L526.6,132.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M899.8,127.3L901.7,127.9L903.7,126.7L904.3,129.8L900.2,130.6L897.7,133.3L893.4,131.4L891.9,134.5L888.8,134.5L888.4,131.8L889.8,129.6L892.7,129.5L893.5,125.6L894.4,123.5L897.6,126.4L899.8,127.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M323.2,120.7L325.2,121.1L327.7,121.0L326.4,122.1L325.3,122.3L321.8,121.1L321.1,120.2L322.2,119.3L323.2,120.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M328.3,113.6L327.0,113.6L323.4,112.8L320.8,111.5L321.7,111.2L325.4,111.9L328.2,113.1L328.3,113.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M156.9,115.2L155.5,115.6L151.0,114.4L150.1,113.4L147.6,112.4L147.1,111.6L144.3,111.1L143.2,109.6L143.4,109.0L146.4,109.6L148.1,110.0L150.7,110.3L151.6,111.2L153.0,112.6L155.8,113.7L156.9,115.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M344.1,109.2L342.2,111.6L344.0,110.7L345.9,111.3L344.9,112.3L347.4,113.0L348.7,112.3L351.5,113.2L350.6,115.2L352.5,114.8L352.9,116.2L353.8,118.0L352.6,120.4L351.3,120.5L349.5,120.0L350.1,117.7L349.3,117.4L346.1,119.8L344.5,119.7L346.4,118.4L343.7,117.7L340.8,117.9L335.4,117.8L334.9,116.9L336.7,116.0L335.5,115.2L337.8,113.5L340.7,109.1L342.4,107.5L344.8,106.6L346.1,106.7L345.6,107.5L344.1,109.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M131.4,99.9L131.4,99.9L131.4,99.9L131.4,99.9L134.0,99.7L133.2,102.8L135.6,105.1L134.5,105.0L132.8,103.8L131.8,102.5L130.4,101.6L129.9,100.4L130.1,99.5L131.4,99.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M899.0,109.0L901.8,114.0L897.7,113.0L896.0,117.1L898.7,119.9L898.6,121.8L896.5,120.2L894.7,122.3L894.2,120.0L894.5,117.3L894.2,114.3L894.8,112.2L894.9,108.5L893.3,105.7L893.6,101.9L896.1,100.7L895.0,99.4L896.3,99.0L897.0,100.8L897.9,103.5L897.9,106.2L899.0,109.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M481.1,104.8L476.2,106.5L472.3,106.1L474.5,103.2L473.1,100.3L476.9,98.2L479.0,96.9L481.3,96.7L484.3,98.5L482.8,100.4L483.2,102.4L481.1,104.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M535.3,95.5L533.6,97.8L530.7,96.2L530.3,95.1L534.4,94.1L535.3,95.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M75.0,91.3L72.2,92.4L70.8,91.7L70.4,90.4L72.9,89.4L74.4,89.0L76.2,89.2L77.4,90.0L75.0,91.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M491.7,87.1L488.7,90.1L491.5,89.7L494.6,89.8L493.8,92.0L491.3,94.5L494.2,94.7L496.9,98.3L498.8,98.7L500.5,101.9L501.3,103.0L504.7,103.5L504.3,105.3L502.9,106.1L504.0,107.5L501.5,109.0L497.8,109.0L493.1,109.7L491.8,109.2L490.0,110.5L487.4,110.2L485.4,111.2L484.0,110.7L488.0,107.7L490.5,107.1L486.2,106.7L485.4,105.6L488.3,104.7L486.7,103.2L487.3,101.4L491.4,101.7L491.8,100.0L489.9,98.3L486.5,97.8L485.9,97.1L486.9,95.8L486.0,95.0L484.5,96.4L484.3,93.7L482.9,92.3L483.9,89.4L486.1,87.1L488.3,87.4L491.7,87.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M40.1,83.6L38.4,84.0L36.5,83.5L34.8,82.7L37.6,82.3L39.8,82.5L40.1,83.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M279.8,77.3L278.7,78.8L277.5,78.6L276.8,77.7L276.9,77.5L278.0,76.7L279.1,76.8L279.8,77.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M272.5,75.8L269.3,77.3L267.3,77.3L266.7,76.5L268.7,75.2L272.6,75.3L272.5,75.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M23.0,72.8L24.7,73.4L26.4,73.1L28.7,73.8L31.4,74.2L31.2,74.5L29.1,75.1L27.0,74.5L25.9,74.0L23.5,74.1L22.8,73.9L23.0,72.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M263.4,67.6L264.0,68.8L265.4,68.4L267.0,69.1L270.0,70.1L273.2,71.0L273.5,72.3L275.5,72.1L277.5,73.0L275.0,73.9L270.7,73.2L269.1,71.9L266.4,73.4L262.4,74.9L261.5,73.2L257.7,73.5L260.1,72.1L260.5,69.9L261.4,67.4L263.4,67.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M459.7,65.4L459.1,67.2L462.2,69.1L458.6,71.2L450.6,73.1L448.2,73.6L444.5,73.2L436.8,72.3L439.5,71.1L433.5,69.7L438.4,69.2L438.3,68.4L432.4,67.7L434.3,65.9L438.5,65.5L442.8,67.4L447.1,65.9L450.6,66.7L455.1,65.2L459.7,65.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M289.3,63.5L286.1,63.6L285.5,62.3L286.6,60.7L289.2,60.3L291.3,61.1L291.4,62.3L291.1,62.7L289.3,63.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M13.8,65.0L15.7,65.7L15.1,63.7L22.6,64.1L28.1,66.7L25.3,67.9L20.7,68.2L20.7,70.9L19.6,71.5L17.0,71.4L14.9,70.5L11.2,69.7L10.5,68.5L7.7,68.0L4.6,68.4L3.0,67.4L3.6,66.4L0.3,67.0L1.6,68.3L0.0,69.5L0.0,58.4L6.8,60.6L14.1,63.3L13.8,65.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M234.3,58.0L232.6,59.0L228.8,58.2L226.6,58.5L222.8,57.2L225.2,56.4L227.2,55.2L230.1,55.9L231.8,56.4L232.6,57.0L234.3,58.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M1000.0,53.2L997.0,53.4L996.5,52.5L1000.0,51.3L1000.0,53.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M3.6,53.1L0.0,53.2L0.0,51.3L0.4,51.2L2.7,51.2L6.7,52.0L6.5,52.4L3.6,53.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M248.5,57.0L248.5,59.8L252.2,57.6L255.5,59.4L254.7,61.5L257.4,63.3L260.3,61.3L262.3,58.9L262.4,55.9L266.4,56.1L270.5,56.5L274.2,57.9L274.4,59.3L272.3,60.7L274.3,62.2L273.9,63.6L268.5,65.5L264.6,66.0L261.8,65.1L260.9,66.5L258.2,68.9L257.4,70.1L254.2,71.9L250.2,72.1L248.0,73.3L247.9,75.1L244.6,75.5L241.2,77.7L238.2,80.8L237.1,83.0L237.0,86.3L241.1,86.7L242.3,89.3L243.6,91.4L247.5,90.9L252.7,92.1L255.4,93.1L257.4,94.4L260.9,95.2L263.9,96.4L268.4,96.5L271.5,96.8L271.0,99.2L271.9,102.0L273.9,105.1L278.0,107.8L280.2,106.9L281.7,104.0L280.2,99.6L278.3,98.1L282.7,96.8L285.8,94.9L287.4,93.0L287.2,91.1L285.3,88.7L281.9,86.7L285.2,83.7L284.0,81.2L283.0,76.9L285.0,76.2L289.7,77.0L292.6,77.3L294.9,76.5L297.5,77.5L300.9,79.1L301.7,80.2L306.7,80.4L306.6,82.7L307.5,86.2L310.1,86.7L312.1,88.3L316.1,86.8L318.8,83.7L320.6,82.4L322.8,84.9L326.4,88.4L329.5,91.8L328.3,93.5L332.0,95.1L334.5,96.7L339.0,97.4L340.7,98.3L341.8,100.6L344.0,101.0L345.1,102.0L345.3,105.1L343.3,106.2L341.3,107.2L336.7,108.2L333.2,110.4L328.5,110.9L322.6,110.3L318.4,110.3L315.6,110.5L313.2,112.5L309.7,113.7L305.7,117.4L302.5,119.9L304.8,119.5L309.3,115.8L315.1,113.5L319.3,113.2L321.7,114.6L319.1,116.5L320.0,119.5L320.9,121.6L324.5,122.9L329.1,122.5L331.9,119.4L332.1,121.4L333.9,122.4L330.4,124.3L324.3,125.9L321.5,127.0L318.4,129.0L316.3,128.8L316.2,126.5L321.0,124.2L316.6,124.3L313.5,124.6L314.0,125.5L311.0,126.9L308.2,127.8L305.2,128.7L303.6,130.5L303.3,130.9L303.3,132.4L304.2,133.9L305.3,133.9L305.0,132.9L305.9,133.5L305.7,134.3L303.8,134.8L302.4,134.7L300.4,135.2L299.2,135.4L297.6,135.5L295.2,136.3L299.3,135.8L300.2,136.3L296.3,137.1L294.5,137.1L294.6,136.8L293.7,137.6L294.5,137.7L293.9,139.7L291.9,141.8L291.7,141.1L291.1,141.0L290.2,140.3L290.8,141.8L291.4,142.3L291.5,143.3L290.6,144.4L289.1,146.6L288.8,146.5L289.7,144.6L288.2,143.6L287.9,141.2L287.4,142.5L288.0,144.2L286.2,143.8L288.1,144.7L288.2,147.3L289.0,147.5L289.3,148.5L289.6,151.2L287.9,153.3L285.0,154.1L283.2,155.8L281.8,155.9L280.4,157.0L280.0,157.9L276.9,159.7L275.4,161.0L274.1,162.7L273.6,164.6L274.1,166.6L275.1,168.9L276.3,170.9L276.3,172.1L277.6,175.3L277.5,177.2L277.4,178.3L276.7,180.0L275.9,180.3L274.5,180.0L274.1,178.8L273.0,178.1L271.6,175.7L270.3,173.6L269.8,172.5L270.4,170.7L269.6,169.2L267.5,166.8L266.4,166.4L263.6,167.7L263.1,167.5L261.7,166.2L260.0,165.6L256.9,165.9L254.4,165.6L252.3,165.8L251.1,166.2L251.6,167.0L251.6,168.1L252.2,168.6L251.6,169.0L250.6,168.6L249.6,169.1L247.6,169.0L245.5,167.6L243.1,167.9L241.0,167.3L239.3,167.5L237.0,168.1L234.4,170.2L231.7,171.4L230.2,172.7L229.5,173.9L229.5,175.9L229.6,177.2L230.2,178.1L230.2,178.1L230.2,178.2L229.1,180.6L228.6,182.6L228.4,186.3L228.1,187.7L228.6,189.2L229.5,190.5L230.0,192.7L231.9,194.7L232.5,196.3L233.6,197.7L236.6,198.4L237.7,199.6L240.1,198.8L242.3,198.5L244.3,198.0L246.1,197.6L247.9,196.4L248.5,194.8L248.7,192.5L249.2,191.7L251.1,190.9L254.0,190.3L256.5,190.4L258.2,190.2L258.9,190.7L258.8,192.1L257.3,193.7L256.6,195.4L257.1,195.9L256.7,197.1L256.0,199.3L255.3,198.6L254.7,198.6L254.7,199.0L255.3,199.0L255.2,199.8L254.8,201.0L255.0,201.4L254.7,202.4L254.9,202.7L254.6,204.1L254.0,204.8L253.5,204.9L253.0,205.9L253.9,206.4L254.1,206.0L254.9,206.3L255.2,206.4L255.8,205.9L256.6,205.9L256.9,206.1L257.3,206.0L258.6,206.2L259.9,206.2L260.8,205.9L261.1,205.5L262.0,205.7L262.7,205.9L263.4,205.8L263.9,205.6L265.2,206.0L265.6,206.0L266.5,206.5L267.3,207.2L268.3,207.6L269.0,208.3L268.8,208.6L268.7,209.2L268.9,210.2L268.3,211.2L268.0,212.3L267.9,213.5L268.1,214.3L268.1,215.5L267.7,215.8L267.4,217.0L267.6,217.7L267.1,218.4L267.2,219.2L267.6,219.6L268.3,221.1L269.4,222.2L270.7,223.4L271.7,224.4L271.6,225.0L272.8,225.1L273.0,224.9L273.8,225.6L275.1,225.4L276.3,224.7L278.0,224.1L279.0,223.3L280.5,223.5L280.4,223.7L281.9,223.8L283.2,224.3L284.1,225.1L285.1,225.9L286.6,226.0L288.6,224.1L289.8,223.8L289.8,222.8L290.3,220.5L291.9,219.2L293.7,219.2L293.9,218.6L296.1,218.8L298.3,217.4L299.3,216.8L300.7,215.5L301.7,215.6L302.4,216.4L301.9,217.3L301.8,217.9L300.1,218.3L301.1,219.5L301.0,221.0L299.8,222.6L300.8,224.8L302.0,224.6L302.7,222.6L301.8,221.6L301.7,219.5L305.1,218.4L304.7,217.1L305.7,216.2L306.7,218.2L308.7,218.2L310.5,219.8L310.6,220.7L313.1,220.7L316.0,220.4L317.6,221.7L319.7,222.0L321.3,221.1L321.3,220.4L324.8,220.3L328.1,220.2L325.7,221.1L326.7,222.4L328.9,222.6L331.0,223.9L331.5,226.2L332.9,226.1L334.0,226.8L335.8,227.8L337.5,229.6L337.6,231.0L338.7,231.1L340.2,232.4L341.3,233.4L344.6,234.0L344.9,233.5L347.1,233.3L350.1,234.0L351.1,234.3L353.1,235.0L356.0,237.3L356.5,238.5L357.5,238.3L358.1,239.9L359.7,244.7L361.2,245.2L361.3,247.1L359.2,249.4L360.0,250.2L364.9,250.7L365.0,253.4L367.2,251.6L370.6,252.6L375.3,254.3L376.6,255.9L376.2,257.5L379.4,256.6L384.8,258.1L388.9,258.0L393.1,260.3L396.6,263.4L398.7,264.2L401.1,264.3L402.1,265.2L403.1,268.7L403.5,270.4L402.4,275.0L401.0,276.8L397.1,280.7L395.3,283.8L393.3,286.2L392.6,286.3L391.8,288.3L392.0,293.5L391.2,297.8L390.9,299.6L390.0,300.7L389.6,304.4L386.7,308.1L386.3,310.9L384.0,312.1L383.4,313.8L380.3,313.8L376.0,314.9L374.0,316.1L370.9,316.9L367.6,319.1L365.3,321.9L364.9,324.0L365.3,325.5L364.8,328.3L364.2,329.7L362.3,331.2L359.2,336.1L356.7,338.3L354.8,339.6L353.6,342.2L351.7,343.8L350.5,345.5L347.4,347.1L345.3,346.5L343.8,346.8L341.3,345.6L339.4,345.7L337.7,344.2L337.5,345.6L341.0,348.0L340.7,349.9L342.4,351.1L342.3,352.5L339.6,356.1L335.5,357.6L329.9,358.1L326.8,357.9L327.4,359.5L326.9,361.6L327.4,363.0L325.7,364.0L322.9,364.4L320.2,363.3L319.1,364.1L319.5,366.8L321.4,367.7L322.9,366.8L323.7,368.2L321.2,369.1L318.9,370.8L318.5,373.6L317.9,375.1L315.3,375.1L313.1,376.5L312.3,378.6L315.0,380.6L317.7,381.2L316.7,383.7L313.4,385.3L311.6,388.5L309.1,389.6L307.9,390.9L308.8,393.8L310.7,395.4L309.5,395.3L307.1,395.3L305.7,395.9L303.2,396.9L302.8,399.5L301.6,399.6L298.5,398.7L295.3,396.8L291.8,395.2L290.9,393.4L291.7,391.8L290.3,389.9L290.0,385.2L291.2,382.5L294.1,380.4L289.9,379.6L292.5,377.1L293.5,372.5L296.6,373.5L298.0,367.7L296.1,367.0L295.3,370.5L293.5,370.1L294.4,366.1L295.3,361.0L296.6,359.1L295.8,356.3L295.6,353.2L296.8,353.1L298.5,348.6L300.4,344.2L301.6,340.1L300.9,335.9L301.8,333.6L301.4,330.2L303.0,326.8L303.5,321.4L304.4,315.6L305.3,309.4L305.1,304.9L304.5,301.0L301.7,299.4L301.5,298.2L296.0,295.4L291.0,292.4L288.9,290.7L287.7,288.4L288.2,287.6L285.8,284.0L283.1,278.8L280.5,273.3L279.3,272.0L278.4,270.0L276.3,268.2L274.3,267.0L275.2,265.8L273.9,263.2L274.7,261.2L276.9,259.5L278.4,257.4L277.8,256.2L276.8,257.5L275.1,256.2L275.7,255.5L275.2,252.9L276.2,252.5L276.7,250.8L277.7,249.0L277.5,247.9L279.0,247.3L281.0,246.2L280.6,245.3L281.6,245.1L281.5,243.7L282.1,242.7L283.5,242.5L284.7,240.8L285.8,239.3L284.7,238.6L285.3,237.0L284.6,234.5L285.2,233.8L284.8,231.4L283.7,229.9L282.7,229.1L282.1,227.6L282.8,226.9L282.1,226.7L281.6,225.8L280.2,225.0L279.0,225.2L278.4,226.2L277.3,226.9L276.7,226.9L276.4,227.5L277.8,229.0L277.0,229.4L276.6,229.8L275.3,229.9L274.8,228.3L274.5,228.8L273.6,228.6L273.0,227.5L271.9,227.3L271.1,227.0L269.9,227.0L269.9,227.6L269.5,227.2L268.0,226.5L267.5,226.0L267.8,225.5L267.7,224.9L266.9,224.2L265.8,223.6L264.9,223.3L264.7,222.5L264.0,222.0L264.1,222.8L263.6,223.5L262.9,222.7L262.1,222.4L261.7,221.8L261.7,221.0L262.1,220.1L261.3,219.7L261.9,219.2L260.9,218.3L259.7,217.2L259.0,216.3L257.9,215.4L256.5,214.1L256.8,213.7L257.2,214.1L257.5,213.9L257.0,213.1L256.1,212.8L255.8,213.5L254.2,213.4L253.2,213.2L252.1,212.6L250.5,212.4L249.7,211.8L248.3,211.4L246.6,211.3L245.3,210.8L243.8,209.6L240.7,206.6L239.2,205.7L237.0,205.0L235.4,205.2L233.2,206.2L231.8,206.5L229.8,205.8L227.7,205.3L225.1,204.0L223.1,203.6L219.9,202.3L217.6,201.0L216.9,200.2L215.3,200.1L212.5,199.2L211.3,197.9L208.4,196.3L207.0,194.6L206.3,193.2L207.2,193.0L206.9,192.2L207.6,191.5L207.6,190.5L206.7,189.2L206.4,188.1L205.5,186.7L203.0,184.0L200.2,181.8L198.9,180.1L196.5,178.9L196.0,178.3L196.4,176.5L195.0,175.9L193.4,174.5L192.7,172.6L191.2,172.4L189.6,170.9L188.3,169.6L188.1,168.7L186.6,166.6L185.7,164.5L185.7,163.4L183.7,162.3L182.8,162.4L181.2,161.7L180.7,162.8L181.2,164.1L181.5,166.2L182.4,167.4L184.5,169.3L184.9,169.9L185.4,170.1L185.7,171.1L186.2,171.0L186.8,172.8L187.6,173.5L188.2,174.5L190.0,175.9L190.9,178.5L191.7,179.7L192.5,181.0L192.6,182.5L194.0,182.6L195.1,183.9L196.1,185.1L196.0,185.6L194.8,186.6L194.4,186.6L193.6,184.9L191.8,183.3L189.8,182.0L188.4,181.3L188.5,179.2L188.1,177.7L186.7,176.9L184.8,175.6L184.5,176.0L183.8,175.3L182.0,174.6L180.4,173.0L180.6,172.8L181.7,172.9L182.8,171.9L182.9,170.6L180.7,168.7L179.1,167.9L178.1,166.2L177.1,164.3L175.8,162.1L174.6,159.6L174.2,158.2L172.4,156.6L171.1,156.3L170.8,155.5L169.2,155.3L168.2,154.6L165.6,154.3L164.9,153.9L164.6,152.3L161.9,149.6L159.6,145.7L159.7,145.0L158.5,144.1L156.3,141.8L155.9,139.5L154.4,138.0L155.1,135.7L155.0,133.3L154.1,131.2L155.2,128.6L155.8,123.5L155.3,119.8L154.5,117.4L153.6,116.2L154.0,115.6L158.0,116.6L159.5,119.2L160.2,118.4L159.7,116.2L158.8,113.9L158.4,113.9L153.0,111.2L151.0,110.0L146.0,108.8L144.5,106.3L144.9,104.6L141.3,103.5L140.8,101.2L137.5,99.2L137.4,97.8L135.9,96.7L133.4,95.8L132.6,93.4L129.1,91.2L127.6,88.5L124.9,88.4L120.5,88.3L117.2,87.5L111.5,84.6L108.8,84.1L104.0,83.1L100.1,83.3L94.7,82.1L91.3,80.9L88.3,81.5L88.8,83.4L87.3,83.6L84.1,84.2L81.6,85.1L78.6,85.7L78.2,84.0L79.4,81.3L82.4,80.5L81.6,79.8L78.1,81.3L76.2,83.2L72.2,85.1L74.2,86.5L71.6,88.5L68.6,89.6L65.8,90.5L65.1,91.7L60.8,93.2L59.9,94.5L56.7,95.6L54.8,95.4L52.2,96.2L49.3,97.2L47.0,98.1L42.3,98.9L41.8,98.4L44.9,97.1L47.6,96.3L50.5,94.7L54.0,94.4L55.4,93.3L59.2,91.6L59.8,91.1L61.9,90.1L62.4,88.0L63.8,86.3L60.6,87.2L59.7,86.7L58.2,87.7L56.4,86.3L55.6,87.3L54.6,85.9L51.8,87.0L50.1,87.0L49.8,85.4L50.3,84.4L48.6,83.4L44.9,83.9L42.6,82.6L40.7,81.9L40.7,80.4L38.6,79.2L39.6,77.6L41.9,76.0L42.9,74.6L45.1,74.4L47.0,74.8L49.3,73.5L51.3,73.7L53.4,72.9L52.9,71.6L51.3,71.1L53.4,70.0L51.7,70.1L48.7,70.7L47.9,71.3L45.7,70.7L41.8,71.0L37.7,70.3L36.5,69.2L33.0,67.6L36.9,66.4L43.1,65.1L45.4,65.1L45.0,66.5L50.9,66.3L48.6,64.6L45.2,63.6L43.2,62.2L40.6,61.0L36.8,60.1L38.3,58.7L43.2,58.6L46.8,57.3L47.4,55.9L50.3,54.6L53.0,54.3L58.2,53.1L60.8,53.3L65.1,51.8L69.3,52.4L71.3,53.6L72.5,53.1L77.2,53.2L77.0,53.9L81.3,54.4L84.1,54.1L90.0,55.0L95.3,55.2L97.4,55.6L101.1,55.1L105.4,56.0L108.4,56.4L113.6,57.0L117.9,58.4L120.8,58.6L123.3,57.5L126.6,56.6L130.8,56.9L134.9,55.7L139.5,55.0L141.4,56.2L143.4,55.5L144.1,54.2L146.0,54.5L150.7,57.0L154.4,55.1L154.8,57.2L158.2,56.8L159.2,56.0L162.6,56.1L166.8,57.3L173.3,58.3L177.1,58.8L179.9,58.6L183.6,60.0L179.7,61.4L184.7,62.0L192.2,61.6L194.6,61.2L197.6,62.8L200.6,61.4L197.7,60.2L199.5,59.3L202.9,59.2L205.1,58.9L207.4,59.6L210.2,61.1L213.3,60.8L218.2,62.1L222.5,61.7L226.5,61.7L226.2,60.0L228.7,59.5L233.0,60.4L233.0,63.1L234.8,60.9L237.0,60.9L238.2,58.1L235.3,56.4L232.0,55.3L232.2,52.2L235.5,50.2L239.2,50.7L242.0,51.9L245.8,55.0L243.3,56.4L248.5,57.0Z"/>
+<path class="map-land" fill-rule="evenodd" d="M182.9,46.9L181.5,48.2L187.7,47.3L191.5,48.7L194.7,47.3L197.2,48.2L199.5,51.0L200.9,49.8L198.9,47.0L201.3,46.6L204.1,47.0L207.2,48.1L209.0,50.8L209.8,52.8L214.5,54.2L219.5,55.5L219.2,56.7L214.6,56.9L216.4,58.0L215.5,59.0L210.4,58.6L205.7,57.8L202.4,58.0L197.2,58.9L189.0,59.4L185.2,59.6L183.7,58.3L179.9,57.6L177.5,57.9L174.1,55.7L175.9,55.4L180.2,54.9L184.1,55.0L187.7,54.5L182.4,53.9L176.4,54.1L172.5,54.1L171.0,53.0L177.5,51.9L173.2,52.0L168.3,51.2L170.7,49.1L172.6,48.0L180.0,46.3L182.9,46.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M209.7,46.1L207.3,47.9L202.9,45.9L203.9,45.6L207.6,45.4L209.7,46.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M287.9,46.9L288.2,47.7L285.2,47.6L282.2,47.6L279.2,47.9L278.4,47.8L275.3,46.3L275.5,45.3L276.8,45.1L283.2,45.4L287.9,46.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M259.5,46.8L261.7,48.5L264.3,46.3L271.3,45.1L276.1,48.0L275.7,49.8L281.2,49.0L283.8,47.9L290.0,49.3L293.8,50.6L294.2,51.9L299.3,51.2L302.2,53.0L308.9,54.1L311.3,55.2L314.0,57.8L308.9,59.1L315.4,60.9L319.8,61.5L323.8,64.1L328.2,64.3L327.3,66.2L322.4,69.4L319.0,68.3L314.7,65.6L311.1,65.9L310.7,67.5L313.6,69.1L317.4,70.4L318.6,71.2L320.4,73.9L319.4,75.9L315.9,75.2L308.9,72.9L312.9,75.3L315.8,77.0L316.2,78.0L308.7,76.9L302.7,75.2L299.3,73.9L300.3,73.1L296.2,71.7L292.1,70.3L292.2,71.1L284.1,71.6L281.8,70.6L283.6,68.6L288.8,68.5L294.6,68.2L293.6,67.2L294.6,65.8L298.2,63.1L297.4,61.9L296.4,60.9L292.1,59.6L286.5,58.6L288.3,57.9L285.3,56.2L282.9,56.0L280.7,55.1L279.2,55.9L274.2,56.3L264.0,55.6L258.2,54.8L253.7,54.4L251.4,53.4L254.3,52.2L250.3,52.2L249.4,49.3L251.6,46.9L254.4,45.7L261.6,45.0L259.5,46.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M221.2,44.9L224.5,45.5L229.5,45.1L230.2,45.9L227.6,47.2L231.8,48.4L231.3,50.9L226.8,52.0L224.1,51.8L222.2,50.7L215.3,48.6L215.3,47.7L221.0,48.0L217.9,46.2L221.2,44.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M898.9,46.6L894.7,46.7L889.0,46.3L888.5,46.2L891.1,45.1L894.6,44.8L898.6,45.9L898.9,46.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M241.1,47.9L238.1,49.9L235.0,49.8L233.2,47.4L233.3,46.0L234.7,44.8L237.5,44.1L243.3,44.2L248.6,44.8L244.4,47.3L241.1,47.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M165.4,51.7L158.1,53.1L156.6,51.8L150.2,50.4L151.1,49.5L153.3,47.2L155.7,45.3L153.0,43.6L162.4,43.2L166.4,43.8L173.5,43.9L176.2,44.7L179.1,45.9L175.6,46.6L168.8,48.6L165.4,50.5L165.4,51.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M918.7,41.4L915.5,42.5L911.0,42.3L905.9,41.2L906.6,40.3L911.7,40.7L918.7,41.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M240.0,41.7L238.5,42.8L234.4,42.6L231.1,41.9L232.5,40.6L236.5,39.9L239.0,40.8L240.0,41.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M903.0,40.1L900.8,42.2L890.6,42.1L886.0,42.7L880.5,40.9L882.0,39.0L885.6,38.5L893.0,38.6L903.0,40.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M226.4,36.9L228.5,38.2L228.6,39.6L227.3,41.7L222.8,42.0L219.8,41.5L219.8,39.9L215.3,40.1L215.1,38.0L218.1,38.0L222.3,37.1L226.2,37.3L226.4,36.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M199.4,38.3L200.5,39.3L203.0,38.9L205.9,39.0L206.4,40.3L204.7,41.7L195.3,42.1L188.3,43.3L184.0,43.3L183.7,42.4L189.5,41.2L176.9,41.5L173.0,41.0L176.8,38.3L179.4,37.6L187.2,38.5L192.2,40.1L197.0,40.4L193.1,37.7L195.6,36.7L198.5,37.0L199.4,38.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M659.8,53.6L658.2,53.8L649.1,53.4L648.4,52.2L643.3,51.5L642.9,50.0L645.8,49.4L645.7,47.8L651.2,45.5L648.6,45.1L655.3,42.7L654.5,41.4L660.7,40.0L669.9,38.2L679.2,37.7L683.9,36.6L689.3,36.3L691.3,37.4L689.4,38.2L679.5,39.6L671.1,40.9L662.4,43.6L658.3,46.3L653.9,49.0L654.5,51.3L659.8,53.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M237.0,35.8L240.1,36.7L245.5,36.7L247.9,37.6L247.3,38.7L250.5,39.3L252.3,40.0L256.0,40.1L260.1,40.3L264.5,39.7L270.1,39.5L274.6,39.7L277.6,40.7L278.2,41.9L276.5,42.6L272.4,43.2L268.8,42.9L260.8,43.3L255.1,43.4L250.7,43.0L243.3,42.1L242.3,40.6L242.0,39.2L239.2,38.0L233.4,37.7L230.2,36.8L231.3,35.7L237.0,35.8Z"/>
+<path class="map-land" fill-rule="evenodd" d="M177.2,34.3L176.8,36.5L174.7,37.4L172.1,37.6L166.9,38.7L162.5,39.2L158.7,38.6L158.7,38.6L163.5,36.5L169.2,34.7L173.4,34.7L177.2,34.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M797.1,36.2L797.9,37.6L800.4,36.9L808.5,36.9L814.8,38.3L817.0,39.3L816.3,40.8L813.3,41.6L806.0,43.1L803.9,43.9L807.3,44.3L811.4,45.0L813.9,44.5L815.4,46.3L816.6,45.6L821.0,45.1L829.9,45.6L830.6,46.9L842.2,47.3L842.4,45.2L848.3,45.7L852.7,45.7L857.2,47.1L858.5,48.9L856.8,50.1L860.3,52.2L864.7,53.4L867.4,50.5L871.8,51.7L876.6,51.0L881.9,51.8L884.0,51.0L888.5,51.4L886.5,48.8L890.2,47.6L915.3,49.4L917.6,51.1L924.9,53.2L936.1,52.7L941.7,53.1L944.0,54.3L943.6,56.3L947.1,57.1L950.8,56.5L955.7,56.5L960.9,57.0L966.2,56.7L971.0,59.2L974.5,58.3L972.2,56.5L973.5,55.3L982.3,56.1L988.1,55.9L996.1,57.2L1000.0,58.4L1000.0,69.5L1000.0,69.5L996.4,70.7L992.8,70.5L995.3,72.0L997.0,74.3L998.3,75.0L998.6,76.2L997.9,76.9L992.7,76.3L984.9,78.4L982.4,78.7L978.2,80.7L974.2,82.4L973.1,83.7L969.2,81.7L961.9,83.9L960.7,82.9L958.0,84.1L954.3,83.7L953.4,85.5L950.0,88.2L950.1,89.3L953.3,90.0L952.9,94.0L950.4,94.1L949.2,96.4L950.3,97.6L945.5,99.0L944.5,102.2L940.4,102.9L939.5,105.7L935.5,108.3L934.5,106.4L933.3,102.3L931.8,96.2L933.1,92.3L935.4,90.7L935.6,89.4L939.9,88.7L944.9,85.2L949.6,82.4L954.6,80.2L956.9,76.2L953.5,76.5L951.8,78.8L944.8,81.8L942.5,78.4L935.3,79.3L928.4,84.0L930.7,85.7L924.5,86.4L920.2,86.7L920.4,84.7L916.1,84.3L912.6,85.7L904.1,85.2L895.0,86.0L886.0,91.4L875.4,98.0L879.7,98.3L881.1,100.1L883.8,100.7L885.6,99.3L888.6,99.5L892.6,102.5L892.7,104.9L890.5,107.7L890.3,111.0L889.1,115.4L884.9,119.4L883.9,121.4L880.2,124.6L876.4,127.8L874.6,129.4L870.9,131.1L869.2,131.1L867.4,129.8L863.7,131.8L863.3,132.7L862.2,132.6L861.0,133.5L860.2,134.4L860.3,136.4L858.9,137.1L858.4,137.5L857.3,138.4L855.5,138.8L854.3,139.6L854.2,140.8L853.8,141.1L855.0,141.5L856.5,142.7L858.9,146.0L859.6,147.8L859.6,151.0L858.6,152.5L856.1,153.1L853.9,154.2L851.3,154.5L851.0,153.0L851.6,150.9L850.3,148.0L852.4,147.5L850.5,145.1L849.1,144.6L848.8,145.1L848.0,145.4L847.9,144.8L847.2,144.6L846.4,144.1L847.2,142.9L847.8,142.6L847.6,142.1L848.3,140.6L848.1,140.1L846.5,139.8L845.2,139.1L841.3,139.9L839.3,141.2L836.3,142.0L837.7,140.7L837.2,139.6L839.4,137.7L837.9,136.3L835.5,137.2L832.3,139.2L830.6,141.0L827.9,141.1L826.5,142.4L827.9,144.3L830.2,144.7L830.3,146.0L832.5,146.8L835.6,144.8L838.1,145.9L839.9,146.0L840.3,147.4L836.4,148.2L835.1,149.7L832.4,151.1L831.0,153.0L834.0,154.6L835.1,157.3L836.7,159.8L838.6,162.0L838.6,164.0L836.8,164.8L837.5,166.3L839.1,167.1L838.7,169.4L838.0,171.6L836.5,171.8L834.4,174.9L832.2,178.5L829.6,181.8L825.8,184.4L821.9,186.7L818.8,187.0L817.1,188.3L816.1,187.4L814.6,188.7L810.7,190.1L807.7,190.6L806.8,193.5L805.2,193.7L804.5,191.6L805.2,190.6L801.5,189.7L800.1,190.1L796.4,192.5L794.1,195.1L793.5,197.1L795.6,200.0L798.2,203.6L800.7,205.3L802.4,207.6L803.7,212.7L803.3,217.6L801.0,219.4L797.8,221.2L795.6,223.5L792.1,226.1L791.1,224.3L791.9,222.4L789.8,220.9L787.5,220.5L786.4,219.0L785.0,216.1L782.5,214.9L780.1,214.9L780.5,212.7L778.0,212.8L777.8,215.8L776.3,219.9L775.4,222.3L775.6,224.3L777.4,224.4L778.6,227.0L779.1,229.4L780.6,231.0L782.3,231.3L783.7,232.7L784.4,233.0L786.0,234.7L787.2,236.5L787.3,238.4L787.0,239.6L787.3,240.6L787.5,242.2L788.5,243.0L789.6,245.5L789.5,246.4L787.6,246.6L784.9,244.5L781.6,242.3L781.3,240.9L779.7,239.1L779.3,236.8L778.3,235.2L778.6,233.2L778.0,232.0L776.9,231.0L776.4,229.6L775.0,228.0L773.6,226.7L773.2,228.3L772.6,226.8L772.9,225.1L773.8,222.4L773.5,220.3L774.3,218.2L773.4,216.6L773.6,213.5L772.5,212.1L771.6,208.8L771.1,205.3L769.9,203.0L768.1,204.4L764.9,206.3L763.4,206.1L761.6,205.4L762.6,202.0L762.0,199.4L759.8,196.2L760.2,195.2L758.6,194.8L756.6,192.6L755.8,191.1L755.6,189.7L755.1,188.4L753.9,186.8L751.4,186.7L751.6,187.8L750.8,189.3L749.6,188.8L749.2,189.3L748.4,189.0L747.3,188.7L746.9,189.7L745.0,189.7L741.6,190.3L741.8,192.4L740.3,194.0L736.3,195.9L733.2,199.2L731.1,200.9L728.3,202.7L728.3,204.0L726.9,204.7L724.4,205.7L723.1,205.8L722.3,208.0L722.9,211.6L723.0,213.9L721.8,216.5L721.8,221.2L720.4,221.4L719.1,223.5L720.0,224.4L717.4,225.2L716.5,227.1L715.4,227.9L712.8,225.3L711.5,221.4L710.4,218.6L709.4,217.3L708.0,214.6L707.3,211.1L706.8,209.4L704.3,205.6L703.1,200.2L702.3,196.6L702.3,193.3L701.8,190.7L697.7,192.3L695.8,192.0L692.1,188.6L693.5,187.6L692.6,186.5L689.4,184.2L687.3,183.5L686.5,181.5L684.4,179.4L679.3,179.9L674.7,179.9L670.8,180.3L665.6,179.5L662.6,178.9L659.4,178.5L658.3,175.1L656.9,174.6L654.8,175.1L652.0,176.4L648.6,175.5L645.8,173.4L643.1,172.6L641.3,170.0L639.2,166.3L637.7,166.7L635.9,165.8L634.9,166.9L633.3,166.7L633.8,168.0L633.6,168.6L634.5,170.7L635.6,173.1L636.9,173.7L637.4,174.7L639.3,175.9L639.5,177.0L639.2,177.9L639.6,178.9L640.4,179.6L640.7,180.6L641.1,181.2L641.0,179.2L641.7,177.8L642.5,177.5L643.3,178.3L643.4,180.0L642.7,181.6L643.3,182.7L643.8,182.5L643.9,183.3L646.0,182.8L648.3,182.9L650.0,183.0L651.9,181.1L654.0,179.3L655.8,177.6L656.6,176.7L656.9,176.9L656.6,178.1L656.3,178.6L656.7,180.8L657.9,182.7L659.5,183.7L661.5,184.0L663.1,184.5L664.4,186.1L665.1,187.1L666.1,187.4L666.1,188.0L665.1,189.7L664.7,190.5L663.5,191.3L662.5,193.3L661.2,193.1L660.6,193.8L660.2,195.2L660.5,197.0L660.3,197.4L659.0,197.4L657.2,198.4L657.0,199.8L656.3,200.3L654.6,200.3L653.5,201.0L653.5,202.1L652.2,202.9L650.7,202.7L648.8,203.6L647.5,203.7L645.5,204.5L645.0,205.7L644.9,206.7L642.1,207.8L637.7,209.1L635.2,211.1L634.0,211.3L633.2,211.1L631.5,212.2L629.8,212.8L627.4,212.9L626.7,213.1L626.1,213.8L625.4,214.0L625.0,214.7L623.6,214.7L622.7,215.0L620.8,214.9L620.1,213.3L620.1,211.8L619.7,210.9L619.1,208.9L618.3,207.7L618.9,207.6L618.6,206.3L619.0,205.8L618.8,204.6L618.5,203.4L617.6,202.6L617.4,201.5L616.0,200.5L614.5,198.1L613.7,195.9L611.8,194.0L610.6,193.5L608.7,190.9L608.4,188.9L608.5,187.3L606.9,184.2L605.6,183.1L604.1,182.5L603.2,180.9L603.4,180.3L602.6,178.9L601.8,178.3L600.7,176.2L599.0,174.0L597.6,172.0L596.2,172.1L596.6,170.5L596.8,169.6L597.1,168.5L597.0,168.1L596.2,169.2L595.6,171.3L594.9,172.7L594.2,173.2L593.3,172.3L592.0,171.1L590.1,167.1L589.8,167.3L590.9,170.3L592.6,173.1L594.7,177.4L595.8,178.9L596.7,180.5L599.1,183.5L598.6,184.0L598.7,185.8L601.9,188.3L602.4,188.9L603.3,191.6L602.7,192.1L603.1,195.0L604.1,198.3L605.2,199.0L606.7,200.0L608.3,203.2L609.1,205.8L610.6,207.1L614.4,209.7L615.9,211.3L617.4,212.9L618.3,213.9L619.7,214.7L620.3,215.6L620.2,216.7L618.7,217.4L619.8,218.2L620.8,218.7L621.3,219.8L622.5,221.0L623.9,221.0L626.5,220.3L629.6,220.0L632.0,219.1L633.4,218.9L634.4,218.4L636.0,218.3L636.9,218.2L638.1,217.8L639.6,217.6L640.9,216.6L642.0,216.6L642.0,217.4L641.8,219.0L641.8,220.4L641.2,221.4L640.4,224.4L639.1,227.6L637.4,231.1L635.0,235.2L632.6,238.3L629.3,242.1L626.6,244.3L622.4,247.1L619.8,249.2L616.8,252.6L616.1,254.0L615.5,254.7L613.6,255.8L612.9,256.9L611.8,257.1L611.4,259.1L610.6,260.2L610.0,262.1L608.9,263.0L607.6,266.4L607.8,268.0L609.6,269.0L609.6,269.7L608.9,271.4L609.0,272.2L608.9,273.6L609.8,275.3L611.0,278.1L612.0,278.7L612.4,279.9L612.3,282.7L612.7,285.1L612.8,289.4L613.3,290.8L612.4,292.8L611.4,294.7L609.6,296.4L607.1,297.5L603.9,298.9L600.8,301.8L599.7,302.3L597.8,304.3L596.6,305.0L596.4,306.9L597.7,309.0L598.3,310.7L598.3,311.5L598.8,311.4L598.7,314.1L598.3,315.4L598.9,315.9L598.5,317.0L597.3,318.0L595.0,318.9L591.7,320.4L590.5,321.5L590.7,322.6L591.4,322.8L591.2,324.3L590.5,326.3L590.2,328.6L589.5,329.9L587.6,331.3L587.0,331.7L585.8,333.1L585.1,334.5L583.5,336.5L580.3,339.4L578.4,341.0L576.3,342.3L573.4,343.4L572.0,343.5L571.6,344.3L569.9,343.9L568.5,344.4L565.5,343.9L563.9,344.2L562.7,344.1L559.8,345.2L557.5,345.6L555.8,346.7L554.5,346.7L553.3,345.7L552.4,345.7L551.2,344.4L551.0,344.8L550.7,344.1L550.7,342.4L549.8,340.6L550.7,340.1L550.6,337.9L548.8,335.3L547.4,333.0L547.4,333.0L545.4,329.4L543.3,327.3L542.3,325.3L541.6,322.5L541.0,320.5L540.0,316.3L540.0,312.9L539.6,311.4L538.5,310.3L537.1,308.0L535.6,304.6L535.0,302.9L532.8,300.2L532.6,298.1L532.3,296.3L532.7,293.9L533.7,291.3L533.8,290.1L534.7,287.6L535.4,286.5L537.0,284.7L537.9,283.4L538.2,281.4L538.0,279.8L537.2,278.8L536.4,277.1L535.8,275.5L535.9,274.9L536.8,273.8L535.9,271.1L535.4,269.2L534.0,267.5L534.2,266.9L533.8,266.1L533.1,264.0L530.8,261.1L528.0,258.2L526.1,256.0L524.4,253.1L524.5,252.2L525.1,251.3L525.8,249.3L526.4,247.2L525.8,246.8L526.8,243.7L527.2,241.5L526.1,239.6L524.9,239.2L524.3,237.9L523.6,237.5L523.6,236.7L520.7,237.7L519.7,237.6L518.6,238.2L516.4,238.2L514.9,236.4L514.0,234.4L512.0,232.6L509.9,232.6L507.5,232.6L505.2,232.9L502.9,233.5L498.6,235.2L497.0,236.1L494.5,236.9L492.1,236.1L490.8,236.2L488.9,235.6L487.1,235.6L483.8,236.1L481.9,236.9L479.1,237.9L478.6,237.9L477.8,237.9L475.0,236.6L472.5,234.5L470.1,232.9L468.2,231.2L467.5,230.9L465.5,229.8L464.0,228.3L463.5,227.3L463.2,225.3L462.0,223.6L460.9,222.5L460.2,222.2L459.5,221.6L459.2,220.4L458.8,219.8L458.0,219.3L456.5,218.2L455.3,218.0L454.7,217.2L454.7,216.8L453.9,216.2L453.7,215.6L453.2,213.5L453.6,212.2L452.4,210.1L451.0,209.1L452.3,208.6L453.6,206.6L454.3,205.2L454.0,203.7L454.8,202.3L455.1,199.7L454.8,197.0L454.5,195.6L454.8,194.2L454.1,192.9L452.6,191.7L452.7,190.5L452.9,189.2L453.9,188.4L454.8,187.0L454.6,186.1L455.6,184.1L457.1,182.3L458.1,181.9L458.8,180.3L458.9,178.8L459.9,177.1L461.7,176.1L463.5,173.2L464.9,172.1L467.5,171.8L469.7,169.9L471.1,169.2L473.4,166.9L472.7,163.4L473.8,161.0L474.2,159.5L476.0,157.7L478.7,156.4L480.8,155.2L482.7,152.4L483.5,150.7L485.6,150.7L487.2,151.9L489.9,151.7L492.8,152.3L494.0,152.3L496.6,150.8L499.6,150.3L501.4,149.2L504.1,148.3L508.8,147.8L513.4,147.6L514.8,148.0L517.4,146.9L520.4,146.9L521.5,147.5L523.4,147.4L526.4,146.2L528.4,146.6L528.3,148.0L530.6,147.0L530.8,147.5L529.4,148.9L529.4,150.1L530.4,150.8L530.0,153.2L528.2,154.6L528.7,156.2L530.2,156.2L530.9,157.5L531.9,158.0L535.2,158.9L536.3,158.7L538.7,159.1L542.3,160.4L543.6,162.8L546.1,163.4L550.1,164.5L553.0,165.9L554.4,165.2L555.7,163.9L555.1,161.8L555.9,160.4L557.9,159.1L559.8,158.8L563.6,159.3L564.5,160.6L565.6,160.6L566.5,161.1L569.2,161.4L569.9,162.3L573.6,162.3L576.3,163.0L579.0,163.8L580.3,164.2L582.5,163.4L583.6,162.6L586.0,162.3L588.0,162.7L588.8,164.1L589.4,163.2L591.6,163.8L593.8,164.0L595.2,163.3L596.0,162.4L595.8,162.2L596.5,160.9L597.1,158.8L597.5,158.1L597.6,158.1L598.6,155.8L599.9,153.9L600.0,153.8L599.7,151.6L600.4,150.5L599.4,149.2L600.4,148.2L598.8,148.4L596.4,147.8L594.5,149.4L590.3,149.7L588.1,148.2L585.1,148.1L584.4,149.3L582.5,149.6L579.8,148.1L576.8,148.2L575.1,145.4L573.1,143.9L574.5,141.7L572.7,140.4L575.8,137.7L580.1,137.6L581.2,135.5L586.5,135.9L589.9,134.1L593.1,133.3L597.7,133.2L602.5,135.2L606.5,136.3L609.8,135.8L612.1,136.1L615.4,134.6L615.8,133.4L615.1,131.5L613.5,130.5L612.0,130.2L611.0,129.3L607.4,127.0L604.3,126.0L601.9,124.3L603.9,123.9L606.2,121.6L604.6,120.5L608.7,119.3L608.7,118.7L606.2,119.2L604.0,119.4L602.1,120.3L599.5,120.4L597.1,121.5L597.3,123.2L598.6,123.9L601.5,123.7L600.9,124.7L597.9,125.2L594.1,126.8L592.6,126.2L593.2,124.9L590.2,124.1L590.6,123.6L593.3,122.6L592.5,122.0L588.2,121.3L588.0,120.3L585.4,120.6L584.4,122.1L582.2,124.2L582.3,124.9L580.9,125.5L580.1,125.2L579.3,128.6L577.9,129.7L576.9,131.7L577.8,133.3L578.1,134.4L580.5,135.3L580.0,136.0L576.7,136.1L575.5,137.0L573.2,138.5L572.3,137.2L572.4,136.6L570.7,136.5L569.2,136.3L565.9,137.0L567.8,138.5L566.4,139.0L564.8,139.0L563.4,137.6L562.9,138.2L563.5,139.8L564.9,141.1L563.8,141.7L565.4,143.0L566.7,143.8L566.8,145.4L564.2,144.7L565.0,146.1L563.3,146.4L564.3,148.8L562.5,148.9L560.2,147.7L559.2,145.4L558.7,143.6L557.6,142.3L556.2,140.7L556.0,139.9L555.5,139.7L555.4,139.1L553.9,138.2L553.7,136.9L553.9,135.0L554.3,134.1L553.8,133.7L553.2,133.5L552.5,132.6L551.3,132.0L548.6,131.0L547.0,130.0L544.5,129.1L542.2,127.1L542.7,126.9L541.4,125.7L541.4,124.8L539.6,124.4L538.8,125.5L537.9,124.6L538.0,123.7L538.1,123.6L538.7,123.4L536.5,123.0L534.2,123.9L534.4,125.3L534.1,126.1L535.0,127.5L537.6,128.9L539.0,131.2L542.1,133.5L544.2,133.4L544.9,134.1L544.1,134.6L546.6,135.6L548.7,136.5L551.0,137.9L551.3,138.4L550.8,139.4L549.3,138.1L546.9,137.7L545.7,139.5L547.7,140.5L547.4,141.9L546.2,142.1L544.7,144.5L543.6,144.7L543.6,143.8L544.1,142.4L544.7,141.8L543.7,140.2L542.8,138.8L541.7,138.4L540.8,137.2L539.1,136.7L537.9,135.6L535.8,135.4L533.6,134.2L531.1,132.3L529.2,130.7L528.3,128.0L527.0,127.7L524.7,126.8L523.4,127.1L521.8,128.4L520.7,128.6L518.1,130.2L512.7,129.4L508.6,130.3L508.3,132.0L508.4,133.6L505.8,135.5L502.3,136.1L502.0,137.0L500.3,138.5L499.2,140.8L500.3,142.4L498.7,143.6L498.1,145.4L496.0,146.0L494.0,148.1L490.5,148.2L487.9,148.1L486.1,149.1L485.1,150.1L483.7,149.9L482.7,149.0L481.9,147.4L479.3,147.0L478.2,147.7L476.7,147.3L475.3,147.6L475.7,145.4L475.4,143.7L474.2,143.4L473.5,142.4L473.8,140.6L474.9,139.6L475.1,138.4L475.6,136.8L475.6,135.6L475.0,134.6L474.9,133.7L475.0,131.7L473.9,130.5L477.8,128.5L481.2,129.0L485.0,129.0L487.9,129.4L490.2,129.3L494.7,129.4L496.2,127.7L496.7,122.2L493.8,119.3L491.8,117.9L487.5,116.8L487.2,114.8L490.8,114.2L495.5,114.9L494.6,111.7L497.3,112.9L503.7,110.8L504.6,108.5L507.0,107.9L509.2,107.4L510.6,106.6L513.1,102.5L516.9,101.4L519.2,101.4L519.7,100.9L522.0,100.7L522.6,101.3L524.4,99.9L523.8,98.9L523.7,97.3L522.6,95.8L522.5,92.9L522.9,92.2L523.7,91.4L526.2,91.2L527.2,90.4L529.4,89.6L529.3,91.1L528.5,92.0L528.8,92.7L530.3,93.2L529.6,94.2L528.8,93.9L526.8,95.9L527.6,97.3L527.6,98.3L530.4,99.0L530.4,100.0L533.2,99.5L534.8,98.7L537.9,99.8L539.2,100.7L541.1,99.9L545.5,98.6L549.0,97.6L551.7,98.1L551.9,98.8L554.6,98.8L555.2,97.6L559.1,96.7L558.5,94.4L558.6,92.3L559.9,90.5L562.6,89.6L564.8,91.6L567.0,91.6L567.5,89.5L567.9,87.8L566.8,88.2L565.1,87.2L564.8,85.6L568.3,84.8L571.8,84.4L574.9,84.9L577.7,84.8L580.9,83.3L578.0,81.9L572.9,82.2L568.0,83.2L563.5,83.8L561.9,82.2L559.2,81.3L559.8,78.6L558.5,76.1L559.8,74.5L562.3,72.7L568.7,69.7L570.6,69.1L570.3,68.0L566.4,66.6L561.6,67.4L558.9,69.4L559.4,71.1L554.9,73.3L549.6,75.7L547.6,79.6L549.5,81.6L552.2,83.1L549.6,86.2L546.7,86.9L545.7,91.6L544.1,94.2L540.7,93.9L539.2,96.1L536.0,96.2L535.1,93.6L532.7,90.4L530.6,86.5L528.8,84.8L523.3,88.0L519.6,88.7L515.7,87.3L514.7,84.3L513.9,77.9L516.4,76.1L523.8,73.7L529.2,70.9L534.3,67.0L541.0,61.6L545.7,59.5L553.3,56.1L559.4,54.8L564.0,55.0L568.2,52.7L573.3,52.8L578.2,52.3L586.9,54.3L583.3,55.0L586.4,56.8L589.3,55.8L593.8,57.5L601.4,58.2L611.9,61.3L614.1,62.6L614.2,64.5L611.2,65.9L606.6,66.7L594.2,64.6L592.2,64.9L596.7,66.9L597.1,71.1L600.6,71.9L602.8,72.6L603.2,71.3L601.4,70.1L603.3,69.0L610.0,70.8L612.3,70.1L610.5,68.1L616.9,65.3L619.5,65.5L622.1,66.5L623.7,64.6L621.4,62.9L622.7,61.2L620.7,59.5L628.5,60.4L630.1,62.0L626.5,62.3L626.6,63.9L628.7,64.8L633.0,64.2L633.7,62.4L639.5,61.1L649.2,58.7L651.3,58.9L648.6,60.6L652.0,60.8L654.0,59.9L659.2,59.8L663.3,58.7L666.5,60.3L669.7,58.5L666.8,56.9L668.2,56.0L676.4,56.8L680.2,57.7L690.3,60.9L692.2,59.4L689.3,57.9L689.3,57.3L685.9,57.1L686.8,55.8L685.3,53.6L685.3,52.7L690.4,50.2L692.2,47.7L694.3,47.1L701.6,47.8L702.2,49.4L699.6,51.6L701.3,52.5L702.2,54.5L701.6,58.3L704.6,60.0L703.4,61.8L698.0,65.8L701.2,66.2L702.3,65.2L705.3,64.5L706.1,63.1L708.5,61.8L706.9,60.2L708.2,58.4L705.1,58.1L704.4,56.6L706.7,53.8L703.1,51.5L708.0,49.7L707.4,47.7L708.8,47.6L710.2,49.2L709.1,51.8L712.1,52.4L710.8,50.3L715.5,49.3L721.3,49.1L726.4,50.7L723.9,48.4L723.6,45.4L728.5,44.9L735.2,45.0L741.2,44.6L738.9,43.2L742.1,41.3L745.3,41.3L750.7,39.9L758.1,39.5L759.0,38.8L766.3,38.5L768.6,39.1L774.8,37.6L779.9,37.7L780.7,36.5L783.3,35.3L789.9,34.2L794.6,35.1L790.8,35.8L797.1,36.2ZM636.4,135.3L637.8,137.3L639.1,137.4L640.0,138.2L637.7,138.4L637.2,140.6L636.7,141.5L635.7,142.2L635.8,143.6L636.7,145.6L639.3,146.2L641.2,147.6L645.2,148.1L649.5,147.3L649.8,146.7L649.3,144.7L649.7,141.8L647.5,140.9L648.2,139.0L646.4,138.8L647.0,136.5L649.6,137.1L652.0,136.2L650.0,134.6L649.2,133.0L647.0,133.7L646.7,135.7L645.8,133.9L645.7,133.3L646.4,132.1L645.8,131.1L642.6,130.2L641.4,127.7L639.8,127.0L639.7,126.1L642.4,126.3L642.5,124.3L644.9,123.9L647.3,124.3L647.8,121.6L647.3,119.9L644.6,120.0L642.2,119.3L639.0,120.5L636.4,121.1L635.1,122.8L632.4,123.2L629.7,126.1L632.2,128.7L631.9,130.6L635.0,133.9L636.4,135.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M239.3,34.7L238.1,34.7L232.9,34.6L232.1,33.8L237.7,33.8L239.7,34.3L239.3,34.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M193.9,34.2L188.7,35.0L184.6,34.1L186.9,33.2L190.9,32.9L194.8,33.3L193.9,34.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M568.7,33.7L562.5,34.9L557.6,34.2L559.5,33.5L557.8,32.6L563.6,32.1L564.7,33.1L568.7,33.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M195.4,31.7L192.0,32.2L187.4,32.2L187.4,31.8L190.3,31.0L191.8,31.1L195.4,31.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M233.8,33.2L229.7,33.7L227.4,33.1L226.2,32.1L226.0,30.9L229.6,31.0L231.2,31.2L234.6,32.2L233.8,33.2Z"/>
+<path class="map-land" fill-rule="evenodd" d="M222.1,32.4L223.1,33.6L218.6,33.3L214.0,32.4L207.8,32.3L210.5,31.5L207.2,30.8L207.0,29.7L212.4,30.1L219.9,31.1L222.1,32.4Z"/>
+<path class="map-land" fill-rule="evenodd" d="M791.9,32.5L776.2,33.6L781.3,29.9L783.6,29.6L785.7,29.8L792.7,31.4L791.9,32.5Z"/>
+<path class="map-land" fill-rule="evenodd" d="M550.7,28.6L559.8,30.7L552.9,31.8L551.3,33.8L548.9,34.3L547.6,36.6L544.2,36.7L538.2,35.1L540.7,34.1L536.6,33.3L531.2,30.9L529.0,28.7L536.6,27.7L538.1,28.7L542.1,28.7L543.1,27.7L547.2,27.6L550.7,28.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M570.7,26.6L576.1,27.6L572.0,29.1L564.0,29.4L555.8,29.0L555.3,28.2L551.3,28.2L548.2,26.9L556.8,26.1L560.9,26.8L563.7,26.0L570.7,26.6Z"/>
+<path class="map-land" fill-rule="evenodd" d="M642.0,26.3L638.3,26.6L635.8,26.8L635.4,27.3L632.2,27.7L629.2,27.1L630.8,26.2L624.6,26.1L630.0,25.6L634.2,25.6L634.8,26.3L636.4,25.7L639.0,25.2L643.1,25.8L642.0,26.3Z"/>
+<path class="map-land" fill-rule="evenodd" d="M777.6,30.9L771.5,31.2L763.8,30.4L759.2,29.4L757.1,27.4L753.3,26.8L760.5,24.9L766.5,24.3L771.9,25.7L778.3,28.4L777.6,30.9Z"/>
+<path class="map-land" fill-rule="evenodd" d="M258.3,28.7L261.6,29.6L257.8,30.4L252.7,32.5L247.8,32.7L242.0,32.4L239.0,31.2L239.1,30.2L241.3,29.5L236.2,29.5L233.1,28.6L231.4,27.3L233.3,26.1L235.2,25.3L238.1,25.1L236.8,24.4L243.3,24.3L246.9,25.8L251.5,26.4L256.1,26.9L258.3,28.7Z"/>
+<path class="map-land" fill-rule="evenodd" d="M309.7,19.1L317.1,19.4L323.1,19.7L328.2,20.5L328.1,21.2L321.3,22.4L314.6,23.0L312.1,23.6L318.1,23.6L311.6,25.3L307.0,26.1L302.3,28.3L296.5,28.8L294.8,29.4L286.4,29.7L290.2,30.0L288.3,30.5L290.6,31.9L287.9,32.8L283.6,33.6L282.3,34.7L278.4,35.5L278.8,36.2L283.6,36.0L283.6,36.7L276.2,38.4L269.0,37.6L260.8,38.1L256.7,37.7L251.4,37.6L251.1,36.2L256.2,35.6L254.8,33.6L256.5,33.4L264.0,34.6L260.2,32.8L255.7,32.3L257.9,31.2L262.8,30.6L263.6,29.6L259.7,28.5L258.5,27.1L266.1,27.2L268.3,27.5L272.6,26.5L266.4,26.2L256.7,26.3L251.8,25.4L249.4,24.3L246.2,23.5L245.6,22.5L249.7,22.0L253.0,21.9L258.4,21.4L262.5,20.4L265.9,20.6L268.9,21.3L271.1,19.8L274.7,19.4L279.7,19.1L288.2,19.0L289.7,19.3L297.7,18.8L303.7,19.0L309.7,19.1Z"/>
+<path class="map-land" fill-rule="evenodd" d="M424.7,18.0L442.1,20.2L437.0,21.3L426.3,21.4L411.4,21.7L412.8,22.2L422.6,21.9L431.0,22.8L436.4,22.0L438.7,23.0L435.6,24.6L442.7,23.5L456.2,22.5L464.5,23.0L466.1,24.2L454.8,26.2L453.2,26.8L444.3,27.3L450.7,27.4L447.5,29.4L445.3,31.2L445.4,34.3L448.7,36.2L444.3,36.3L439.8,37.1L444.9,38.6L445.6,41.0L442.6,41.2L446.2,43.6L440.0,43.8L443.2,45.0L442.3,45.9L438.4,46.4L434.5,46.4L438.0,48.3L438.1,49.5L432.6,48.3L431.1,49.1L434.9,49.8L438.5,51.5L439.6,53.7L434.6,54.2L432.5,53.2L429.0,51.6L430.0,53.5L426.8,54.9L434.1,55.0L437.9,55.2L430.5,57.6L422.9,59.8L414.8,60.8L411.7,60.8L408.9,61.8L405.0,64.8L399.0,66.7L397.1,66.8L393.4,67.5L389.4,68.2L387.0,69.9L387.0,71.8L385.6,73.7L381.1,75.9L382.2,78.1L380.9,80.3L379.5,83.1L375.6,83.2L371.5,81.0L365.9,80.9L363.2,79.4L361.4,76.7L356.6,73.3L355.2,71.4L354.8,69.0L350.9,66.4L351.9,64.3L350.1,63.4L352.8,60.1L357.0,59.1L358.1,57.9L358.7,55.8L355.5,56.7L354.0,57.1L351.5,57.5L348.1,56.6L347.9,54.8L349.0,53.3L351.6,53.2L357.2,54.0L352.5,52.2L350.0,51.3L347.2,51.6L344.9,51.0L348.0,48.4L346.3,47.3L344.1,45.4L340.8,42.5L337.2,41.4L337.3,40.2L329.8,38.6L323.9,38.4L316.5,38.5L309.7,38.7L306.5,37.8L301.7,36.1L309.0,35.2L314.5,35.1L302.7,34.3L296.4,33.2L296.8,32.1L307.3,30.8L317.5,29.5L318.5,28.4L311.0,27.5L313.5,26.3L323.1,24.4L327.1,24.1L326.0,22.9L332.5,22.1L341.1,21.7L349.6,21.7L352.7,22.5L360.0,21.0L366.7,22.0L370.6,22.3L376.3,23.2L369.7,21.7L370.1,20.5L379.4,18.8L389.2,18.9L392.7,17.9L402.5,17.7L424.7,18.0Z"/>
+            </g><g id="map-markers"></g>
+          </svg></div>
+          <div class="map-legend" aria-label="地图状态图例"><span><i></i><span data-i18n="map_legend_live">实时在线</span></span><span><i class="offline"></i><span data-i18n="map_legend_off">离线</span></span><span><i class="snapshot"></i><span data-i18n="map_legend_snap">历史快照</span></span></div>
+          <div class="map-caption"><span data-i18n="map_caption">位置按机房所在城市 / 地区示意</span><a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a></div>
+        </div>
+        <aside class="map-sidebar" aria-label="地图节点列表和所选节点状态"><h3 data-i18n="map_locations">节点位置</h3><div id="map-node-list" class="map-node-list"></div><div id="map-detail" class="map-detail"></div></aside>
+      </div>
+      <div class="empty-state" id="empty-state"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg><p id="empty-title">正在获取节点状态</p><small id="empty-description">你的云端数据即将到达。</small></div>
+    </section>
+    <footer class="footer"><span class="footer-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="footer_privacy">查看时采集 · 离开后暂停</span></span><span data-i18n="footer_traffic">累计流量自各节点系统启动计起</span></footer>
+  </main>
+  <div class="preview-badge" id="preview-badge" hidden>本地预览 · 节点数据为采样快照</div>
+  <script>
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const PROBE_I18N = {
+      zh: {
+        page_title: "私有云监控 · 云端概览",
+        console_title: "私有云监控",
+        cluster_overview: "集群概览",
+        reg_all: "全部",
+        reg_us: "美国",
+        reg_jp: "日本",
+        reg_sg: "新加坡",
+        reg_de: "德国",
+        reg_fr: "法国",
+        view_card: "卡片视图",
+        view_table: "列表视图",
+        view_map: "地图视图",
+        th_node: "节点",
+        th_status: "状态",
+        th_cpu: "CPU",
+        th_mem: "内存",
+        th_speed: "接收 / 发送",
+        th_traffic: "累计接收 / 发送",
+        th_uptime: "运行时间",
+        th_load: "负载",
+        map_world: "世界地图",
+        map_locations: "节点位置",
+        map_caption: "位置按机房所在城市 / 地区示意",
+        map_legend_live: "实时在线",
+        map_legend_off: "离线",
+        map_legend_snap: "历史快照",
+        zoom_in: "放大地图",
+        zoom_out: "缩小地图",
+        focus_node: "定位所选节点",
+        reset_map: "显示全图",
+        refresh_btn: "刷新数据",
+        logout_btn: "退出登录",
+        footer_privacy: "查看时采集 · 离开后暂停",
+        footer_traffic: "累计流量自各节点系统启动计起",
+        preview_badge: "本地预览 · 节点数据为采样快照",
+        ov_online: "在线节点",
+        ov_last_online: "上次在线",
+        ov_recent_online: "最近在线",
+        ov_rx: "实时接收",
+        ov_recent_rx: "最近接收",
+        ov_mem: "内存使用",
+        ov_traffic: "累计流量",
+        heading_nodes: "云端节点",
+        heading_map: "节点地图",
+        date_sub: "北京时间 · UTC+8",
+        status_healthy: "运行正常",
+        status_offline: "离线",
+        status_last_online: "上次在线",
+        status_last_offline: "上次离线",
+        lbl_cpu_usage: "CPU 使用率",
+        lbl_mem_usage: "内存使用率",
+        lbl_rx_live: "实时接收",
+        lbl_rx_snap: "当时接收",
+        lbl_tx_live: "实时发送",
+        lbl_tx_snap: "当时发送",
+        lbl_total: "累计",
+        lbl_uptime_no_data: "暂无实时数据",
+        lbl_reconnect_wait: "等待重新连接",
+        lbl_load: "负载",
+        empty_title_loading: "正在获取节点状态",
+        empty_desc_loading: "你的云端数据即将到达。",
+        empty_title_error: "暂时无法获取节点状态",
+        empty_desc_error: "正在自动重试，也可以点击右上角刷新。",
+        empty_title_none: "这里还没有节点",
+        empty_desc_all: "等待探针添加节点并开始上报。",
+        empty_desc_filter: "试试切换到其他国家。",
+        conn_connecting: "连接中",
+        conn_live: "实时连接",
+        conn_stale: "正在重连",
+        conn_error: "连接中断",
+        conn_waking: "正在唤醒",
+        country_names: { us: "美国", jp: "日本", sg: "新加坡", de: "德国", fr: "法国" },
+        area_names: { "圣何塞": "圣何塞", "俄勒冈": "俄勒冈", "大阪": "大阪", "东京": "东京", "新加坡": "新加坡", "法兰克福": "法兰克福", "马赛": "马赛" }
+      },
+      en: {
+        page_title: "CloudFleet Radar · Cluster Overview",
+        console_title: "CloudFleet Radar",
+        cluster_overview: "Cluster Overview",
+        reg_all: "All",
+        reg_us: "United States",
+        reg_jp: "Japan",
+        reg_sg: "Singapore",
+        reg_de: "Germany",
+        reg_fr: "France",
+        view_card: "Card View",
+        view_table: "Table View",
+        view_map: "Map View",
+        th_node: "Node",
+        th_status: "Status",
+        th_cpu: "CPU",
+        th_mem: "Memory",
+        th_speed: "Rx / Tx Speed",
+        th_traffic: "Total In / Out",
+        th_uptime: "Uptime",
+        th_load: "Load",
+        map_world: "World Map",
+        map_locations: "Node Locations",
+        map_caption: "Locations indicated by datacenter metro region",
+        map_legend_live: "Live Online",
+        map_legend_off: "Offline",
+        map_legend_snap: "Snapshot",
+        zoom_in: "Zoom In",
+        zoom_out: "Zoom Out",
+        focus_node: "Focus Selected",
+        reset_map: "Reset View",
+        refresh_btn: "Refresh Data",
+        logout_btn: "Logout",
+        footer_privacy: "Active Telemetry · Pauses when Inactive",
+        footer_traffic: "Traffic accumulated since system startup",
+        preview_badge: "Local Preview · Telemetry Snapshot",
+        ov_online: "Online Nodes",
+        ov_last_online: "Last Online",
+        ov_recent_online: "Recent Online",
+        ov_rx: "Real-time Rx",
+        ov_recent_rx: "Recent Rx",
+        ov_mem: "Memory Load",
+        ov_traffic: "Cumulative Traffic",
+        heading_nodes: "Cloud Nodes",
+        heading_map: "Node Map",
+        date_sub: "Beijing Time · UTC+8",
+        status_healthy: "Healthy",
+        status_offline: "Offline",
+        status_last_online: "Last Online",
+        status_last_offline: "Last Offline",
+        lbl_cpu_usage: "CPU Usage",
+        lbl_mem_usage: "Memory Usage",
+        lbl_rx_live: "Real-time Rx",
+        lbl_rx_snap: "Snapshot Rx",
+        lbl_tx_live: "Real-time Tx",
+        lbl_tx_snap: "Snapshot Tx",
+        lbl_total: "Total",
+        lbl_uptime_no_data: "No live data",
+        lbl_reconnect_wait: "Awaiting reconnect",
+        lbl_load: "Load",
+        empty_title_loading: "Fetching Node Telemetry",
+        empty_desc_loading: "Cloud telemetry metrics arriving shortly.",
+        empty_title_error: "Unable to reach probe server",
+        empty_desc_error: "Retrying automatically, or click refresh above.",
+        empty_title_none: "No Nodes Found",
+        empty_desc_all: "Waiting for agent nodes to connect and report.",
+        empty_desc_filter: "Try selecting a different region or country tab.",
+        conn_connecting: "Connecting",
+        conn_live: "Live Sync",
+        conn_stale: "Reconnecting",
+        conn_error: "Connection Lost",
+        conn_waking: "Waking Up",
+        country_names: { us: "United States", jp: "Japan", sg: "Singapore", de: "Germany", fr: "France" },
+        area_names: { "圣何塞": "San Jose", "俄勒冈": "Oregon", "大阪": "Osaka", "东京": "Tokyo", "新加坡": "Singapore", "法兰克福": "Frankfurt", "马赛": "Marseille" }
+      }
+    };
+
+    let probeLang = localStorage.getItem("probe_lang") || (navigator.language && !navigator.language.startsWith("zh") ? "en" : "zh");
+
+    function applyProbeLang() {
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      document.documentElement.lang = probeLang === "zh" ? "zh-CN" : "en";
+      document.title = dict.page_title;
+      
+      const btn = document.getElementById("probe-lang-btn");
+      if (btn) btn.textContent = probeLang === "zh" ? "🌐 EN" : "🌐 中文";
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      const refBtn = document.getElementById("refresh-button");
+      if (refBtn) { refBtn.title = dict.refresh_btn; refBtn.setAttribute("aria-label", dict.refresh_btn); }
+      const logBtn = document.getElementById("logout-button");
+      if (logBtn) { logBtn.title = dict.logout_btn; logBtn.setAttribute("aria-label", dict.logout_btn); }
+
+      const vc = document.getElementById("view-card");
+      if (vc) { vc.title = dict.view_card; vc.setAttribute("aria-label", dict.view_card); }
+      const vt = document.getElementById("view-table");
+      if (vt) { vt.title = dict.view_table; vt.setAttribute("aria-label", dict.view_table); }
+      const vm = document.getElementById("view-map");
+      if (vm) { vm.title = dict.view_map; vm.setAttribute("aria-label", dict.view_map); }
+
+      const todayEl = $('today');
+      if (todayEl) {
+        todayEl.textContent = new Intl.DateTimeFormat(probeLang === "zh" ? "zh-CN" : "en-US", {
+          timeZone: "Asia/Shanghai",
+          month: probeLang === "zh" ? "long" : "short",
+          day: "numeric",
+          weekday: probeLang === "zh" ? "long" : "short"
+        }).format(new Date());
+      }
+
+      updateLens();
+    }
+
+    function toggleProbeLang() {
+      probeLang = (probeLang === "zh") ? "en" : "zh";
+      localStorage.setItem("probe_lang", probeLang);
+      applyProbeLang();
+      mapListSignature = "";
+      mapMarkerSignature = "";
+      render();
+    }
+
+    const POLL_MS = 2500;
+    const OFFLINE_SECONDS = 15;
+    const BYTE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    const SNAPSHOT_KEY = 'private-cloud.probe.snapshot.v1';
+    const COUNTRY_NAMES = { us: '美国', jp: '日本', sg: '新加坡', de: '德国', fr: '法国' };
+    const NODE_LOCATIONS = {
+      'vps-sjc': { code: 'us', area: '圣何塞', latitude: 37.3382, longitude: -121.8863, dx: -36, dy: 29 },
+      'vps-gcp': { code: 'us', area: '俄勒冈', latitude: 45.5946, longitude: -121.1787, dx: -36, dy: -24 },
+      'vps-azure': { code: 'jp', area: '大阪', latitude: 34.6937, longitude: 135.5023, dx: 32, dy: 25 },
+      'vps-aws': { code: 'jp', area: '东京', latitude: 35.6762, longitude: 139.6503, dx: 32, dy: -23 },
+      'vps-sg': { code: 'sg', area: '新加坡', latitude: 1.3521, longitude: 103.8198, dx: 16, dy: 29 },
+      'vps-fra': { code: 'de', area: '法兰克福', latitude: 50.1109, longitude: 8.6821, dx: -39, dy: -26 },
+      'vps-mrs': { code: 'fr', area: '马赛', latitude: 43.2965, longitude: 5.3698, dx: -39, dy: 26 }
+    };
+    let cachedNodes = {};
+    let historicalIds = new Set();
+    let nodeSnapshotAt = {};
+    let snapshotSavedAt = 0;
+    let currentView = 'card';
+    let currentFilter = 'all';
+    let hasLoaded = false;
+    let lastSuccessAt = 0;
+    let lastError = '';
+    let requestInFlight = false;
+    let lastOnlineSignature = '';
+    let selectedMapNode = '';
+    let mapView = { zoom: 1, x: 0, y: 0 };
+    let mapListSignature = '';
+    let mapMarkerSignature = '';
+    let mapDrag = null;
+    let mapDraggedAt = 0;
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function icon(name) { return `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`; }
+    function finite(value) { const n = Number(value); return value === null || value === '' || !Number.isFinite(n) ? null : Math.max(0, n); }
+    function percentage(value) { const n = finite(value); return n === null ? null : Math.min(100, n); }
+    function displayPercent(value) { return value === null ? '—' : Number(value.toFixed(1)).toString(); }
+    function parseBytes(value) {
+      const match = String(value ?? '').trim().match(/^(\d+(?:\.\d+)?)\s*(B|[KMGTPE]I?B)(?:\/S)?$/i);
+      if (!match) return null;
+      const unit = match[2].toUpperCase().replace('IB', 'B');
+      const exponent = BYTE_UNITS.indexOf(unit);
+      return exponent < 0 ? null : Number(match[1]) * 1024 ** exponent;
+    }
+    function formatBytes(value, speed = false) {
+      if (value === null || !Number.isFinite(value)) return { value: '—', unit: speed ? 'KB/s' : 'GB', text: '—' };
+      let exponent = speed ? 1 : 0;
+      while (value >= 1024 ** (exponent + 1) && exponent < BYTE_UNITS.length - 1) exponent++;
+      const amount = value / 1024 ** exponent;
+      const digits = exponent === 0 ? 0 : (amount >= 100 ? 0 : 1);
+      const text = amount.toFixed(digits);
+      const unit = BYTE_UNITS[exponent] + (speed ? '/s' : '');
+      return { value: text, unit, text: `${text} ${unit}` };
+    }
+    function isOnlineAt(node, at) {
+      const seen = Number(node.last_seen);
+      const age = at / 1000 - seen;
+      return seen > 0 && age >= -30 && age < OFFLINE_SECONDS;
+    }
+    function isOnline(node) { return isOnlineAt(node, historicalIds.has(node.id) ? nodeSnapshotAt[node.id] || snapshotSavedAt : Date.now()); }
+    function fillClass(value, memory = false) { return value >= 80 ? 'high' : value >= 50 ? 'mid' : memory ? 'memory' : ''; }
+    function statusLabel(online, historical = false) {
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      return historical
+        ? (online ? dict.status_last_online : dict.status_last_offline)
+        : (online ? dict.status_healthy : dict.status_offline);
+    }
+    function statusHTML(online, historical = false) { return `<span class="node-status${online ? '' : ' offline'}${historical ? ' snapshot' : ''}"><span class="status-dot"></span>${statusLabel(online, historical)}</span>`; }
+    function readable(value) { return escapeHTML(value === null || value === undefined || value === '' ? '—' : value); }
+    function countryCode(node) {
+      const code = String(node.country_code || NODE_LOCATIONS[node.id]?.code || node.region_code || '').toLowerCase();
+      return Object.hasOwn(COUNTRY_NAMES, code) ? code : '';
+    }
+    function nodeLocation(node) {
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      const known = NODE_LOCATIONS[node.id] || {};
+      const code = countryCode(node);
+      const rawCountry = dict.country_names[code] || node.country || '';
+      const rawArea = known.area || node.area || '';
+      const transArea = dict.area_names[rawArea] || rawArea;
+      return { ...known, country: rawCountry, area: transArea,
+        latitude: node.latitude ?? known.latitude, longitude: node.longitude ?? known.longitude };
+    }
+    function nodeTitle(node) {
+      const place = nodeLocation(node);
+      return node.cloud && place.country && place.area ? `${node.cloud} · ${place.country} · ${place.area}` : node.cloud && node.location ? `${node.cloud} · ${node.location}` : node.name;
+    }
+    function flagHTML(node) {
+      const code = countryCode(node);
+      return code ? `<svg class="flag-svg" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-${code}"/></svg>` : icon('globe');
+    }
+    function projectLocation(latitude, longitude) {
+      if (typeof latitude !== 'number' || typeof longitude !== 'number' || !Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return null;
+      return { x: (longitude + 180) / 360 * 1000, y: (90 - latitude) / 180 * 500 };
+    }
+    function clampMapView(view) {
+      const zoom = Number.isFinite(view.zoom) ? Math.max(1, Math.min(4, view.zoom)) : 1;
+      return { zoom, x: Math.max(1000 * (1 - zoom), Math.min(0, Number.isFinite(view.x) ? view.x : 0)),
+        y: Math.max(500 * (1 - zoom), Math.min(0, Number.isFinite(view.y) ? view.y : 0)) };
+    }
+    function getNodes() { return Object.values(cachedNodes).filter((n) => n && typeof n === 'object' && !Array.isArray(n)); }
+    function getVisibleNodes() { return getNodes().filter((node) => currentFilter === 'all' || countryCode(node) === currentFilter); }
+    function hasMetrics(node) { return Number(node.last_seen) > 0 && node.data && typeof node.data === 'object' && !Array.isArray(node.data) && Object.keys(node.data).length > 0; }
+    function normalizeNodes(value) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid-response');
+      const entries = Object.entries(value);
+      if (entries.length > 200 || entries.some(([id, node]) => !/^[A-Za-z0-9_-]{1,80}$/.test(id) || !node || typeof node !== 'object' || Array.isArray(node) || node.id !== id || !node.data || typeof node.data !== 'object' || Array.isArray(node.data))) throw new Error('invalid-response');
+      return Object.fromEntries(entries);
+    }
+    function formatSnapshotTime(at, short = false) {
+      const options = { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      if (!short) Object.assign(options, { year: 'numeric', month: '2-digit', day: '2-digit' });
+      return new Intl.DateTimeFormat('zh-CN', options).format(new Date(at));
+    }
+    function restoreSnapshot() {
+      try {
+        const raw = localStorage.getItem(SNAPSHOT_KEY);
+        if (!raw || raw.length > 250000) return;
+        const saved = JSON.parse(raw);
+        if (saved.version !== 1 || !Number.isFinite(saved.savedAt) || saved.savedAt <= 0 || saved.savedAt > Date.now() + 60000) return;
+        const nodes = normalizeNodes(saved.nodes);
+        if (!Object.values(nodes).some(hasMetrics)) return;
+        const times = Object.fromEntries(Object.keys(nodes).map(id => {
+          const at = saved.nodeSnapshotAt?.[id];
+          return [id, Number.isFinite(at) && at > 0 && at <= saved.savedAt ? at : saved.savedAt];
+        }));
+        cachedNodes = nodes;
+        historicalIds = new Set(Object.keys(nodes));
+        nodeSnapshotAt = times;
+        snapshotSavedAt = saved.savedAt;
+        hasLoaded = true;
+        if (['all', 'us', 'jp', 'sg', 'de', 'fr'].includes(saved.filter)) currentFilter = saved.filter;
+      } catch (_) {}
+    }
+    function saveSnapshot() {
+      if (!getNodes().some(hasMetrics)) return;
+      const now = Date.now();
+      if (!historicalIds.size) snapshotSavedAt = now;
+      const times = Object.fromEntries(getNodes().map(node => [node.id, historicalIds.has(node.id) ? nodeSnapshotAt[node.id] || snapshotSavedAt : now]));
+      try {
+        localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({ version: 1, savedAt: now, nodeSnapshotAt: times, nodes: cachedNodes, filter: currentFilter }));
+      } catch (_) {}
+    }
+    function freezeSnapshot() {
+      if (!getNodes().some(hasMetrics)) return;
+      const now = Date.now();
+      if (!historicalIds.size) snapshotSavedAt = now;
+      for (const node of getNodes()) {
+        if (!historicalIds.has(node.id)) nodeSnapshotAt[node.id] = now;
+        historicalIds.add(node.id);
+      }
+    }
+    function applyStatus(value) {
+      const incoming = normalizeNodes(value);
+      const now = Date.now();
+      const remaining = new Set();
+      const merged = Object.fromEntries(Object.entries(incoming).map(([id, node]) => {
+        if (historicalIds.has(id) && cachedNodes[id] && !(hasMetrics(node) && isOnlineAt(node, now))) {
+          remaining.add(id);
+          return [id, { ...cachedNodes[id], ...node, data: cachedNodes[id].data, last_seen: cachedNodes[id].last_seen }];
+        }
+        nodeSnapshotAt[id] = now;
+        return [id, node];
+      }));
+      historicalIds = remaining;
+      cachedNodes = merged;
+      hasLoaded = true;
+      lastSuccessAt = now;
+      lastError = '';
+      if (!Object.keys(incoming).length) {
+        try { localStorage.removeItem(SNAPSHOT_KEY); } catch (_) {}
+      } else saveSnapshot();
+    }
+
+    function renderOverview() {
+      const nodes = getNodes();
+      const online = nodes.filter(isOnline);
+      const historyCount = nodes.filter(node => historicalIds.has(node.id)).length;
+      const sumMetric = (list, key) => {
+        const values = list.map((node) => parseBytes((node.data || {})[key])).filter((v) => v !== null);
+        return values.length ? values.reduce((a, b) => a + b, 0) : null;
+      };
+      const rx = sumMetric(online, 'rx_speed');
+      const tx = sumMetric(online, 'tx_speed');
+      const memUsed = sumMetric(online, 'mem_used');
+      const memTotal = sumMetric(online, 'mem_total');
+      const totalIn = sumMetric(nodes, 'total_in');
+      const totalOut = sumMetric(nodes, 'total_out');
+      const memoryPercent = memTotal > 0 && memUsed !== null ? memUsed / memTotal * 100 : null;
+      const rxDisplay = formatBytes(rx, true);
+      const traffic = formatBytes(totalIn === null && totalOut === null ? null : (totalIn || 0) + (totalOut || 0));
+      $('online-count').textContent = hasLoaded ? online.length : '—';
+      $('total-count').textContent = `/ ${hasLoaded ? nodes.length : '—'}`;
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      $('online-label').textContent = historyCount ? (historyCount === nodes.length ? dict.ov_last_online : dict.ov_recent_online) : dict.ov_online;
+      $('rx-label').textContent = historyCount ? dict.ov_recent_rx : dict.ov_rx;
+      const missing = nodes.length - online.length;
+      const note = $('online-note');
+      note.className = 'overview-note' + (nodes.length && !historyCount ? (missing ? ' warning' : ' good') : '');
+      note.replaceChildren();
+      if (nodes.length) {
+        const dot = document.createElement('span'); dot.className = 'status-dot'; dot.style.width = '4px'; dot.style.height = '4px'; note.append(dot);
+      }
+      const noteMsg = probeLang === 'zh'
+        ? (historyCount ? `${nodes.length - historyCount} 台已连接 · ${historyCount} 台显示快照` : nodes.length ? (missing ? `${missing} 台离线 · ${Math.round(online.length / nodes.length * 100)}% 在线` : '所有节点通信正常') : hasLoaded ? '暂无节点' : '等待节点上报')
+        : (historyCount ? `${nodes.length - historyCount} connected · ${historyCount} snapshot` : nodes.length ? (missing ? `${missing} offline · ${Math.round(online.length / nodes.length * 100)}% online` : 'All nodes healthy') : hasLoaded ? 'No nodes' : 'Awaiting telemetry');
+      note.append(document.createTextNode(noteMsg));
+      $('rx-value').textContent = rxDisplay.value;
+      $('rx-unit').textContent = rxDisplay.unit;
+      $('tx-note').textContent = probeLang === 'zh' ? `发送 ${formatBytes(tx, true).text}` : `Tx ${formatBytes(tx, true).text}`;
+      $('memory-value').textContent = displayPercent(memoryPercent);
+      $('memory-meter').style.width = `${Math.min(100, memoryPercent || 0)}%`;
+      $('memory-note').textContent = memUsed !== null && memTotal !== null ? `${(memUsed / 1024 ** 3).toFixed(1)} / ${(memTotal / 1024 ** 3).toFixed(1)} GB` : '— / — GB';
+      $('traffic-value').textContent = traffic.value;
+      $('traffic-unit').textContent = traffic.unit;
+      $('traffic-note').textContent = probeLang === 'zh' ? `收 ${formatBytes(totalIn).text} · 发 ${formatBytes(totalOut).text}` : `In ${formatBytes(totalIn).text} · Out ${formatBytes(totalOut).text}`;
+      const countries = new Set(nodes.map(countryCode).filter(Boolean));
+      $('page-description').textContent = hasLoaded
+        ? (nodes.length
+          ? (probeLang === 'zh' ? `${nodes.length} 台服务器，分布在 ${countries.size} 个国家。此刻状态，尽在这里。` : `${nodes.length} servers across ${countries.size} countries. Real-time fleet telemetry.`)
+          : (probeLang === 'zh' ? '所有云端节点，在这里相遇。' : 'All cloud nodes in one unified cockpit.'))
+        : (probeLang === 'zh' ? '正在连接你的云端节点。' : 'Connecting to your cloud nodes.');
+      $('node-count').textContent = probeLang === 'zh' ? `${getVisibleNodes().length} 台` : `${getVisibleNodes().length} Nodes`;
+      document.querySelectorAll('[data-count]').forEach((element) => {
+        const region = element.dataset.count;
+        element.textContent = region === 'all' ? nodes.length : nodes.filter((node) => countryCode(node) === region).length;
+      });
+      updateLens();
+    }
+
+    function nodeView(node) {
+      const data = node.data && typeof node.data === 'object' ? node.data : {};
+      const online = isOnline(node);
+      return {
+        online, data, historical: historicalIds.has(node.id),
+        cpu: online ? percentage(data.cpu) : null,
+        memory: online ? percentage(data.mem_percent) : null,
+        rx: online ? readable(data.rx_speed) : '—',
+        tx: online ? readable(data.tx_speed) : '—'
+      };
+    }
+    function renderCards(nodes) {
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      $('card-container').innerHTML = nodes.map((node) => {
+        const { online, data, cpu, memory, rx, tx, historical } = nodeView(node);
+        return `<article class="node-card${online ? '' : ' offline'}" aria-label="${escapeHTML(nodeTitle(node))}，${statusLabel(online, historical)}">
+          <div class="node-top"><span class="country-flag" aria-hidden="true">${flagHTML(node)}</span>${statusHTML(online, historical)}</div>
+          <h3 class="node-name">${readable(nodeTitle(node))}</h3>
+          <div class="node-meters">
+            <div><div class="meter-label">${dict.lbl_cpu_usage}</div><div class="meter-number">${displayPercent(cpu)}<small>%</small></div><div class="meter-track" role="meter" aria-label="${dict.lbl_cpu_usage}" aria-valuemin="0" aria-valuemax="100" ${cpu === null ? `aria-valuetext="${dict.lbl_uptime_no_data}"` : `aria-valuenow="${cpu}"`}><div class="meter-fill ${fillClass(cpu)}" style="width:${cpu || 0}%"></div></div><div class="meter-detail">${readable(node.arch)}</div></div>
+            <div><div class="meter-label">${dict.lbl_mem_usage}</div><div class="meter-number">${displayPercent(memory)}<small>%</small></div><div class="meter-track" role="meter" aria-label="${dict.lbl_mem_usage}" aria-valuemin="0" aria-valuemax="100" ${memory === null ? `aria-valuetext="${dict.lbl_uptime_no_data}"` : `aria-valuenow="${memory}"`}><div class="meter-fill ${fillClass(memory, true)}" style="width:${memory || 0}%"></div></div><div class="meter-detail">${online ? `${readable(data.mem_used)} / ${readable(data.mem_total)}` : dict.lbl_reconnect_wait}</div></div>
+          </div>
+          <div class="node-network">
+            <div><div class="network-label">${icon('down')}${historical ? dict.lbl_rx_snap : dict.lbl_rx_live}</div><span class="network-value">${rx}</span><div class="network-total">${dict.lbl_total} ${readable(data.total_in)}</div></div>
+            <div><div class="network-label">${icon('up')}${historical ? dict.lbl_tx_snap : dict.lbl_tx_live}</div><span class="network-value tx">${tx}</span><div class="network-total">${dict.lbl_total} ${readable(data.total_out)}</div></div>
+          </div>
+          <div class="node-footer"><span>${icon('clock')}${online ? (probeLang === 'zh' ? `运行: ${readable(data.uptime)}` : `Up: ${readable(data.uptime)}`) : dict.lbl_uptime_no_data}</span><span>${icon('pulse')}${dict.lbl_load} ${online ? readable(data.load) : '—'}</span></div>
+        </article>`;
+      }).join('');
+    }
+    function renderTable(nodes) {
+      $('table-body').innerHTML = nodes.map((node) => {
+        const { online, data, cpu, memory, rx, tx, historical } = nodeView(node);
+        return `<tr><td><div class="table-node"><span class="country-flag" aria-hidden="true">${flagHTML(node)}</span><div><div class="table-name">${readable(nodeTitle(node))}</div><div class="table-sub">${readable(node.arch)}</div></div></div></td>
+          <td>${statusHTML(online, historical)}</td>
+          <td><div class="table-meter"><span>${displayPercent(cpu)}${cpu === null ? '' : '%'}</span><div class="meter-track"><div class="meter-fill ${fillClass(cpu)}" style="width:${cpu || 0}%"></div></div></div></td>
+          <td><div class="table-meter"><span>${displayPercent(memory)}${memory === null ? '' : '%'}</span><div class="meter-track"><div class="meter-fill ${fillClass(memory, true)}" style="width:${memory || 0}%"></div></div><div class="table-sub">${online ? `${readable(data.mem_used)} / ${readable(data.mem_total)}` : '—'}</div></div></td>
+          <td><div class="table-two-line"><span>↓ ${rx}</span><span>↑ ${tx}</span></div></td>
+          <td><div class="table-two-line"><span>↓ ${readable(data.total_in)}</span><span>↑ ${readable(data.total_out)}</span></div></td>
+          <td>${online ? readable(data.uptime) : '—'}</td><td>${online ? readable(data.load) : '—'}</td></tr>`;
+      }).join('');
+    }
+    function renderMapMarkers(nodes = getVisibleNodes()) {
+      const svg = $('world-map');
+      const scale = Math.max(1, Math.min(4.5, 1000 / (svg.getBoundingClientRect().width || 1000)));
+      const signature = JSON.stringify([mapView, scale, selectedMapNode, nodes.map(node => [node.id, nodeTitle(node), isOnline(node), historicalIds.has(node.id), nodeLocation(node)])]);
+      $('map-land-layer').setAttribute('transform', `translate(${mapView.x} ${mapView.y}) scale(${mapView.zoom})`);
+      $('map-zoom-in').disabled = mapView.zoom >= 4;
+      $('map-zoom-out').disabled = mapView.zoom <= 1;
+      if (signature === mapMarkerSignature) return;
+      mapMarkerSignature = signature;
+      const focusedId = document.activeElement?.closest('#map-markers [data-map-node]')?.dataset.mapNode;
+      $('map-markers').innerHTML = nodes.map(node => {
+        const place = nodeLocation(node);
+        const point = projectLocation(place.latitude, place.longitude);
+        if (!point) return '';
+        const x = point.x * mapView.zoom + mapView.x, y = point.y * mapView.zoom + mapView.y;
+        if (x < 0 || x > 1000 || y < 0 || y > 500) return '';
+        const label = place.area;
+        const width = label.length * 11 + 18;
+        const labelX = Math.max(width / 2 + 4, Math.min(1000 / scale - width / 2 - 4, x / scale + (place.dx || 26))) - x / scale;
+        const labelY = Math.max(16, Math.min(500 / scale - 16, y / scale + (place.dy || -24))) - y / scale;
+        const { online, historical } = nodeView(node);
+        return `<g class="map-marker${online ? '' : ' offline'}${historical ? ' snapshot' : ''}${selectedMapNode === node.id ? ' selected' : ''}" data-map-node="${escapeHTML(node.id)}" transform="translate(${x} ${y}) scale(${scale})" role="button" tabindex="0" aria-label="${escapeHTML(nodeTitle(node))}，${statusLabel(online, historical)}" aria-pressed="${selectedMapNode === node.id}"><title>${readable(nodeTitle(node))} · ${statusLabel(online, historical)}</title><path class="map-leader" d="M0 0 L${labelX} ${labelY}"/><rect x="${labelX - width / 2}" y="${labelY - 11}" width="${width}" height="22" rx="7"/><text x="${labelX}" y="${labelY + .5}">${readable(label)}</text><circle class="map-halo" r="10"/><circle class="map-dot" r="4.5"/></g>`;
+      }).join('');
+      if (focusedId) [...$('map-markers').querySelectorAll('[data-map-node]')].find(element => element.dataset.mapNode === focusedId)?.focus({ preventScroll: true });
+    }
+    function renderMap(nodes) {
+      if (!nodes.some(node => node.id === selectedMapNode)) selectedMapNode = nodes[0]?.id || '';
+      const countries = new Set(nodes.map(countryCode).filter(Boolean));
+      const historyCount = nodes.filter(node => historicalIds.has(node.id)).length;
+      $('map-summary').textContent = `${nodes.length} 台节点 · ${countries.size} 个国家${historyCount ? ` · ${historyCount} 台显示上次快照` : ' · 点击标记查看状态'}`;
+      const listHTML = nodes.map(node => {
+        const { online, historical } = nodeView(node);
+        return `<button class="map-node-item" data-map-node="${escapeHTML(node.id)}" aria-pressed="${selectedMapNode === node.id}"><span class="country-flag" aria-hidden="true">${flagHTML(node)}</span><span class="map-node-copy"><strong>${readable(nodeTitle(node))}</strong><small>${statusLabel(online, historical)}</small></span><span class="status-dot${online ? '' : ' offline'}${historical ? ' snapshot' : ''}" aria-hidden="true"></span></button>`;
+      }).join('');
+      if (listHTML !== mapListSignature) {
+        mapListSignature = listHTML;
+        const focusedId = document.activeElement?.closest('#map-node-list [data-map-node]')?.dataset.mapNode;
+        $('map-node-list').innerHTML = listHTML;
+        if (focusedId) [...$('map-node-list').querySelectorAll('[data-map-node]')].find(element => element.dataset.mapNode === focusedId)?.focus({ preventScroll: true });
+      }
+      const node = nodes.find(node => node.id === selectedMapNode);
+      $('map-focus').disabled = !node || !projectLocation(nodeLocation(node).latitude, nodeLocation(node).longitude);
+      if (node) {
+        const { online, historical, data, cpu, memory, rx, tx } = nodeView(node);
+        $('map-detail').innerHTML = `<div class="map-detail-title"><strong>${readable(nodeTitle(node))}</strong>${statusHTML(online, historical)}</div><p>${readable(node.arch)}${historical ? `<br>快照 · ${formatSnapshotTime(nodeSnapshotAt[node.id] || snapshotSavedAt)}（北京时间）` : ''}</p><div class="map-detail-metrics"><div><span>CPU 使用率</span><strong>${displayPercent(cpu)}${cpu === null ? '' : '%'}</strong></div><div><span>内存使用率</span><strong>${displayPercent(memory)}${memory === null ? '' : '%'}</strong></div><div><span>${historical ? '当时接收' : '实时接收'}</span><strong>${rx}</strong></div><div><span>${historical ? '当时发送' : '实时发送'}</span><strong>${tx}</strong></div></div><p>${icon('clock')} ${online ? readable(data.uptime) : '等待重新连接'}</p>`;
+      } else $('map-detail').textContent = '选择一个节点，查看它的状态。';
+      renderMapMarkers(nodes);
+    }
+    function selectMapNode(id) {
+      if (!getVisibleNodes().some(node => node.id === id)) return;
+      selectedMapNode = id;
+      renderMap(getVisibleNodes());
+    }
+    function zoomMap(factor) {
+      const zoom = Math.max(1, Math.min(4, mapView.zoom * factor));
+      const ratio = zoom / mapView.zoom;
+      mapView = clampMapView({ zoom, x: 500 - (500 - mapView.x) * ratio, y: 250 - (250 - mapView.y) * ratio });
+      renderMapMarkers();
+    }
+    function focusMapNode() {
+      const node = getVisibleNodes().find(node => node.id === selectedMapNode);
+      if (!node) return;
+      const place = nodeLocation(node), point = projectLocation(place.latitude, place.longitude);
+      if (!point) return;
+      mapView = clampMapView({ zoom: 2.6, x: 500 - point.x * 2.6, y: 250 - point.y * 2.6 });
+      renderMapMarkers();
+    }
+    function render() {
+      renderOverview();
+      const nodes = getVisibleNodes();
+      $('card-container').hidden = currentView !== 'card' || nodes.length === 0;
+      $('table-container').hidden = currentView !== 'table' || nodes.length === 0;
+      $('map-container').hidden = currentView !== 'map' || nodes.length === 0;
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      $('nodes-heading').textContent = currentView === 'map' ? dict.heading_map : dict.heading_nodes;
+      $('empty-state').hidden = nodes.length > 0;
+      if (!nodes.length) {
+        $('empty-title').textContent = !hasLoaded ? (lastError ? '暂时无法获取节点状态' : '正在获取节点状态') : '这里还没有节点';
+        $('empty-description').textContent = !hasLoaded ? (lastError ? '正在自动重试，也可以点击右上角刷新。' : '你的云端数据即将到达。') : currentFilter === 'all' ? '等待探针添加节点并开始上报。' : '试试切换到其他国家。';
+      }
+      if (currentView === 'card') renderCards(nodes);
+      else if (currentView === 'table') renderTable(nodes);
+      else if (nodes.length) renderMap(nodes);
+      lastOnlineSignature = getNodes().map((n) => `${n.id}:${isOnline(n)}`).join('|');
+      updateConnection();
+    }
+    function updateLens() {
+      const selected = document.querySelector('.filter-chip[aria-selected="true"]');
+      if (!selected) return;
+      const lens = document.querySelector('.segment-lens');
+      lens.style.width = `${selected.offsetWidth}px`;
+      lens.style.transform = `translateX(${selected.offsetLeft}px)`;
+    }
+    function setFilter(region, focus = false) {
+      currentFilter = region;
+      document.querySelectorAll('.filter-chip').forEach((button) => {
+        const selected = button.dataset.region === region;
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+        if (selected && focus) button.focus();
+      });
+      $('nodes-panel').setAttribute('aria-labelledby', `region-${region}`);
+      render();
+    }
+    function setView(view) {
+      if (!['card', 'table', 'map'].includes(view)) return;
+      currentView = view;
+      $('view-card').setAttribute('aria-pressed', String(view === 'card'));
+      $('view-table').setAttribute('aria-pressed', String(view === 'table'));
+      $('view-map').setAttribute('aria-pressed', String(view === 'map'));
+      try { localStorage.setItem('antigravity.probe.view', view); } catch (_) {}
+      render();
+    }
+    function updateConnection() {
+      const age = lastSuccessAt ? Math.floor((Date.now() - lastSuccessAt) / 1000) : null;
+      const stale = age !== null && age >= 8;
+      const nodes = getNodes();
+      const historyCount = nodes.filter(node => historicalIds.has(node.id)).length;
+      const waking = hasLoaded && nodes.length > 0 && Date.now() - wakeStartedAt < 10000 && nodes.some(node => !isOnlineAt(node, Date.now()));
+      const state = lastError ? (hasLoaded ? 'stale' : 'error') : historyCount || waking ? 'connecting' : stale ? 'stale' : hasLoaded ? 'live' : 'connecting';
+      const dict = PROBE_I18N[probeLang] || PROBE_I18N.zh;
+      const label = historyCount && !lastError
+        ? (probeLang === 'zh' ? `正在恢复 ${nodes.length - historyCount}/${nodes.length}` : `Restoring ${nodes.length - historyCount}/${nodes.length}`)
+        : waking && !lastError
+        ? dict.conn_waking
+        : { live: dict.conn_live, connecting: dict.conn_connecting, stale: dict.conn_stale, error: dict.conn_error }[state];
+      if ($('connection').dataset.state !== state) $('connection').dataset.state = state;
+      if ($('connection-text').textContent !== label) $('connection-text').textContent = label;
+      $('nodes-panel').dataset.mode = historyCount ? 'snapshot' : hasLoaded ? 'live' : 'loading';
+      $('connection-notice').hidden = !historyCount && !lastError && !stale && !waking;
+      $('connection-notice').classList.toggle('snapshot', historyCount > 0 && !lastError);
+      $('connection-notice').querySelector('use').setAttribute('href', historyCount && !lastError ? '#i-clock' : '#i-alert');
+      const message = historyCount ? `上次查看快照 · ${formatSnapshotTime(snapshotSavedAt)}（北京时间）。${lastError ? '连接暂不可用，保留快照并自动重试。' : historyCount === nodes.length ? '正在重新连接探针，收到上报后自动更新。' : `${nodes.length - historyCount} 台已更新，${historyCount} 台仍显示快照，等待重新上报。`}` : lastError || (waking ? '正在启动按需采集，节点将在几秒内陆续上报。' : stale ? '数据更新延迟，正在重新连接。当前保留最近一次上报结果。' : '');
+      if ($('notice-text').textContent !== message) $('notice-text').textContent = message;
+      $('update-time').textContent = historyCount
+        ? (probeLang === 'zh' ? `快照 · ${formatSnapshotTime(snapshotSavedAt, true)}` : `Snapshot · ${formatSnapshotTime(snapshotSavedAt, true)}`)
+        : age === null
+        ? (probeLang === 'zh' ? '每 2.5 秒自动更新' : 'Auto-refresh every 2.5s')
+        : age < 5
+        ? (probeLang === 'zh' ? '刚刚更新 · 自动刷新' : 'Just updated · Live Sync')
+        : (probeLang === 'zh' ? `${age} 秒前更新 · 自动重连` : `Updated ${age}s ago`);
+      const signature = getNodes().map((n) => `${n.id}:${isOnline(n)}`).join('|');
+      if (signature !== lastOnlineSignature) render();
+    }
+    const viewId = Array.from(crypto.getRandomValues(new Uint8Array(16)), value => value.toString(16).padStart(2, '0')).join('');
+    let wakeStartedAt = Date.now();
+    function releaseCollection() {
+      const body = new URLSearchParams({ view: viewId, active: '0' });
+      let sent = false;
+      try { sent = navigator.sendBeacon('/auth/presence', body); } catch (_) {}
+      if (!sent) {
+        fetch('/auth/presence', { method: 'POST', body, credentials: 'same-origin', keepalive: true }).catch(() => {});
+      }
+    }
+    function leavePage() { freezeSnapshot(); saveSnapshot(); releaseCollection(); }
+    function reconnect() { wakeStartedAt = Date.now(); freezeSnapshot(); render(); fetchStatus(); }
+    window.addEventListener('pagehide', leavePage);
+    window.addEventListener('pageshow', (event) => { if (event.persisted) reconnect(); else fetchStatus(); });
+    async function fetchStatus() {
+      if (requestInFlight || document.hidden) return;
+      requestInFlight = true;
+      $('refresh-button').disabled = true;
+      $('refresh-button').setAttribute('aria-busy', 'true');
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5500);
+      try {
+        const response = await fetch('/api/status', { cache: 'no-store', signal: controller.signal, headers: { Accept: 'application/json', 'X-Probe-View': viewId } });
+        if (response.status === 401) { saveSnapshot(); location.replace('/login?expired=1'); return; }
+        if (!response.ok) throw new Error(response.status === 401 || response.status === 403 ? 'authentication' : 'connection');
+        const data = await response.json();
+        if (document.hidden) { releaseCollection(); return; }
+        applyStatus(data);
+        $('preview-badge').hidden = response.headers.get('X-Probe-Preview') !== 'snapshot';
+        render();
+      } catch (error) {
+        freezeSnapshot();
+        lastError = error.message === 'authentication' ? '登录状态已失效，请刷新页面重新登录。' : hasLoaded ? '暂时无法连接，正在自动重试。当前保留最近一次上报结果。' : '暂时无法连接探针，正在自动重试。';
+        render();
+      } finally {
+        clearTimeout(timeout);
+        requestInFlight = false;
+        $('refresh-button').disabled = false;
+        $('refresh-button').setAttribute('aria-busy', 'false');
+      }
+    }
+    $('region-tabs').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-region]');
+      if (button) setFilter(button.dataset.region);
+    });
+    $('region-tabs').addEventListener('keydown', (event) => {
+      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+      if (!keys.includes(event.key)) return;
+      const buttons = [...document.querySelectorAll('.filter-chip')];
+      let index = buttons.findIndex((button) => button.dataset.region === currentFilter);
+      if (event.key === 'Home') index = 0;
+      else if (event.key === 'End') index = buttons.length - 1;
+      else index = (index + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+      event.preventDefault();
+      setFilter(buttons[index].dataset.region, true);
+    });
+    $('view-card').addEventListener('click', () => setView('card'));
+    $('view-table').addEventListener('click', () => setView('table'));
+    $('view-map').addEventListener('click', () => setView('map'));
+    $('map-container').addEventListener('click', event => {
+      const marker = event.target.closest('[data-map-node]');
+      if (marker && Date.now() - mapDraggedAt > 250) selectMapNode(marker.dataset.mapNode);
+    });
+    $('map-markers').addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const marker = event.target.closest('[data-map-node]');
+      if (marker) { event.preventDefault(); selectMapNode(marker.dataset.mapNode); }
+    });
+    $('map-zoom-in').addEventListener('click', () => zoomMap(1.4));
+    $('map-zoom-out').addEventListener('click', () => zoomMap(1 / 1.4));
+    $('map-focus').addEventListener('click', focusMapNode);
+    $('map-reset').addEventListener('click', () => { mapView = { zoom: 1, x: 0, y: 0 }; renderMapMarkers(); });
+    $('world-map').addEventListener('pointerdown', event => {
+      if (event.button !== 0 || event.target.closest('[data-map-node]') || mapView.zoom <= 1) return;
+      const matrix = $('world-map').getScreenCTM();
+      if (!matrix) return;
+      mapDrag = { id: event.pointerId, clientX: event.clientX, clientY: event.clientY, x: mapView.x, y: mapView.y, scale: matrix.a, moved: false };
+      $('world-map').setPointerCapture(event.pointerId);
+      $('world-map').classList.add('dragging');
+    });
+    $('world-map').addEventListener('pointermove', event => {
+      if (!mapDrag || event.pointerId !== mapDrag.id) return;
+      const dx = event.clientX - mapDrag.clientX, dy = event.clientY - mapDrag.clientY;
+      if (Math.abs(dx) + Math.abs(dy) > 4) mapDrag.moved = true;
+      if (!mapDrag.moved) return;
+      mapView = clampMapView({ zoom: mapView.zoom, x: mapDrag.x + dx / mapDrag.scale, y: mapDrag.y + dy / mapDrag.scale });
+      renderMapMarkers();
+    });
+    function endMapDrag(event) {
+      if (!mapDrag || event.pointerId !== mapDrag.id) return;
+      if (mapDrag.moved) mapDraggedAt = Date.now();
+      mapDrag = null;
+      $('world-map').classList.remove('dragging');
+    }
+    $('world-map').addEventListener('pointerup', endMapDrag);
+    $('world-map').addEventListener('pointercancel', endMapDrag);
+    $('world-map').addEventListener('lostpointercapture', endMapDrag);
+    $('world-map').addEventListener('keydown', event => {
+      if (event.target !== $('world-map')) return;
+      if (event.key === '+' || event.key === '=') zoomMap(1.4);
+      else if (event.key === '-') zoomMap(1 / 1.4);
+      else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+        mapView = clampMapView({ ...mapView, x: mapView.x + (event.key === 'ArrowLeft' ? 60 : event.key === 'ArrowRight' ? -60 : 0), y: mapView.y + (event.key === 'ArrowUp' ? 60 : event.key === 'ArrowDown' ? -60 : 0) });
+        renderMapMarkers();
+      } else return;
+      event.preventDefault();
+    });
+    $('refresh-button').addEventListener('click', fetchStatus);
+    $('logout-button').addEventListener('click', async () => {
+      const button = $('logout-button');
+      saveSnapshot();
+      button.disabled = true;
+      try {
+        const response = await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error('logout');
+        location.replace('/login');
+      } catch (_) {
+        button.disabled = false;
+        button.title = '暂时无法退出，请重试';
+        $('connection-text').textContent = '退出失败，请重试';
+      }
+    });
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(updateLens).observe($('region-tabs'));
+      new ResizeObserver(() => { if (currentView === 'map') renderMapMarkers(); }).observe($('world-map'));
+    } else window.addEventListener('resize', () => { updateLens(); if (currentView === 'map') renderMapMarkers(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) leavePage(); else reconnect(); });
+    if (/(?:Chrome|Chromium|Edg)\//.test(navigator.userAgent)) document.documentElement.dataset.optics = 'chromium';
+    if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+      document.querySelectorAll('.liquid').forEach((element) => {
+        element.addEventListener('pointermove', (event) => {
+          const bounds = element.getBoundingClientRect();
+          element.style.setProperty('--glass-x', `${(event.clientX - bounds.left) / bounds.width * 100}%`);
+          element.style.setProperty('--glass-y', `${(event.clientY - bounds.top) / bounds.height * 100}%`);
+        });
+      });
+    }
+    $('today').textContent = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', month: 'long', day: 'numeric', weekday: 'long' }).format(new Date());
+    $('today').dateTime = new Date().toISOString();
+    restoreSnapshot();
+    applyProbeLang();
+    setFilter(currentFilter);
+    try { const savedView = localStorage.getItem('antigravity.probe.view'); if (['table', 'map'].includes(savedView)) setView(savedView); } catch (_) {}
+    render();
+    fetchStatus();
+    setInterval(() => { if (!document.hidden) fetchStatus(); }, POLL_MS);
+    setInterval(() => { if (!document.hidden) updateConnection(); }, 1000);
+  </script>
+</body>
+</html>

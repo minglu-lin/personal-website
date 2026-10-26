@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f4f7fb">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="same-origin">
+<title>私有云监控 · 登录</title>
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:light;--ink:#18263c;--secondary:#586b82;--muted:#61728a;--blue:#0878ed;--red:#bd3548;--spring:cubic-bezier(.2,.8,.2,1);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang SC','Helvetica Neue',sans-serif;font-synthesis:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;min-width:280px;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto;color:var(--ink);background:#f4f7fb}body::before{content:'';position:fixed;inset:0;z-index:-3;pointer-events:none;background:radial-gradient(ellipse at 12% 16%,#c2dffc7a,transparent 47%),radial-gradient(ellipse at 87% 72%,#ccebe68a,transparent 45%),radial-gradient(ellipse at 63% 9%,#e8ddf45e,transparent 42%),linear-gradient(140deg,#f8fafd,#edf4fa 55%,#f7f9fc)}button,input{font:inherit}button{color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{cursor:wait}a,button,input{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}a{color:inherit;text-decoration:none}.icon{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.shell{width:min(1180px,calc(100% - 80px));margin-inline:auto}
+.header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:35px}.console-title{font-size:14px;font-weight:600;letter-spacing:-.3px}.private-badge{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--secondary);padding:9px 12px;background:#ffffff70;border:1px solid #ffffffb8;border-radius:20px}.private-badge .icon{width:12px;height:12px;stroke-width:1.5}
+.scene{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}.orb{position:absolute;border-radius:50%;border:1px solid #ffffffd9;box-shadow:inset 3px 4px 15px #ffffffed,inset -6px -9px 22px #7badd31f,0 24px 60px #6f98c20d;backdrop-filter:blur(3px);background:radial-gradient(circle at 29% 23%,#fff9,transparent 49%),radial-gradient(circle at 75% 83%,#b9d0f431,transparent 57%),linear-gradient(140deg,#eff7ff47,#d8e7f51a)}.orb::before{content:'';position:absolute;inset:7px;border:1px solid #ffffff63;border-radius:50%;box-shadow:inset 0 1px 4px #ffffff9c}.orb::after{content:'';position:absolute;top:13%;left:17%;width:38%;height:10%;transform:rotate(-36deg);border-radius:50%;background:#ffffffa6;filter:blur(8px)}.orb-one{width:350px;height:350px;left:calc(50% - 625px);top:24%;transform:rotate(-15deg)}.orb-two{width:205px;height:205px;left:calc(50% + 325px);top:55%}.orb-three{width:78px;height:78px;left:calc(50% + 240px);top:15%;opacity:.7}.orbit{position:absolute;width:980px;height:460px;left:50%;top:51%;border:1px solid #a6bfd21a;border-radius:50%;transform:translate(-50%,-50%) rotate(-27deg)}.orbit::before,.orbit::after{content:'';position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;border:1px solid #c5d9ee;box-shadow:0 0 13px white}.orbit::before{top:18%;left:11%}.orbit::after{bottom:15%;right:14%}.scene-caption{position:absolute;left:calc(50% - 533px);top:calc(24% + 378px);font:9px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#8296ad;letter-spacing:2px}.scene-caption::before{content:'';display:block;width:24px;height:1px;background:#b8c9da;margin-bottom:12px}
+main{display:grid;place-items:center;padding:54px 24px 62px}.login-layout{width:100%;max-width:408px}.login-card{position:relative;isolation:isolate;border-radius:32px;padding:33px 34px 30px;border:1px solid #fffffff2;background:linear-gradient(150deg,#ffffffa6,#ffffffe0 62%,#f7fbffc2);box-shadow:0 20px 65px #4265920d,0 3px 12px #42659205,inset 1px 1px 0 white,inset -1px -1px 0 #ffffffb3;backdrop-filter:blur(30px) saturate(155%);-webkit-backdrop-filter:blur(30px) saturate(155%)}.login-card::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse at 1% 0,#ffffffdb,transparent 60%);box-shadow:inset 0 1px 0 white}.eyebrow{font-size:9px;letter-spacing:2px;font-weight:600;color:#66809e;margin:0 0 9px}h1{font-size:32px;font-weight:650;letter-spacing:-1.4px;line-height:1.3;margin:0}.intro{font-size:12px;line-height:1.7;color:var(--secondary);margin:11px 0 27px}.field{margin-top:18px}.field label{display:block;font-size:11px;font-weight:550;color:#425775;margin:0 0 9px 2px}.input-wrap{position:relative;display:flex;align-items:center;border:1px solid #a9bddc42;background:#f4f8fc80;border-radius:14px;box-shadow:inset 0 1px 3px #4e6d9c05;transition:border-color .2s,box-shadow .2s,background .2s}.input-wrap:focus-within{background:#ffffffd9;border-color:#0878ed80;box-shadow:0 0 0 3px #0878ed0e,inset 0 1px 2px #e7efff36}.input-icon{position:absolute;left:15px;width:17px;height:17px;color:#8093ad;pointer-events:none}input{height:51px;width:100%;min-width:0;outline:none;border:0;background:transparent;color:var(--ink);padding:0 14px 0 43px;font-size:14px;border-radius:14px;-webkit-appearance:none}input::placeholder{color:#8b9bb0;font-size:12px}input:autofill{box-shadow:inset 0 0 0 100px #eff6fd}input::-ms-reveal{display:none}input[type=password],#password{padding-right:50px}.reveal{position:absolute;right:4px;top:4px;display:grid;place-items:center;width:43px;height:43px;background:transparent;border:0;border-radius:11px;color:#7b8faa}.reveal:hover{color:var(--blue);background:#e6f0fc80}.reveal .icon{width:18px;height:18px}.error{display:flex;align-items:flex-start;gap:8px;margin:17px 0 0;font-size:11px;line-height:1.7;color:var(--red);padding:11px 12px;border:1px solid #e36c7c24;border-radius:12px;background:#fff0f39c}.error .icon{width:15px;height:15px;margin-top:2px}.field [aria-invalid=true]{color:#97293b}.submit{margin-top:26px;width:100%;min-height:49px;border-radius:14px;border:1px solid #096edf;color:white;background:linear-gradient(175deg,#228eff,#0878ed);box-shadow:0 6px 14px #0878ed20,inset 0 1px 0 #ffffff3d;display:flex;align-items:center;justify-content:center;gap:12px;font-size:13px;font-weight:600;letter-spacing:.2px;transition:transform .2s var(--spring),box-shadow .2s,opacity .2s}.submit:hover{box-shadow:0 7px 19px #0878ed30}.submit:active{transform:scale(.985)}.submit:disabled{opacity:.7}.submit .icon{width:16px;height:16px}.spinner{width:16px;height:16px;border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite}.card-foot{display:flex;justify-content:center;align-items:center;gap:6px;border-top:1px solid #7899c013;margin-top:24px;padding-top:20px;font-size:10px;letter-spacing:.2px;color:#768ba3}.card-foot .icon{width:12px;height:12px}.under-card{display:flex;justify-content:center;align-items:center;gap:7px;color:#7c90a8;font-size:10px;margin:22px 0 0}.under-card span{width:3px;height:3px;border-radius:50%;background:#9db1c6}.footer{display:flex;align-items:center;justify-content:space-between;gap:20px;color:#8a9bb0;font-size:9px;padding-bottom:26px;letter-spacing:.25px}.footer-right{font:9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.5px}.noscript{color:var(--secondary);font-size:11px;margin-top:16px;line-height:1.7}@keyframes spin{to{transform:rotate(360deg)}}
+@media(min-width:1500px){.orb-one{width:410px;height:410px;left:calc(50% - 690px)}.scene-caption{left:calc(50% - 580px);top:calc(24% + 438px)}}
+@media(max-width:960px){.orb-one{left:-145px;top:26%;width:300px;height:300px}.orb-two{left:auto;right:-70px;top:61%;width:180px;height:180px}.orb-three{left:auto;right:16%;top:17%;width:60px;height:60px}.scene-caption{display:none}.orbit{width:780px;height:400px}}
+@media(max-width:600px){input{font-size:16px}.shell{width:calc(100% - 40px)}.header{padding-top:23px}.private-badge{font-size:9px;padding:7px 9px}.private-badge .icon{width:10px;height:10px}main{padding:42px 20px 44px}.login-layout{max-width:390px}.login-card{padding:29px 27px 26px;border-radius:28px}h1{font-size:30px}.intro{margin-bottom:24px}.orb-one{width:230px;height:230px;left:-141px;top:20%;opacity:.65}.orb-two{right:-117px;top:64%;width:220px;height:220px;opacity:.7}.orb-three{right:9%;top:14%;width:43px;height:43px;opacity:.55}.orbit{width:630px;height:340px}.footer{padding-bottom:22px;font-size:8px}.footer-right{font-size:8px;letter-spacing:1px}.under-card{font-size:9px;margin-top:20px}}
+@media(max-width:350px){.shell{width:calc(100% - 32px)}main{padding-inline:16px}.login-card{padding-inline:22px}.private-badge{padding:7px}.footer-right{letter-spacing:.5px}}
+@media(max-height:720px) and (min-width:601px){main{padding-block:32px}.header{padding-top:24px}.login-card{padding-block:27px}.footer{padding-bottom:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.submit:active{transform:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.login-card{background:#fffffff2}.orb{opacity:.45}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></symbol><symbol id="eye" viewBox="0 0 24 24"><path d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></symbol><symbol id="eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18M10.5 5.6c.5-.1 1-.1 1.5-.1 6.1 0 9.5 6.5 9.5 6.5a19.1 19.1 0 0 1-2.5 3.3M6.1 6.1A23.7 23.7 0 0 0 2.5 12s3.4 6.5 9.5 6.5c1.6 0 3-.4 4.2-1M10 10a2.8 2.8 0 0 0 4 4"/></symbol></defs></svg>
+<div class="scene" aria-hidden="true"><div class="orbit"></div><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="orb orb-three"></div><div class="scene-caption">A QUIETER VIEW<br>OF YOUR CLOUD.</div></div>
+<header class="header shell"><span class="console-title">私有云监控</span><div class="private-badge"><svg class="icon" aria-hidden="true"><use href="#lock"/></svg>私人空间</div></header>
+<main>
+<div class="login-layout">
+<section class="login-card" aria-labelledby="login-title">
+<p class="eyebrow">YOUR CLOUD, IN FOCUS</p>
+<h1 id="login-title">欢迎回来。</h1>
+<p class="intro">登录以查看你的云端节点。</p>
+<form id="login-form" action="/auth/login" method="post">
+<input type="hidden" name="next" id="next" value="/">
+<div class="field"><label for="username" data-i18n="lbl_user">用户名</label><div class="input-wrap"><svg class="icon input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20v-1.5a6.5 6.5 0 0 1 13 0V20"/></svg><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="128" placeholder="请输入用户名" required aria-describedby="login-error"></div></div>
+<div class="field"><label for="password" data-i18n="lbl_pass">密码</label><div class="input-wrap"><svg class="icon input-icon" aria-hidden="true"><use href="#lock"/></svg><input id="password" name="password" type="password" autocomplete="current-password" maxlength="1024" placeholder="请输入密码" required aria-describedby="login-error"><button type="button" id="reveal" class="reveal" aria-label="显示密码" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#eye"/></svg></button></div></div>
+<div id="login-error" class="error" role="alert" hidden><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg><span id="error-text">用户名或密码不正确，请重试。</span></div>
+<button id="submit" class="submit" type="submit"><span class="spinner" id="spinner" hidden aria-hidden="true"></span><span id="submit-text">登录</span><svg class="icon" id="submit-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+<noscript><!-- SERVER_ERROR --><p class="noscript">填写账号密码后即可登录。</p></noscript>
+</form>
+<div class="card-foot"><svg class="icon" aria-hidden="true"><use href="#lock"/></svg><span data-i18n="foot">安全访问，仅限授权用户</span></div>
+</section>
+<p class="under-card"><span data-i18n="under_l">一个入口</span><span></span><span data-i18n="under_r">连接你的云端</span></p>
+</div>
+</main>
+<footer class="footer shell"><span data-i18n="title">私有云监控</span><span class="footer-right">DESIGNED FOR CLARITY</span></footer>
+<script>
+(() => {
+  'use strict';
+  const LOGIN_I18N = {
+    zh: {
+      page_title: "私有云监控 · 登录",
+      title: "私有云监控",
+      badge: "安全访问 · 凭证加密",
+      h1: "欢迎回来",
+      intro: "输入探针凭据以访问实时遥测控制台",
+      lbl_user: "用户名",
+      ph_user: "请输入用户名",
+      lbl_pass: "密码",
+      ph_pass: "请输入密码",
+      submit: "登录",
+      submitting: "正在登录",
+      foot: "安全访问，仅限授权用户",
+      under_l: "一个入口",
+      under_r: "连接你的云端",
+      err_invalid: "用户名或密码不正确，请重试。",
+      err_limited: "尝试次数较多，请稍后再试。",
+      err_expired: "登录已过期，请重新登录。",
+      err_generic: "暂时无法登录，请稍后重试。",
+      err_timeout: "连接超时，请重试。",
+      err_network: "连接暂时中断，请稍后重试。"
+    },
+    en: {
+      page_title: "CloudFleet Radar · Sign In",
+      title: "CloudFleet Radar",
+      badge: "Secure Access · Encrypted",
+      h1: "Welcome Back",
+      intro: "Sign in with your credentials to access live telemetry",
+      lbl_user: "Username",
+      ph_user: "Enter username",
+      lbl_pass: "Password",
+      ph_pass: "Enter password",
+      submit: "Sign In",
+      submitting: "Signing in...",
+      foot: "Secure Access · Authorized Users Only",
+      under_l: "One Unified Gateway",
+      under_r: "Connecting Your Cloud",
+      err_invalid: "Incorrect username or password. Please try again.",
+      err_limited: "Too many attempts. Please try again later.",
+      err_expired: "Session expired. Please sign in again.",
+      err_generic: "Unable to sign in. Please try again later.",
+      err_timeout: "Connection timed out. Please retry.",
+      err_network: "Network disconnected. Please retry."
+    }
+  };
+
+  let loginLang = localStorage.getItem("probe_lang") || (navigator.language && !navigator.language.startsWith("zh") ? "en" : "zh");
+
+  function applyLoginLang() {
+    const dict = LOGIN_I18N[loginLang] || LOGIN_I18N.zh;
+    document.title = dict.page_title;
+    document.documentElement.lang = loginLang === "zh" ? "zh-CN" : "en";
+    const btn = document.getElementById("login-lang-btn");
+    if (btn) btn.textContent = loginLang === "zh" ? "🌐 EN" : "🌐 中文";
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const k = el.dataset.i18n;
+      if (dict[k]) el.textContent = dict[k];
+    });
+    if (username) username.placeholder = dict.ph_user;
+    if (password) password.placeholder = dict.ph_pass;
+    if (submit && !submit.disabled) {
+      document.querySelector("#submit-text").textContent = dict.submit;
+    }
+  }
+
+  window.toggleLoginLang = function() {
+    loginLang = (loginLang === "zh") ? "en" : "zh";
+    localStorage.setItem("probe_lang", loginLang);
+    applyLoginLang();
+  };
+
+  const form = document.querySelector('#login-form');
+  const password = document.querySelector('#password');
+  const username = document.querySelector('#username');
+  const reveal = document.querySelector('#reveal');
+  const submit = document.querySelector('#submit');
+  const message = document.querySelector('#login-error');
+  const params = new URLSearchParams(location.search);
+  const destination = params.get('next') || '/';
+  const safeNext = /^\/(?!\/)/.test(destination) && !/[\\\x00-\x20\x7f]/.test(destination) && !/^\/(login|auth)(\/|\?|$)/.test(destination) ? destination : '/';
+  document.querySelector('#next').value = safeNext;
+  function error(text) {
+    document.querySelector('#error-text').textContent = text;
+    message.hidden = false;
+    if (text.startsWith('用户名或密码')) { username.setAttribute('aria-invalid','true'); password.setAttribute('aria-invalid','true'); }
+  }
+  if (params.get('error') === 'invalid') error('用户名或密码不正确，请重试。');
+  if (params.get('error') === 'limited') error('尝试次数较多，请稍后再试。');
+  if (params.get('expired') === '1') error('登录已过期，请重新登录。');
+  reveal.addEventListener('click',() => {
+    const show = password.type === 'password';
+    password.type = show ? 'text' : 'password';
+    reveal.setAttribute('aria-pressed',String(show));
+    reveal.setAttribute('aria-label',show ? '隐藏密码' : '显示密码');
+    reveal.querySelector('use').setAttribute('href',show ? '#eye-off' : '#eye');
+  });
+  form.addEventListener('input',() => {message.hidden=true;username.removeAttribute('aria-invalid');password.removeAttribute('aria-invalid');});
+  form.addEventListener('submit',async event => {
+    event.preventDefault();
+    if (!form.reportValidity() || submit.disabled) return;
+    message.hidden = true;
+    submit.disabled = true;
+    form.setAttribute('aria-busy','true');
+    document.querySelector('#spinner').hidden = false;
+    document.querySelector('#submit-arrow').hidden = true;
+    document.querySelector('#submit-text').textContent = '正在登录';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(),15000);
+    try {
+      const response = await fetch('/auth/login',{method:'POST',credentials:'same-origin',headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)),signal:controller.signal});
+      const data = await response.json();
+      if (response.ok && data.ok) {location.replace(data.next || '/');return;}
+      if (response.status === 429) error('尝试次数较多，请稍后再试。');
+      else if (response.status === 401) error('用户名或密码不正确，请重试。');
+      else error('暂时无法登录，请稍后重试。');
+    } catch (exception) { error(exception.name === 'AbortError' ? '连接超时，请重试。' : '连接暂时中断，请稍后重试。'); }
+    finally {
+      clearTimeout(timeout);
+      submit.disabled = false;
+      form.removeAttribute('aria-busy');
+      document.querySelector('#spinner').hidden = true;
+      document.querySelector('#submit-arrow').hidden = false;
+      document.querySelector('#submit-text').textContent = '登录';
+    }
+  });
+  applyLoginLang();
+})();
+</script>
+</body>
+</html>

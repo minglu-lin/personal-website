@@ -1,0 +1,3 @@
+[submodule "apps/myip/src"]
+	path = apps/myip/src
+	url = https://github.com/minglu-lin/MyIP.git

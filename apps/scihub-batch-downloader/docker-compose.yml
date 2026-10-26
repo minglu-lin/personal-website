@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  scihub-batch:
+    build: .
+    container_name: scihub-batch-downloader
+    restart: unless-stopped
+    ports:
+      - "18890:18890"
+    volumes:
+      - ./downloads:/app/downloads
+      - ./archives:/app/archives
+    environment:
+      - PORT=18890
+      - HOST=0.0.0.0
+      - UNPAYWALL_EMAIL=scholar_oa@example.com
+      - RESEARCH_EMAIL=research@example.com

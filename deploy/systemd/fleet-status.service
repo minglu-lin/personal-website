@@ -1,0 +1,16 @@
+[Unit]
+Description=Fleet Status Telemetry Monitor Service
+After=network.target
+
+[Service]
+Type=simple
+User=opc
+WorkingDirectory=/var/www/personal-website/apps/fleet-status-monitor/server
+ExecStart=/usr/bin/python3 /var/www/personal-website/apps/fleet-status-monitor/server/server.py --port 18889
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

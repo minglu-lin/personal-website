@@ -1,0 +1,17 @@
+[Unit]
+Description=Card BIN / IIN Lookup Microservice (10-Digit Radar)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/card_bin_service
+ExecStart=/usr/bin/python3 /opt/card_bin_service/server.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=card-bin-service
+
+[Install]
+WantedBy=multi-user.target

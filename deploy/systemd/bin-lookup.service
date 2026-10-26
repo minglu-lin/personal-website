@@ -1,0 +1,16 @@
+[Unit]
+Description=Card BIN Intelligence Lookup Web Service
+After=network.target
+
+[Service]
+Type=simple
+User=opc
+WorkingDirectory=/var/www/personal-website/apps/card-bin-lookup
+ExecStart=/usr/bin/python3 /var/www/personal-website/apps/card-bin-lookup/server.py --port 18895
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

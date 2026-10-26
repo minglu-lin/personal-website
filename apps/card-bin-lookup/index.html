@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球卡 BIN 智能雷达系统 | 10位卡BIN高精度查询 - bin.11231632.xyz</title>
+    <meta name="description" content="专业高精度 10 位卡 BIN / IIN 查询平台，支持 Visa、Mastercard、Amex、银联等全球卡组织，穿透发卡行、卡种属性、借贷属性与国家币种。">
+    <!-- Google Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.2.3/css/flag-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(14, 165, 233, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 85%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            min-height: 100vh;
+        }
+
+        /* 3D Realistic Credit Card */
+        .credit-card-container {
+            perspective: 1000px;
+        }
+        .credit-card {
+            width: 100%;
+            max-width: 440px;
+            height: 260px;
+            border-radius: 20px;
+            padding: 24px 28px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+        }
+        .credit-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .card-chip {
+            width: 48px;
+            height: 38px;
+            background: linear-gradient(135deg, #d4af37 0%, #f6e27a 50%, #b8860b 100%);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+        }
+        .card-chip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        /* Smooth Glows & Shadows */
+        .glow-border:focus-within {
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+            border-color: #0ea5e9;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Access Password Modal Overlay (Hidden by default to prevent any FOUC flash) -->
+    <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md transition-all duration-300" style="display: none;">
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl relative text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500 to-indigo-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-brand-500/30 text-white">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">系统已启用安全授权</h3>
+            <p class="text-xs text-slate-500 mb-6">
+                为防止接口免费额度被滥用，请输入访问授权密码以解锁卡 BIN 智能雷达系统。
+            </p>
+            <div class="space-y-4">
+                <div class="relative">
+                    <input 
+                        type="password" 
+                        id="authPasswordInput" 
+                        placeholder="请输入访问授权密码" 
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-center text-base font-mono text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white tracking-widest"
+                        onkeydown="if(event.key === 'Enter') verifyPassword();"
+                    />
+                </div>
+                <div id="authErrorMsg" class="hidden text-xs text-rose-500 font-medium"></div>
+                <button onclick="verifyPassword()" id="btnAuth" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-md shadow-brand-500/20 transition">
+                    立即验证并解锁
+                </button>
+            </div>
+            <div class="mt-5 text-[11px] text-slate-400 font-mono">
+                请向系统管理员索取访问授权凭证
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center shadow-md shadow-brand-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-lg tracking-tight text-slate-900">Card BIN Radar</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-brand-50 text-brand-600 font-mono border border-brand-200">10-Digit Sub-BIN</span>
+                    </div>
+                    <div class="text-xs text-slate-500 font-mono">bin.11231632.xyz</div>
+                </div>
+            </div>
+
+            <!-- Actions / Status -->
+            <div class="flex items-center space-x-3">
+                <!-- Rate Limit Badge -->
+                <div class="hidden md:flex items-center space-x-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>8位免费分流 / 10位Neutrino高精通道</span>
+                </div>
+
+                <!-- Password Status & Lock (hidden when AUTH_ENABLED=false) -->
+                <button id="authLockBtn" onclick="lockSystem()" title="重新输入密码锁定系统" class="hidden px-3 py-1.5 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 transition flex items-center space-x-1.5 text-slate-700 font-mono">
+                    <span>🔒</span>
+                    <span id="lockStatusText">已授权</span>
+                </button>
+
+                <!-- Language Switch -->
+                <button onclick="toggleLang()" class="px-3 py-1.5 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 transition flex items-center space-x-1.5 text-slate-700">
+                    <span id="langIcon">🌐</span>
+                    <span id="langText">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-2xl mx-auto mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-3">
+                全球卡片 <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600">10位 BIN / IIN</span> 智能解析
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600" id="heroDesc">
+                支持 6 至 10 位子卡段精准穿透 • 包含 Visa/万事达/运通/银联全卡种属性 • 毫秒级本地高速持久缓存
+            </p>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="flex justify-center mb-8">
+            <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 shadow-inner">
+                <button onclick="switchTab('single')" id="tabBtnSingle" class="px-5 py-2 rounded-lg text-sm font-semibold transition bg-white text-brand-700 shadow-sm">
+                    单卡深度解析
+                </button>
+                <button onclick="switchTab('batch')" id="tabBtnBatch" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+                    批量矩阵查询
+                </button>
+                <button onclick="switchTab('api')" id="tabBtnApi" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+                    开发者 API
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TAB 1: SINGLE LOOKUP ================= -->
+        <div id="tabSingle" class="space-y-8">
+            
+            <!-- Grid: Left Input & Quick Samples, Right Interactive 3D Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left: Input Form -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 card-shadow relative glow-border transition duration-300">
+                        <label class="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 mb-2" id="labelCardBin">
+                            输入卡号或 6-10 位卡 BIN (Card BIN / IIN)
+                        </label>
+                        <div class="relative flex items-center">
+                            <input 
+                                type="text" 
+                                id="binInput" 
+                                maxlength="24"
+                                placeholder="4246 7112 34" 
+                                autofocus
+                                class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3.5 text-xl sm:text-2xl font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white tracking-wider transition"
+                                oninput="handleBinInput(this.value)"
+                                onkeydown="if(event.key === 'Enter') doLookup();"
+                            />
+                            <div class="absolute right-3 flex items-center space-x-2">
+                                <button onclick="pasteClipboard()" title="从剪贴板粘贴" class="p-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-600 hover:text-slate-900 transition text-xs font-mono flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                    <span class="hidden sm:inline">粘贴</span>
+                                </button>
+                                <button onclick="clearInput()" title="清空输入" class="p-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-600 hover:text-slate-900 transition text-xs">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-4 flex items-center space-x-3">
+                            <button onclick="doLookup()" id="btnLookup" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-md shadow-brand-500/20 transition flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg id="searchIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <span id="btnLookupText">立即查询 (10位精析)</span>
+                            </button>
+                        </div>
+
+                        <!-- Input Info -->
+                        <div class="mt-3 flex items-center justify-between text-xs text-slate-500 font-mono">
+                            <span id="digitCount">已输入: 0 位数字</span>
+                            <span class="text-emerald-600 flex items-center space-x-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                <span>双通道智能分流 • 密码防护已开启</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Preset Cards -->
+                    <div>
+                        <div class="text-xs font-mono uppercase text-slate-500 mb-2 font-semibold" id="quickTestTitle">
+                            💡 快速测试示例 (点击一键填入)
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                            <button onclick="setSample('4246711234')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/pl.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="PL">
+                                    <span>波兰 4246711234</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">Visa 经典借记卡</div>
+                            </button>
+                            <button onclick="setSample('5567661234')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/us.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="US">
+                                    <span>美国 5567661234</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">万事达 车队商业卡</div>
+                            </button>
+                            <button onclick="setSample('3782821234')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/us.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="US">
+                                    <span>运通 3782821234</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">Amex 白金信用卡</div>
+                            </button>
+                            <button onclick="setSample('6222021234')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/cn.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="CN">
+                                    <span>工行 6222021234</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">银联 经典借记卡</div>
+                            </button>
+                            <button onclick="setSample('5353161234')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/gb.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="GB">
+                                    <span>Revolut 535316</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">虚拟预付白金卡</div>
+                            </button>
+                            <button onclick="setSample('4111111111')" class="p-3 rounded-2xl bg-white border border-slate-200 hover:border-brand-300 hover:shadow-sm transition text-left">
+                                <div class="text-slate-900 font-bold flex items-center space-x-1.5">
+                                    <img src="https://flagcdn.com/20x15/us.png" class="inline-block w-4 h-3 rounded-xs object-cover border border-slate-200 shadow-2xs" alt="US">
+                                    <span>摩根大通 411111</span>
+                                </div>
+                                <div class="text-slate-500 text-[11px]">Visa 签名信用卡</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive 3D Realistic Credit Card -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="credit-card-container w-full max-w-sm">
+                        <div id="virtualCard" class="credit-card flex flex-col justify-between" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                            
+                            <!-- Card Top: Chip & Contactless & Brand Name -->
+                            <div class="flex items-center justify-between relative z-10">
+                                <div class="flex items-center space-x-3">
+                                    <div class="card-chip"></div>
+                                    <!-- Contactless NFC Icon -->
+                                    <svg class="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.393 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                                    </svg>
+                                </div>
+                                <div id="cardIssuerTop" class="text-xs font-semibold tracking-wider uppercase text-white/90 max-w-[170px] truncate text-right drop-shadow">
+                                    GLOBAL ISSUER
+                                </div>
+                            </div>
+
+                            <!-- Card Middle: Formatted Number Live Display -->
+                            <div class="my-auto relative z-10">
+                                <div id="cardNumberDisplay" class="font-mono text-xl sm:text-2xl font-bold tracking-widest text-white drop-shadow-md">
+                                    •••• •••• •••• ••••
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span id="cardCategoryBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/20 text-white font-semibold uppercase tracking-wider backdrop-blur-sm">
+                                        STANDARD
+                                    </span>
+                                    <span id="cardTypeBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white/90 uppercase tracking-wider">
+                                        CARD
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Card Bottom: Holder, Valid Thru & Brand Logo -->
+                            <div class="flex items-end justify-between relative z-10">
+                                <div>
+                                    <div class="text-[9px] uppercase tracking-widest text-white/70 font-mono">Card Member</div>
+                                    <div class="text-xs font-mono font-bold tracking-wider text-white uppercase drop-shadow">BIN RADAR</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-[9px] uppercase tracking-widest text-white/70 font-mono">Valid Thru</div>
+                                    <div class="text-xs font-mono font-bold text-white drop-shadow">12/28</div>
+                                </div>
+                                <div id="cardBrandLogo" class="text-right">
+                                    <span class="text-xl font-extrabold italic tracking-tight text-white drop-shadow">CARD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis Results View (Initially Hidden) -->
+            <div id="resultsCard" class="hidden bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 card-shadow relative overflow-hidden">
+                
+                <!-- Results Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
+                    <div class="flex items-center space-x-4">
+                        <!-- High-resolution National Flag Icon Badge -->
+                        <div class="relative flex-shrink-0">
+                            <div id="resultFlagContainer" class="w-16 h-12 rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-slate-50 flex items-center justify-center transition-all">
+                                <span id="resultFlagPlaceholder" class="text-3xl select-none">🌐</span>
+                                <img id="resultFlagImg" class="hidden w-full h-full object-cover" alt="Country Flag" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                                <h2 id="resultBankName" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                                    发卡行名称
+                                </h2>
+                                <span id="resultCacheBadge" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    ⚡ 命中持久缓存
+                                </span>
+                            </div>
+                            <div class="text-xs font-mono text-slate-500 mt-1 flex items-center space-x-3 flex-wrap">
+                                <span id="resultCountryFull" class="flex items-center space-x-1.5">
+                                    <span id="resultCountryMiniFlag"></span>
+                                    <span id="resultCountryName">国家: 未知</span>
+                                </span>
+                                <span>•</span>
+                                <span id="resultBinQuery">查询 10位: -</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Luhn Badge -->
+                    <div id="resultLuhnBox" class="self-start sm:self-center">
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                            Luhn 校验: 待输入完整卡号
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Attributes Grid (8 Key Dimensions) -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    
+                    <!-- 1. 卡组织品牌 -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">卡组织 (Brand)</div>
+                        <div id="fieldBrand" class="text-base sm:text-lg font-bold text-slate-900 flex items-center space-x-1.5">
+                            <span>-</span>
+                        </div>
+                        <div id="fieldBrandSub" class="text-[11px] text-slate-500 mt-0.5">国际清算网络</div>
+                    </div>
+
+                    <!-- 2. 卡片类型 (Credit/Debit/Prepaid) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">卡片形态 (Type)</div>
+                        <div id="fieldType" class="text-base sm:text-lg font-bold text-slate-900">
+                            -
+                        </div>
+                        <div id="fieldTypeSub" class="text-[11px] text-slate-500 mt-0.5">借贷属性</div>
+                    </div>
+
+                    <!-- 3. 卡片等级 (Category) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">卡片级别 (Tier)</div>
+                        <div id="fieldCategory" class="text-base sm:text-lg font-bold text-brand-600">
+                            -
+                        </div>
+                        <div id="fieldCategorySub" class="text-[11px] text-slate-500 mt-0.5">等级权益划分</div>
+                    </div>
+
+                    <!-- 4. 账户类型 (Commercial) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">账户类型 (Account)</div>
+                        <div id="fieldCommercial" class="text-base sm:text-lg font-bold text-slate-900">
+                            -
+                        </div>
+                        <div id="fieldCommercialSub" class="text-[11px] text-slate-500 mt-0.5">个人 / 商业卡</div>
+                    </div>
+
+                    <!-- 5. 虚拟卡 / 实体卡 (Prepaid) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">虚拟卡 / 预付</div>
+                        <div id="fieldPrepaid" class="text-base sm:text-lg font-bold text-slate-900">
+                            -
+                        </div>
+                        <div id="fieldPrepaidSub" class="text-[11px] text-slate-500 mt-0.5">是否预付费账户</div>
+                    </div>
+
+                    <!-- 6. 充值特性 (Reloadable) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">循环充值 (Reloadable)</div>
+                        <div id="fieldReloadable" class="text-base sm:text-lg font-bold text-slate-900">
+                            -
+                        </div>
+                        <div id="fieldReloadableSub" class="text-[11px] text-slate-500 mt-0.5">余额可续充性</div>
+                    </div>
+
+                    <!-- 7. 结算币种 (Currency) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">本币币种 (Currency)</div>
+                        <div id="fieldCurrency" class="text-base sm:text-lg font-bold text-emerald-600">
+                            -
+                        </div>
+                        <div id="fieldCurrencySub" class="text-[11px] text-slate-500 mt-0.5">默认清算货币</div>
+                    </div>
+
+                    <!-- 8. 国家及代码 (ISO) -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">ISO 编码 (Country)</div>
+                        <div id="fieldIso" class="text-base sm:text-lg font-bold text-slate-900">
+                            -
+                        </div>
+                        <div id="fieldIsoSub" class="text-[11px] text-slate-500 mt-0.5">Alpha-2 / Alpha-3</div>
+                    </div>
+                </div>
+
+                <!-- Issuer Link & Website (if available) -->
+                <div id="issuerLinksBox" class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs font-mono text-slate-500">
+                    <div class="flex items-center space-x-2">
+                        <span>发卡机构官网:</span>
+                        <a id="issuerWebLink" href="#" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:underline flex items-center space-x-1 font-semibold">
+                            <span id="issuerWebText">无公开网址</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                    <div class="text-slate-400" id="queryTimestamp">
+                        解析状态: 就绪
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: BATCH LOOKUP ================= -->
+        <div id="tabBatch" class="hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 card-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-base font-bold text-slate-900">批量输入卡号或 6-10 位卡 BIN (每行一个，支持最多 20 条)</h3>
+                    <span class="text-xs font-mono text-slate-500">缓存优先 • 限流保护</span>
+                </div>
+                <textarea 
+                    id="batchInput" 
+                    rows="6" 
+                    placeholder="4246711234&#10;5567661234&#10;3782821234&#10;6222021234&#10;5353161234"
+                    class="w-full bg-slate-50 border border-slate-300 rounded-2xl p-4 text-sm font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white"
+                ></textarea>
+                <div class="mt-4 flex flex-wrap gap-3">
+                    <button onclick="doBatchLookup()" id="btnBatchLookup" class="py-2.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-sm">
+                        <span>批量快速查询</span>
+                    </button>
+                    <button onclick="exportBatchCsv()" class="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-sm font-mono transition">
+                        导出 CSV
+                    </button>
+                    <button onclick="copyBatchJson()" class="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-sm font-mono transition">
+                        复制 JSON
+                    </button>
+                </div>
+            </div>
+
+            <!-- Batch Table -->
+            <div id="batchResultsWrapper" class="hidden bg-white border border-slate-200 rounded-3xl overflow-hidden card-shadow">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm font-mono">
+                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
+                            <tr>
+                                <th class="p-3.5">BIN 号码</th>
+                                <th class="p-3.5">国家/地区</th>
+                                <th class="p-3.5">卡组织</th>
+                                <th class="p-3.5">类型</th>
+                                <th class="p-3.5">卡种级别</th>
+                                <th class="p-3.5">发卡银行</th>
+                                <th class="p-3.5">商业/虚拟</th>
+                                <th class="p-3.5">来源</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batchTableBody" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: DEVELOPER API ================= -->
+        <div id="tabApi" class="hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 card-shadow">
+                <h3 class="text-xl font-bold text-slate-900 mb-2">开放 REST API 接口文档</h3>
+                <p class="text-sm text-slate-600 mb-6">
+                    API 已启用访问密码验证与单 IP 限流（1次/60秒）。调用时需通过 Header `X-Access-Password` 或 URL 参数 `?password=...` 传递授权密码。
+                </p>
+
+                <!-- Endpoint 1 -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-mono text-xs font-bold rounded-lg">GET</span>
+                        <code class="text-sm font-mono text-brand-700">https://bin.11231632.xyz/api/lookup?bin={10位BIN}</code>
+                    </div>
+                    <div class="bg-slate-900 rounded-2xl p-4 font-mono text-xs text-slate-200 overflow-x-auto shadow-inner">
+                        <span class="text-slate-500"># cURL 带密码鉴权调用</span><br>
+                        curl "https://bin.11231632.xyz/api/lookup?bin=4246711234" \<br>
+                        &nbsp;&nbsp;-H "X-Access-Password: 你的密码"
+                    </div>
+                </div>
+
+                <!-- Endpoint 2 -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-1 bg-indigo-100 text-indigo-800 font-mono text-xs font-bold rounded-lg">POST</span>
+                        <code class="text-sm font-mono text-brand-700">https://bin.11231632.xyz/api/batch</code>
+                    </div>
+                    <div class="bg-slate-900 rounded-2xl p-4 font-mono text-xs text-slate-200 overflow-x-auto shadow-inner">
+                        <span class="text-slate-500"># 批量查询示例</span><br>
+                        curl -X POST "https://bin.11231632.xyz/api/batch" \<br>
+                        &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+                        &nbsp;&nbsp;-H "X-Access-Password: 你的密码" \<br>
+                        &nbsp;&nbsp;-d '{"bins": ["4246711234", "5567661234", "3782821234"]}'
+                    </div>
+                </div>
+
+                <!-- Python Code Snippet -->
+                <div class="space-y-2">
+                    <div class="text-xs font-mono text-slate-500 uppercase">Python 3 接入代码</div>
+                    <div class="bg-slate-900 rounded-2xl p-4 font-mono text-xs text-slate-200 overflow-x-auto shadow-inner">
+<pre>import requests
+
+headers = {"X-Access-Password": "你的密码"}
+res = requests.get("https://bin.11231632.xyz/api/lookup", params={"bin": "4246711234"}, headers=headers).json()
+if res.get("success"):
+    card = res["data"]
+    print(f"发卡行: {card['issuer']}")
+    print(f"国家: {card['country']} ({card['currency_code']})")
+    print(f"品牌: {card['card_brand']} | 级别: {card['card_category']}")
+</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-slate-200 py-8 text-center text-xs text-slate-500 font-mono space-y-2 bg-white">
+        <div>Card BIN / IIN Intelligence Gateway • 部署于 Oracle ARM 圣何塞 • Cloudflare Anycast CDN 加速</div>
+        <div class="text-slate-400">Powered by Neutrino API with Smart Local Persistence Layer • Light Theme</div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        const AUTH_ENABLED = false; // 暂时关闭密码验证：免密直接访问，不弹出任何授权窗口
+        let currentLang = 'zh';
+        let latestBatchData = [];
+
+        // Auth management
+        function getStoredPassword() {
+            return localStorage.getItem('bin_access_pwd') || '';
+        }
+
+        function checkAuthOnLoad() {
+            const lockBtn = document.getElementById('authLockBtn');
+            if (!AUTH_ENABLED) {
+                hideAuthModal();
+                if (lockBtn) lockBtn.classList.add('hidden');
+                return;
+            }
+            if (lockBtn) lockBtn.classList.remove('hidden');
+
+            const pwd = getStoredPassword();
+            if (!pwd) {
+                showAuthModal();
+            } else {
+                hideAuthModal();
+            }
+        }
+
+        function showAuthModal() {
+            if (!AUTH_ENABLED) return;
+            const modal = document.getElementById('authModal');
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            document.getElementById('authPasswordInput').focus();
+        }
+
+        function hideAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }
+
+        function lockSystem() {
+            if (!AUTH_ENABLED) return;
+            localStorage.removeItem('bin_access_pwd');
+            document.getElementById('authPasswordInput').value = '';
+            document.getElementById('authErrorMsg').classList.add('hidden');
+            showAuthModal();
+        }
+
+        async function verifyPassword() {
+            const input = document.getElementById('authPasswordInput').value.trim();
+            if (!input) {
+                showAuthError('请输入访问授权密码！');
+                return;
+            }
+
+            const btn = document.getElementById('btnAuth');
+            btn.disabled = true;
+            btn.innerText = '正在验证...';
+
+            try {
+                const res = await fetch('/api/verify', {
+                    headers: { 'X-Access-Password': input }
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    localStorage.setItem('bin_access_pwd', input);
+                    hideAuthModal();
+                    document.getElementById('lockStatusText').innerText = '已授权';
+                } else {
+                    showAuthError(data.error || '密码错误，请重新输入');
+                }
+            } catch(e) {
+                showAuthError('网络异常，验证失败');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '立即验证并解锁';
+            }
+        }
+
+        function showAuthError(msg) {
+            const el = document.getElementById('authErrorMsg');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+
+        // Formatting input with groups of 4
+        function handleBinInput(val) {
+            const digits = val.replace(/\D/g, '');
+            document.getElementById('digitCount').innerText = `已输入: ${digits.length} 位数字`;
+
+            // Update 3D card number
+            let formatted = '';
+            for (let i = 0; i < 16; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                if (i < digits.length) {
+                    formatted += digits[i];
+                } else {
+                    formatted += '•';
+                }
+            }
+            document.getElementById('cardNumberDisplay').innerText = formatted;
+
+            // Real-time Brand Detection from prefix
+            detectBrandPreview(digits);
+        }
+
+        function detectBrandPreview(digits) {
+            let brand = 'CARD';
+            let bg = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
+            if (digits.startsWith('4')) {
+                brand = 'VISA';
+                bg = 'linear-gradient(135deg, #1a1f71 0%, #0056b3 100%)';
+            } else if (digits.startsWith('51') || digits.startsWith('52') || digits.startsWith('53') || digits.startsWith('54') || digits.startsWith('55') || (digits.length >= 4 && parseInt(digits.slice(0,4)) >= 2221 && parseInt(digits.slice(0,4)) <= 2720)) {
+                brand = 'MASTERCARD';
+                bg = 'linear-gradient(135deg, #24292e 0%, #cf4324 100%)';
+            } else if (digits.startsWith('34') || digits.startsWith('37')) {
+                brand = 'AMEX';
+                bg = 'linear-gradient(135deg, #0070d2 0%, #002f6c 100%)';
+            } else if (digits.startsWith('62')) {
+                brand = 'UNIONPAY';
+                bg = 'linear-gradient(135deg, #004b79 0%, #bf1b24 100%)';
+            } else if (digits.startsWith('35')) {
+                brand = 'JCB';
+                bg = 'linear-gradient(135deg, #0e5c9e 0%, #2b9148 100%)';
+            } else if (digits.startsWith('6011') || digits.startsWith('65')) {
+                brand = 'DISCOVER';
+                bg = 'linear-gradient(135deg, #ff6000 0%, #1a1a1a 100%)';
+            }
+            document.getElementById('cardBrandLogo').innerHTML = `<span class="text-xl font-extrabold italic tracking-tight text-white drop-shadow">${brand}</span>`;
+            document.getElementById('virtualCard').style.background = bg;
+        }
+
+        function setSample(bin) {
+            document.getElementById('binInput').value = bin;
+            handleBinInput(bin);
+        }
+
+        function clearInput() {
+            document.getElementById('binInput').value = '';
+            handleBinInput('');
+            document.getElementById('resultsCard').classList.add('hidden');
+        }
+
+        async function pasteClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    const clean = text.trim();
+                    document.getElementById('binInput').value = clean;
+                    handleBinInput(clean);
+                }
+            } catch(e) {
+                alert('无法访问剪贴板，请手动粘贴');
+            }
+        }
+
+        async function doLookup() {
+            const pwd = getStoredPassword();
+            if (AUTH_ENABLED && !pwd) {
+                showAuthModal();
+                return;
+            }
+
+            const val = document.getElementById('binInput').value;
+            const digits = val.replace(/\D/g, '');
+            if (digits.length < 6) {
+                alert(currentLang === 'zh' ? '请输入至少 6 到 10 位的有效卡号或卡 BIN！' : 'Please enter at least 6 to 10 digits for BIN lookup.');
+                return;
+            }
+
+            const btn = document.getElementById('btnLookup');
+            const btnText = document.getElementById('btnLookupText');
+            btn.disabled = true;
+            btnText.innerText = currentLang === 'zh' ? '正在穿透解析...' : 'Querying BIN...';
+
+            try {
+                const headers = {};
+                if (pwd) headers['X-Access-Password'] = pwd;
+
+                const res = await fetch(`/api/lookup?bin=${digits}`, { headers });
+                const data = await res.json();
+                
+                if (res.status === 401 && AUTH_ENABLED) {
+                    alert('访问密码无效或已被重置，请重新输入密码！');
+                    lockSystem();
+                    return;
+                }
+
+                if (!res.ok || !data.success) {
+                    alert(data.error || '查询失败，请检查输入或稍后重试');
+                    return;
+                }
+
+                renderResults(data);
+            } catch(e) {
+                alert('网络连接错误，请检查服务器网络');
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = currentLang === 'zh' ? '立即查询 (10位精析)' : 'Lookup BIN (10-Digit)';
+            }
+        }
+
+        function renderResults(res) {
+            const card = res.data;
+            const meta = res.meta;
+
+            // Show results section
+            const resultsCard = document.getElementById('resultsCard');
+            resultsCard.classList.remove('hidden');
+
+            // Header flag using real national flag icon library (FlagCDN + cdnjs SVG fallback)
+            const cCode = (card.country_code || '').toLowerCase();
+            const flagImg = document.getElementById('resultFlagImg');
+            const flagPlaceholder = document.getElementById('resultFlagPlaceholder');
+            const miniFlag = document.getElementById('resultCountryMiniFlag');
+
+            if (cCode && cCode.length === 2) {
+                flagImg.src = `https://flagcdn.com/w160/${cCode}.png`;
+                flagImg.srcset = `https://flagcdn.com/w160/${cCode}.png 1x, https://flagcdn.com/w320/${cCode}.png 2x`;
+                flagImg.alt = card.country || cCode.toUpperCase();
+                flagImg.classList.remove('hidden');
+                flagPlaceholder.classList.add('hidden');
+
+                // Fallback to cdnjs SVG flag if flagcdn fails
+                flagImg.onerror = function() {
+                    this.onerror = null;
+                    this.src = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.2.3/flags/4x3/${cCode}.svg`;
+                };
+
+                miniFlag.innerHTML = `<img src="https://flagcdn.com/20x15/${cCode}.png" class="inline-block w-4 h-3 rounded-xs mr-1 align-middle object-cover border border-slate-200" alt="${cCode}">`;
+            } else {
+                flagImg.classList.add('hidden');
+                flagPlaceholder.classList.remove('hidden');
+                miniFlag.innerHTML = '';
+            }
+
+            // Header info
+            document.getElementById('resultBankName').innerText = card.issuer || '未知发卡机构 (Unknown)';
+            document.getElementById('resultCountryName').innerText = `国家/地区: ${meta.country_name_zh} (${card.country || '-'})`;
+            document.getElementById('resultBinQuery').innerText = `查询位: ${res.query_bin} (${res.bin_length}位)`;
+
+            // Engine / Cache badge
+            const cacheBadge = document.getElementById('resultCacheBadge');
+            const engine = res.source_engine || (res.cached ? '本地持久缓存' : '云端实时穿透');
+            if (res.cached) {
+                cacheBadge.innerText = `⚡ ${engine}`;
+                cacheBadge.className = 'text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+            } else if (engine.includes('免费') || engine.includes('HandyAPI') || engine.includes('Binlist')) {
+                cacheBadge.innerText = `🟢 ${engine}`;
+                cacheBadge.className = 'text-xs font-mono px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200';
+            } else {
+                cacheBadge.innerText = `🔵 ${engine}`;
+                cacheBadge.className = 'text-xs font-mono px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200';
+            }
+
+            // Luhn badge
+            const luhnBox = document.getElementById('resultLuhnBox');
+            if (meta.luhn_valid === true) {
+                luhnBox.innerHTML = '<span class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">✓ Luhn 校验通过</span>';
+            } else if (meta.luhn_valid === false) {
+                luhnBox.innerHTML = '<span class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-rose-50 text-rose-700 border border-rose-200">✕ Luhn 校验未通过</span>';
+            } else {
+                luhnBox.innerHTML = '<span class="px-3 py-1.5 rounded-xl text-xs font-mono text-slate-500 bg-slate-100 border border-slate-200">Luhn 校验: 需全卡号</span>';
+            }
+
+            // 8 Grid items
+            document.getElementById('fieldBrand').innerText = meta.brand_display || card.card_brand;
+            document.getElementById('fieldType').innerText = meta.card_type_zh || card.card_type;
+            document.getElementById('fieldCategory').innerText = meta.card_category_zh || card.card_category;
+            document.getElementById('fieldCommercial').innerText = meta.is_commercial_zh;
+            document.getElementById('fieldPrepaid').innerText = meta.is_prepaid_zh;
+            document.getElementById('fieldReloadable').innerText = meta.is_reloadable_zh;
+            document.getElementById('fieldCurrency').innerText = card.currency_code ? `${card.currency_code}` : '-';
+            if (cCode && cCode.length === 2) {
+                document.getElementById('fieldIso').innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <img src="https://flagcdn.com/24x18/${cCode}.png" class="inline-block w-5 h-3.5 rounded object-cover border border-slate-200 shadow-2xs" alt="${cCode}">
+                        <span>${card.country_code || '-'} / ${card.country_code3 || '-'}</span>
+                    </div>
+                `;
+            } else {
+                document.getElementById('fieldIso').innerText = `${card.country_code || '-'} / ${card.country_code3 || '-'}`;
+            }
+
+            // Issuer Website
+            const issuerLink = document.getElementById('issuerWebLink');
+            const issuerText = document.getElementById('issuerWebText');
+            if (card.issuer_website) {
+                issuerLink.href = card.issuer_website.startsWith('http') ? card.issuer_website : `https://${card.issuer_website}`;
+                issuerText.innerText = card.issuer_website;
+            } else {
+                issuerLink.href = '#';
+                issuerText.innerText = '无官网登记';
+            }
+
+            // Update 3D card visuals
+            document.getElementById('cardIssuerTop').innerText = card.issuer || 'GLOBAL ISSUER';
+            document.getElementById('cardCategoryBadge').innerText = card.card_category || 'STANDARD';
+            document.getElementById('cardTypeBadge').innerText = card.card_type || 'CARD';
+            if (meta.brand_gradient) {
+                document.getElementById('virtualCard').style.background = meta.brand_gradient;
+            }
+
+            // Smooth scroll into view
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Tab Switching
+        function switchTab(tab) {
+            document.getElementById('tabSingle').classList.toggle('hidden', tab !== 'single');
+            document.getElementById('tabBatch').classList.toggle('hidden', tab !== 'batch');
+            document.getElementById('tabApi').classList.toggle('hidden', tab !== 'api');
+
+            const btnSingle = document.getElementById('tabBtnSingle');
+            const btnBatch = document.getElementById('tabBtnBatch');
+            const btnApi = document.getElementById('tabBtnApi');
+
+            const activeClass = 'bg-white text-brand-700 shadow-sm';
+            const inactiveClass = 'text-slate-600 hover:text-slate-900';
+
+            btnSingle.className = `px-5 py-2 rounded-lg text-sm font-semibold transition ${tab === 'single' ? activeClass : inactiveClass}`;
+            btnBatch.className = `px-5 py-2 rounded-lg text-sm font-semibold transition ${tab === 'batch' ? activeClass : inactiveClass}`;
+            btnApi.className = `px-5 py-2 rounded-lg text-sm font-semibold transition ${tab === 'api' ? activeClass : inactiveClass}`;
+        }
+
+        // Batch Lookup
+        async function doBatchLookup() {
+            const pwd = getStoredPassword();
+            if (AUTH_ENABLED && !pwd) {
+                showAuthModal();
+                return;
+            }
+
+            const raw = document.getElementById('batchInput').value;
+            const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length >= 6);
+            if (lines.length === 0) {
+                alert('请在文本框中每行输入一个卡 BIN！');
+                return;
+            }
+
+            const btn = document.getElementById('btnBatchLookup');
+            btn.disabled = true;
+            btn.innerText = '正在批量查询...';
+
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (pwd) headers['X-Access-Password'] = pwd;
+
+                const res = await fetch('/api/batch', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ bins: lines })
+                });
+                const data = await res.json();
+                
+                if (res.status === 401 && AUTH_ENABLED) {
+                    alert('访问密码无效，请重新输入密码！');
+                    lockSystem();
+                    return;
+                }
+
+                if (res.status === 429) {
+                    alert(data.error || '请求过于频繁，请稍后重试！');
+                    return;
+                }
+
+                if (!res.ok || !data.success) {
+                    alert(data.error || '批量查询失败');
+                    return;
+                }
+                latestBatchData = data.items;
+                renderBatchTable(data.items);
+            } catch(e) {
+                alert('批量查询发生异常');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '批量快速查询';
+            }
+        }
+
+        function renderBatchTable(items) {
+            const wrapper = document.getElementById('batchResultsWrapper');
+            const tbody = document.getElementById('batchTableBody');
+            wrapper.classList.remove('hidden');
+            tbody.innerHTML = '';
+
+            items.forEach(item => {
+                const c = item.data;
+                const m = item.meta;
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition';
+                const cCode = (c.country_code || '').toLowerCase();
+                const flagHtml = (cCode && cCode.length === 2)
+                    ? `<img src="https://flagcdn.com/20x15/${cCode}.png" class="inline-block w-4 h-3 rounded-xs mr-1.5 align-middle object-cover border border-slate-200 shadow-2xs" alt="${cCode}">`
+                    : '🌐 ';
+
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-slate-900">${item.query_bin}</td>
+                    <td class="p-3.5 flex items-center">${flagHtml}<span>${m.country_name_zh}</span></td>
+                    <td class="p-3.5 font-semibold text-brand-600">${m.brand_display}</td>
+                    <td class="p-3.5">${m.card_type_zh}</td>
+                    <td class="p-3.5 text-amber-600 font-medium">${m.card_category_zh}</td>
+                    <td class="p-3.5 text-slate-700 max-w-[200px] truncate" title="${c.issuer}">${c.issuer}</td>
+                    <td class="p-3.5 text-xs text-slate-500">${c.is_commercial ? '商业' : '个人'} / ${c.is_prepaid ? '虚拟' : '实体'}</td>
+                    <td class="p-3.5">${item.cached ? '<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs">⚡ 缓存</span>' : '<span class="text-sky-700 bg-sky-50 px-2 py-0.5 rounded text-xs">🌐 实时</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportBatchCsv() {
+            if (latestBatchData.length === 0) {
+                alert('请先完成批量查询！');
+                return;
+            }
+            let csv = "BIN,Country,Brand,Type,Category,Issuer,Commercial,Prepaid,Currency\n";
+            latestBatchData.forEach(i => {
+                const c = i.data;
+                csv += `"${i.query_bin}","${c.country}","${c.card_brand}","${c.card_type}","${c.card_category}","${c.issuer.replace(/"/g, '""')}","${c.is_commercial}","${c.is_prepaid}","${c.currency_code}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `card_bin_batch_${Date.now()}.csv`;
+            link.click();
+        }
+
+        function copyBatchJson() {
+            if (latestBatchData.length === 0) {
+                alert('请先完成批量查询！');
+                return;
+            }
+            navigator.clipboard.writeText(JSON.stringify(latestBatchData, null, 2)).then(() => {
+                alert('批量查询结果已成功复制为 JSON 格式！');
+            });
+        }
+
+        // Toggle Language
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.getElementById('langText').innerText = currentLang === 'zh' ? 'EN' : '中文';
+            document.getElementById('labelCardBin').innerText = currentLang === 'zh' 
+                ? '输入卡号或 6-10 位卡 BIN (Card BIN / IIN)' 
+                : 'Enter Card Number or 6-10 Digit Card BIN / IIN';
+            document.getElementById('btnLookupText').innerText = currentLang === 'zh' 
+                ? '立即查询 (10位精析)' 
+                : 'Lookup BIN (10-Digit)';
+            document.getElementById('heroDesc').innerText = currentLang === 'zh'
+                ? '支持 6 至 10 位子卡段精准穿透 • 包含 Visa/万事达/运通/银联全卡种属性 • 毫秒级本地高速持久缓存'
+                : 'High-precision 6-10 digit sub-BIN intelligence • Visa, Mastercard, Amex, UnionPay • Lightning-fast local cache';
+            document.getElementById('tabBtnSingle').innerText = currentLang === 'zh' ? '单卡深度解析' : 'Single Lookup';
+            document.getElementById('tabBtnBatch').innerText = currentLang === 'zh' ? '批量矩阵查询' : 'Batch Matrix';
+            document.getElementById('tabBtnApi').innerText = currentLang === 'zh' ? '开发者 API' : 'Developer API';
+        }
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuthOnLoad();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# ==============================================================================
+# Git Ignore for Personal Website & Deployment Hub
+# ==============================================================================
+
+# Private & Sensitive Environment Files
+.env
+.env.local
+.env.*
+!.env.example
+
+# MyIP persistent volume & cache
+apps/myip/data/
+data/
+
+# Python Runtime & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# OS & Editor temporary files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.bak

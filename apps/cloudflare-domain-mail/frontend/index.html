@@ -1,0 +1,4060 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>11231632.xyz Cloud Mail · 液态玻璃域名邮箱中枢</title>
+  <link rel="icon" href="/logo.png">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #162438;
+      --secondary: #4e627a;
+      --muted: #687b92;
+      --blue: #0878ed;
+      --blue-soft: rgba(8, 120, 237, .1);
+      --green: #12804c;
+      --green-soft: rgba(18, 128, 76, .11);
+      --teal: #0d8a99;
+      --orange: #b26408;
+      --red: #cf3f50;
+      --line: rgba(93, 119, 151, .14);
+      --spring: cubic-bezier(.2, .8, .2, 1);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100svh;
+      color: var(--ink);
+      background: #f3f7fc;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 10% 10%, rgba(178, 214, 255, .58), transparent 44%),
+        radial-gradient(ellipse at 88% 22%, rgba(186, 236, 232, .52), transparent 42%),
+        radial-gradient(ellipse at 50% 92%, rgba(212, 206, 252, .45), transparent 48%),
+        linear-gradient(145deg, #f8fbff 0%, #edf4fb 52%, #f5f8fc 100%);
+    }
+
+    /* Ambient 3D Liquid Glass Orbs */
+    .scene {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .86);
+      box-shadow:
+        inset 4px 5px 18px rgba(255, 255, 255, .94),
+        inset -8px -10px 26px rgba(105, 160, 215, .14),
+        0 28px 65px rgba(85, 125, 175, .07);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255, 255, 255, .72), transparent 50%),
+        radial-gradient(circle at 74% 80%, rgba(168, 205, 250, .24), transparent 58%),
+        linear-gradient(140deg, rgba(240, 248, 255, .36), rgba(210, 230, 250, .14));
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+    .orb::after {
+      content: "";
+      position: absolute;
+      top: 13%;
+      left: 17%;
+      width: 38%;
+      height: 11%;
+      transform: rotate(-35deg);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .72);
+      filter: blur(6px);
+    }
+    .orb-one { width: 380px; height: 380px; left: -90px; top: 14%; }
+    .orb-two { width: 260px; height: 260px; right: -60px; top: 58%; animation-delay: -6s; }
+    .orb-three { width: 120px; height: 120px; right: 18%; top: 9%; opacity: .75; animation-delay: -11s; }
+    @keyframes floatOrb {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(18px, -22px, 0) rotate(8deg); }
+    }
+
+    /* Core Liquid Glass Surface */
+    .liquid {
+      position: relative;
+      isolation: isolate;
+      border: 1px solid rgba(255, 255, 255, .94);
+      box-shadow:
+        0 12px 36px rgba(45, 76, 118, .065),
+        0 2px 6px rgba(45, 76, 118, .035),
+        inset 0 1px 0 #ffffff,
+        inset 0 -1px 0 rgba(255, 255, 255, .72);
+    }
+    .liquid::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      pointer-events: none;
+      background: rgba(255, 255, 255, .58);
+      -webkit-backdrop-filter: blur(24px) saturate(175%);
+      backdrop-filter: blur(24px) saturate(175%);
+    }
+    .liquid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at var(--glass-x, 24%) var(--glass-y, 0%),
+        rgba(255, 255, 255, .74),
+        transparent 64%
+      );
+      box-shadow:
+        inset 1px 1px 1px rgba(255, 255, 255, .92),
+        inset -1px -1px 1px rgba(130, 168, 210, .12);
+    }
+    html[data-optics="chromium"] .liquid::before {
+      backdrop-filter: url(#glass-refraction) blur(20px) saturate(175%);
+    }
+
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button:disabled { cursor: wait; opacity: .65; }
+    a { color: inherit; text-decoration: none; }
+    .icon {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .shell {
+      width: min(1260px, calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      position: sticky;
+      top: 16px;
+      z-index: 30;
+      margin-top: 18px;
+      min-height: 64px;
+      padding: 10px 18px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 650;
+      font-size: 15px;
+      letter-spacing: -.3px;
+    }
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, #218eff, #0878ed);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(8, 120, 237, .26), inset 0 1px 0 rgba(255,255,255,.45);
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--secondary);
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(255, 255, 255, .9);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(255, 255, 255, .92);
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(18, 128, 76, .5);
+      animation: pulseGreen 2s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(18, 128, 76, .45); }
+      70% { box-shadow: 0 0 0 7px rgba(18, 128, 76, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(18, 128, 76, 0); }
+    }
+    .pill-btn {
+      border: 1px solid rgba(255, 255, 255, .92);
+      background: rgba(255, 255, 255, .72);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform .2s var(--spring), background .2s, box-shadow .2s;
+    }
+    .pill-btn:hover {
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(45, 76, 118, .08);
+    }
+    .pill-btn:active { transform: scale(.96); }
+
+    /* PROMINENT DUAL-MODE SWITCHER BANNER */
+    .mode-switcher-bar {
+      margin-top: 18px;
+      padding: 8px;
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .mode-card-btn {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, .42);
+      border-radius: 18px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      transition: all .24s var(--spring);
+    }
+    .mode-card-btn:hover {
+      background: rgba(255, 255, 255, .78);
+      transform: translateY(-1px);
+    }
+    .mode-card-btn.active-personal {
+      background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(235, 245, 255, .92));
+      border-color: rgba(8, 120, 237, .42);
+      box-shadow: 0 8px 24px rgba(8, 120, 237, .12), inset 0 1px 0 #fff;
+    }
+    .mode-card-btn.active-instant {
+      background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(232, 250, 242, .92));
+      border-color: rgba(18, 128, 76, .42);
+      box-shadow: 0 8px 24px rgba(18, 128, 76, .12), inset 0 1px 0 #fff;
+    }
+    .mode-card-btn.active-admin {
+      background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(242, 238, 255, .92));
+      border-color: rgba(107, 76, 230, .42);
+      box-shadow: 0 8px 24px rgba(107, 76, 230, .12), inset 0 1px 0 #fff;
+    }
+    .mode-card-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+    .mode-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .mode-icon-box.blue {
+      background: rgba(8, 120, 237, .12);
+      color: var(--blue);
+    }
+    .mode-icon-box.green {
+      background: rgba(18, 128, 76, .13);
+      color: var(--green);
+    }
+    .mode-icon-box.purple {
+      background: rgba(107, 76, 230, .12);
+      color: #6b4ce6;
+    }
+    .mode-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .mode-desc {
+      font-size: 11.5px;
+      color: var(--secondary);
+      margin-top: 2px;
+    }
+    .mode-pill-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .mode-pill-tag.blue { background: var(--blue); color: #fff; }
+    .mode-pill-tag.green { background: var(--green); color: #fff; }
+    .mode-pill-tag.muted { background: rgba(93, 119, 151, .12); color: var(--secondary); }
+
+    /* Site Unlock Gate (111) */
+    .gate-wrap {
+      min-height: calc(100svh - 140px);
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+    }
+    .gate-card {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 30px;
+      padding: 34px 32px 30px;
+      text-align: left;
+    }
+    .gate-eyebrow {
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin: 0 0 8px;
+    }
+    .gate-card h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 650;
+      letter-spacing: -1px;
+    }
+    .gate-desc {
+      margin: 10px 0 24px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--secondary);
+    }
+
+    /* DUAL PORTAL LANDING (Default Personal Auth + Prominent Instant Temp Mail Card) */
+    .portal-grid {
+      margin-top: 20px;
+      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    .portal-card {
+      border-radius: 28px;
+      padding: 30px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .sub-tabs {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 14px;
+      background: rgba(226, 236, 248, .7);
+      border: 1px solid rgba(255, 255, 255, .9);
+      gap: 4px;
+      margin-bottom: 22px;
+    }
+    .sub-tab {
+      border: 0;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+      transition: all .2s var(--spring);
+    }
+    .sub-tab.active {
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 2px 8px rgba(45, 76, 118, .08);
+    }
+
+    .field-group {
+      margin-bottom: 15px;
+    }
+    .field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 7px;
+    }
+    .glass-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border-radius: 14px;
+      background: rgba(244, 248, 253, .82);
+      border: 1px solid rgba(155, 182, 214, .38);
+      transition: all .2s;
+    }
+    .glass-input-wrap:focus-within {
+      background: rgba(255, 255, 255, .96);
+      border-color: rgba(8, 120, 237, .55);
+      box-shadow: 0 0 0 3px rgba(8, 120, 237, .12);
+    }
+    .glass-input {
+      width: 100%;
+      height: 46px;
+      border: 0;
+      outline: none;
+      background: transparent;
+      padding: 0 15px;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .input-suffix {
+      padding-right: 14px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .primary-btn {
+      border: 1px solid #096edf;
+      background: linear-gradient(175deg, #2490ff, #0878ed);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 14px;
+      min-height: 47px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(8, 120, 237, .22), inset 0 1px 0 rgba(255, 255, 255, .38);
+      transition: transform .2s var(--spring), box-shadow .2s;
+    }
+    .primary-btn:hover {
+      box-shadow: 0 8px 22px rgba(8, 120, 237, .32), inset 0 1px 0 rgba(255, 255, 255, .45);
+      transform: translateY(-1px);
+    }
+    .primary-btn:active { transform: scale(.98); }
+
+    .emerald-btn {
+      border: 1px solid #0f7042;
+      background: linear-gradient(175deg, #1ea362, #12804c);
+      color: #fff;
+      font-weight: 650;
+      font-size: 14.5px;
+      border-radius: 16px;
+      min-height: 52px;
+      padding: 0 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 22px rgba(18, 128, 76, .25), inset 0 1px 0 rgba(255, 255, 255, .38);
+      transition: transform .2s var(--spring), box-shadow .2s;
+    }
+    .emerald-btn:hover {
+      box-shadow: 0 12px 28px rgba(18, 128, 76, .34), inset 0 1px 0 rgba(255, 255, 255, .45);
+      transform: translateY(-2px);
+    }
+    .emerald-btn:active { transform: scale(.98); }
+
+    /* Instant Promo Card Styling */
+    .instant-promo-card {
+      background: linear-gradient(155deg, rgba(255, 255, 255, .72), rgba(230, 250, 242, .68));
+      border: 1px solid rgba(255, 255, 255, .96);
+    }
+    .feature-list {
+      margin: 18px 0 24px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 11px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--secondary);
+      line-height: 1.55;
+    }
+    .feature-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green-soft);
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Active Mailbox Header Dock */
+    .hero-dock {
+      margin-top: 16px;
+      border-radius: 26px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .address-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      min-width: 280px;
+    }
+    .stage-label-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .stage-eyebrow.green { color: var(--green); }
+    .otp-quick-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(18, 128, 76, .14), rgba(8, 120, 237, .14));
+      border: 1px solid rgba(18, 128, 76, .28);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: transform .2s var(--spring);
+    }
+    .otp-quick-banner:hover { transform: scale(1.03); }
+
+    .address-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px 10px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .84);
+      border: 1px solid #ffffff;
+      box-shadow: 0 4px 16px rgba(45, 76, 118, .05), inset 0 1px 0 #fff;
+      flex-wrap: wrap;
+    }
+    .address-text {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: clamp(16px, 2vw, 21px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.3px;
+      user-select: all;
+      word-break: break-all;
+      cursor: pointer;
+    }
+    .address-domain { color: var(--blue); }
+    .address-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      border: 1px solid rgba(155, 182, 214, .34);
+      background: rgba(255, 255, 255, .9);
+      padding: 8px 13px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .2s var(--spring);
+    }
+    .action-btn:hover {
+      background: #ffffff;
+      border-color: rgba(8, 120, 237, .38);
+      color: var(--blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(8, 120, 237, .08);
+    }
+    .action-btn.copy-main {
+      background: linear-gradient(175deg, #2490ff, #0878ed);
+      color: #fff;
+      border-color: #0878ed;
+      box-shadow: 0 4px 12px rgba(8, 120, 237, .22);
+    }
+    .action-btn.copy-main:hover { color: #fff; }
+    .action-btn.green-main {
+      background: linear-gradient(175deg, #1ea362, #12804c);
+      color: #fff;
+      border-color: #12804c;
+      box-shadow: 0 4px 12px rgba(18, 128, 76, .22);
+    }
+    .action-btn.green-main:hover { color: #fff; }
+
+    /* Ephemeral Session Chips (Only for current tab session in Instant mode) */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .saved-chip {
+      border: 1px solid rgba(255, 255, 255, .88);
+      background: rgba(255, 255, 255, .64);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: var(--secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .18s var(--spring);
+    }
+    .saved-chip.active {
+      background: rgba(18, 128, 76, .13);
+      border-color: rgba(18, 128, 76, .38);
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* Split-Pane Master-Detail Workspace */
+    .workspace {
+      margin-top: 16px;
+      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: 390px minmax(0, 1fr);
+      gap: 18px;
+      min-height: 560px;
+      align-items: stretch;
+    }
+    .pane {
+      border-radius: 26px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .pane-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255, 255, 255, .42);
+    }
+    .pane-title {
+      font-size: 14.5px;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .count-badge {
+      font-size: 11px;
+      font-weight: 650;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Mail List Items */
+    .mail-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 620px;
+    }
+    .mail-item {
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, .75);
+      background: rgba(255, 255, 255, .56);
+      border-radius: 18px;
+      padding: 14px 15px;
+      transition: all .2s var(--spring);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mail-item:hover {
+      background: rgba(255, 255, 255, .88);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(45, 76, 118, .06);
+    }
+    .mail-item.selected {
+      background: rgba(255, 255, 255, .96);
+      border-color: rgba(8, 120, 237, .45);
+      box-shadow: 0 8px 22px rgba(8, 120, 237, .1), inset 0 1px 0 #fff;
+    }
+    .mail-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--secondary);
+    }
+    .mail-sender {
+      font-weight: 650;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .unread-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+    .mail-time {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .mail-subject {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .mail-snippet {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mail-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .otp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid rgba(18, 128, 76, .25);
+    }
+    .to-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      background: rgba(8, 120, 237, .09);
+      color: var(--blue);
+    }
+
+    /* Right Mail Reader Detail Pane */
+    .reader-empty {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--secondary);
+    }
+    .reader-head {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .45);
+    }
+    .reader-subject {
+      margin: 0 0 12px;
+      font-size: 19px;
+      font-weight: 650;
+      letter-spacing: -.4px;
+      line-height: 1.35;
+    }
+    .reader-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12.5px;
+      color: var(--secondary);
+    }
+    .reader-otp-bar {
+      margin-top: 14px;
+      padding: 11px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(18, 128, 76, .12), rgba(8, 120, 237, .1));
+      border: 1px solid rgba(18, 128, 76, .28);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .reader-otp-code {
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 20px;
+      font-weight: 750;
+      color: var(--green);
+      letter-spacing: 1px;
+    }
+    .reader-body {
+      flex: 1;
+      padding: 20px 24px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, .68);
+    }
+    .reader-iframe {
+      width: 100%;
+      min-height: 420px;
+      border: 0;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(45, 76, 118, .04);
+    }
+    .reader-pre {
+      margin: 0;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid var(--line);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Modals (Compose & Credential / Password Change) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(22, 36, 56, .28);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 28px;
+      padding: 28px 30px;
+    }
+    .glass-textarea {
+      width: 100%;
+      min-height: 150px;
+      border-radius: 14px;
+      border: 1px solid rgba(155, 182, 214, .38);
+      background: rgba(255, 255, 255, .82);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      outline: none;
+      resize: vertical;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      padding: 11px 20px;
+      border-radius: 999px;
+      background: rgba(22, 36, 56, .92);
+      backdrop-filter: blur(16px);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(22, 36, 56, .22);
+      transition: all .25s var(--spring);
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .footer {
+      padding: 16px 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    /* Global Admin Console Styles (Liquid Glass) */
+    .admin-nav-bar {
+      margin-top: 14px;
+      padding: 8px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .admin-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--secondary);
+      padding: 9px 15px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 650;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .2s var(--spring);
+    }
+    .admin-tab-btn:hover {
+      background: rgba(255, 255, 255, .65);
+      color: var(--ink);
+    }
+    .admin-tab-btn.active {
+      background: rgba(255, 255, 255, .96);
+      border-color: rgba(110, 66, 229, .38);
+      color: var(--purple);
+      box-shadow: 0 6px 18px rgba(110, 66, 229, .12), inset 0 1px 0 #fff;
+    }
+    .admin-panel-card {
+      margin-top: 16px;
+      margin-bottom: 28px;
+      border-radius: 26px;
+      padding: 22px 24px;
+    }
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .stat-glass-card {
+      border-radius: 22px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, .86);
+      background: linear-gradient(145deg, rgba(255, 255, 255, .82), rgba(255, 255, 255, .52));
+      box-shadow: 0 8px 24px rgba(45, 76, 118, .06), inset 0 1px 0 #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stat-label {
+      font-size: 12px;
+      font-weight: 650;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 750;
+      letter-spacing: -.8px;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+    .stat-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .admin-table-wrap {
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .58);
+      margin-top: 14px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    .admin-table th {
+      padding: 12px 14px;
+      font-weight: 650;
+      color: var(--secondary);
+      background: rgba(255, 255, 255, .72);
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .admin-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(98, 126, 164, .1);
+      vertical-align: middle;
+    }
+    .admin-table tr:last-child td { border-bottom: 0; }
+    .admin-table tr:hover td { background: rgba(255, 255, 255, .82); }
+    .mini-btn {
+      border: 1px solid rgba(255, 255, 255, .9);
+      background: rgba(255, 255, 255, .78);
+      color: var(--ink);
+      padding: 4px 9px;
+      border-radius: 9px;
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all .16s var(--spring);
+      white-space: nowrap;
+    }
+    .mini-btn:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(45, 76, 118, .08);
+    }
+    .mini-btn.blue { color: var(--blue); border-color: rgba(8, 120, 237, .28); }
+    .mini-btn.green { color: var(--green); border-color: rgba(18, 128, 76, .28); }
+    .mini-btn.purple { color: var(--purple); border-color: rgba(110, 66, 229, .28); }
+    .mini-btn.red { color: var(--red); border-color: rgba(217, 45, 32, .25); }
+    .admin-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+      margin-bottom: 28px;
+    }
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .kv-item {
+      padding: 10px 13px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .66);
+      border: 1px solid rgba(255, 255, 255, .88);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .kv-key {
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: var(--muted);
+    }
+    .kv-val {
+      font-size: 12.5px;
+      font-weight: 650;
+      color: var(--ink);
+      word-break: break-all;
+    }
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .6);
+      border: 1px solid rgba(255, 255, 255, .86);
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 960px) {
+      .mode-switcher-bar { grid-template-columns: 1fr; }
+      .portal-grid { grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .admin-grid-2 { grid-template-columns: 1fr; }
+      .mail-list { max-height: 340px; }
+    }
+    @media (max-width: 640px) {
+      .shell { width: calc(100% - 28px); }
+      .topbar { padding: 10px 12px; }
+      .portal-card { padding: 22px 20px; }
+      .hero-dock { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Optical Liquid Glass SVG Filter & Icons -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <filter id="glass-refraction" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+      <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="scene" aria-hidden="true">
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+    <div class="orb orb-three"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar liquid shell">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg class="icon" style="color:#fff"><use href="#i-mail"/></svg>
+      </div>
+      <span>11231632.xyz Cloud Mail</span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="live-pill" id="live-status-pill" hidden>
+        <span class="pulse-dot"></span>
+        <span id="poll-countdown">实时监听中 (5s)</span>
+      </div>
+      <button type="button" class="pill-btn" id="lang-btn" onclick="toggleLang()">🌐 EN</button>
+      <a class="pill-btn" href="https://11231632.xyz" target="_blank" rel="noopener">
+        <span data-i18n="back_home">个人主页 ↗</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- STEP 1: Site Access Gate (111) -->
+  <div id="site-gate" class="gate-wrap shell" hidden>
+    <section class="gate-card liquid">
+      <p class="gate-eyebrow">LIQUID GLASS MAIL GATEWAY</p>
+      <h1 data-i18n="gate_title">解锁域名邮箱</h1>
+      <p class="gate-desc" data-i18n="gate_desc">首次访问请输入前端通行密码，进入后可选择「密码注册/登录专属邮箱」或「免注册极速一次性邮箱」。</p>
+      <form onsubmit="handleSiteUnlock(event)">
+        <div class="glass-input-wrap">
+          <input id="site-pass-input" class="glass-input" type="password" placeholder="请输入前端访问密码" required autocomplete="current-password">
+        </div>
+        <p id="site-gate-err" style="color:var(--red);font-size:12px;margin:10px 2px 0;" hidden></p>
+        <button type="submit" id="site-gate-btn" class="primary-btn" style="width:100%;margin-top:18px;">
+          <svg class="icon"><use href="#i-lock"/></svg>
+          <span data-i18n="gate_btn">解锁进入邮箱系统</span>
+        </button>
+      </form>
+      <p style="margin:18px 0 0;font-size:11px;color:var(--muted);text-align:center;" data-i18n="gate_sec_note">
+        🔒 安全防线已启用：连续密码错误 10 次将自动触发邮件告警
+      </p>
+    </section>
+  </div>
+
+  <!-- STEP 2: Main Application Shell -->
+  <main id="app-main" class="shell" hidden>
+    <!-- PROMINENT TOP DUAL-MODE SWITCHER BANNER -->
+    <nav class="mode-switcher-bar liquid" aria-label="邮箱模式切换">
+      <!-- Mode 1: Personal Password Mailbox (Default) -->
+      <button type="button" class="mode-card-btn active-personal" id="mode-btn-personal" onclick="switchMode('personal')">
+        <div class="mode-card-left">
+          <div class="mode-icon-box blue">
+            <svg class="icon" style="width:21px;height:21px;"><use href="#i-lock"/></svg>
+          </div>
+          <div>
+            <div class="mode-title">
+              <span data-i18n="m1_title">🔐 专属密码邮箱</span>
+            </div>
+            <div class="mode-desc" data-i18n="m1_desc">独立密码保护 · 严格会话隔离</div>
+          </div>
+        </div>
+        <span class="mode-pill-tag blue" id="m1-tag" data-i18n="tag_default">专属模式</span>
+      </button>
+
+      <!-- Mode 2: Instant Disposable Temp Mail (No Registration) -->
+      <button type="button" class="mode-card-btn" id="mode-btn-instant" onclick="switchMode('instant')">
+        <div class="mode-card-left">
+          <div class="mode-icon-box green">
+            <svg class="icon" style="width:21px;height:21px;"><use href="#i-bolt"/></svg>
+          </div>
+          <div>
+            <div class="mode-title">
+              <span data-i18n="m2_title">⚡ 免注册 · 极速一次性邮箱</span>
+            </div>
+            <div class="mode-desc" data-i18n="m2_desc">免注册免密 · 自动分配前缀并直达收件箱</div>
+          </div>
+        </div>
+        <span class="mode-pill-tag green" id="m2-tag" data-i18n="tag_instant">即开即用 →</span>
+      </button>
+    </nav>
+
+    <!-- VIEW A: PERSONAL MAILBOX LOGIN / REGISTER PORTAL (Shown in Personal Mode when not signed in yet) -->
+    <section class="portal-grid" id="personal-auth-portal">
+      <!-- Left Card: Password Login & Registration (Liquid Glass) -->
+      <div class="portal-card liquid">
+        <div>
+          <div class="sub-tabs">
+            <button type="button" class="sub-tab active" id="subtab-login" onclick="switchAuthSubTab('login')" data-i18n="sub_login">🔑 登录已有邮箱</button>
+            <button type="button" class="sub-tab" id="subtab-register" onclick="switchAuthSubTab('register')" data-i18n="sub_register">✨ 注册新专属邮箱</button>
+            <button type="button" class="sub-tab" id="subtab-jwt" onclick="switchAuthSubTab('jwt')" data-i18n="sub_jwt">🎫 凭证登录</button>
+          </div>
+
+          <!-- 1. Login Form -->
+          <form id="form-personal-login" onsubmit="handlePersonalLogin(event)">
+            <h2 style="margin:0 0 6px;font-size:22px;font-weight:650;" data-i18n="login_h2">登录你的专属域名邮箱</h2>
+            <p style="margin:0 0 20px;font-size:13px;color:var(--secondary);" data-i18n="login_p">
+              输入你的邮箱前缀与独立密码，即可进入受密码保护的私人收件箱（与其他人完全物理隔离）。
+            </p>
+            <div class="field-group">
+              <label class="field-label" data-i18n="lbl_email_addr">邮箱账号</label>
+              <div class="glass-input-wrap">
+                <input id="login-email-input" class="glass-input" type="text" placeholder="输入前缀 (如 minglu) 或完整邮箱" required autocomplete="username">
+                <span class="input-suffix">@11231632.xyz</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" data-i18n="lbl_email_pass">邮箱独立密码</label>
+              <div class="glass-input-wrap">
+                <input id="login-pass-input" class="glass-input" type="password" placeholder="请输入该邮箱的独立密码" required autocomplete="current-password">
+              </div>
+            </div>
+            <p id="login-err-msg" style="color:var(--red);font-size:12px;margin:8px 0;" hidden></p>
+            <button type="submit" id="btn-personal-login" class="primary-btn" style="width:100%;margin-top:8px;">
+              <svg class="icon"><use href="#i-lock"/></svg>
+              <span data-i18n="btn_do_login">安全登录专属邮箱</span>
+            </button>
+          </form>
+
+          <!-- 2. Register Form -->
+          <form id="form-personal-register" onsubmit="handlePersonalRegister(event)" hidden>
+            <h2 style="margin:0 0 6px;font-size:22px;font-weight:650;" data-i18n="reg_h2">注册全新专属密码邮箱</h2>
+            <p style="margin:0 0 20px;font-size:13px;color:var(--secondary);" data-i18n="reg_p">
+              自定义专属前缀并设置独立密码。注册后仅凭你的密码方可登录，其他人无法抢注或查看。
+            </p>
+            <div class="field-group">
+              <label class="field-label" data-i18n="lbl_reg_prefix">自定义邮箱前缀</label>
+              <div class="glass-input-wrap">
+                <input id="reg-prefix-input" class="glass-input" type="text" placeholder="例如：minglu.work (支持字母、数字、._-)" maxlength="32" pattern="[a-zA-Z0-9._-]+" required>
+                <span class="input-suffix">@11231632.xyz</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" data-i18n="lbl_reg_pass">设置独立登录密码</label>
+              <div class="glass-input-wrap">
+                <input id="reg-pass-input" class="glass-input" type="password" placeholder="请设置该邮箱的专属登录密码" minlength="3" required autocomplete="new-password">
+              </div>
+            </div>
+            <p id="reg-err-msg" style="color:var(--red);font-size:12px;margin:8px 0;" hidden></p>
+            <button type="submit" id="btn-personal-reg" class="primary-btn" style="width:100%;margin-top:8px;">
+              <svg class="icon"><use href="#i-user"/></svg>
+              <span data-i18n="btn_do_reg">立即注册并进入专属收件箱</span>
+            </button>
+          </form>
+
+          <!-- 3. JWT Credential Login Form -->
+          <form id="form-personal-jwt" onsubmit="handleJwtLogin(event)" hidden>
+            <h2 style="margin:0 0 6px;font-size:22px;font-weight:650;" data-i18n="jwt_h2">使用 JWT 凭证密钥登录</h2>
+            <p style="margin:0 0 20px;font-size:13px;color:var(--secondary);" data-i18n="jwt_p">
+              粘贴邮箱的 JWT Token 凭证即可直接恢复收件箱访问。
+            </p>
+            <div class="field-group">
+              <label class="field-label">JWT Token</label>
+              <div class="glass-input-wrap">
+                <input id="jwt-token-input" class="glass-input" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required>
+              </div>
+            </div>
+            <p id="jwt-err-msg" style="color:var(--red);font-size:12px;margin:8px 0;" hidden></p>
+            <button type="submit" class="primary-btn" style="width:100%;margin-top:8px;">
+              <span data-i18n="btn_do_jwt">验证凭证并进入收件箱</span>
+            </button>
+          </form>
+        </div>
+
+        <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);">
+          <span data-i18n="isolation_note">🛡️ 隐私隔离：不会在本地暴露任何其他用户的邮箱记录</span>
+          <span>11231632.xyz</span>
+        </div>
+      </div>
+
+      <!-- Right Card: Eye-Catching Instant Disposable Temp Mail Entry -->
+      <div class="portal-card liquid instant-promo-card">
+        <div>
+          <span class="mode-pill-tag green" style="display:inline-block;margin-bottom:12px;" data-i18n="promo_badge">⚡ 免注册 · 零配置即开即用</span>
+          <h2 style="margin:0 0 10px;font-size:24px;font-weight:700;letter-spacing:-.5px;" data-i18n="promo_h2">
+            只需要临时接收一两次验证码？
+          </h2>
+          <p style="margin:0;font-size:13.5px;line-height:1.65;color:var(--secondary);" data-i18n="promo_p">
+            无需注册账号、无需设置密码！点击下方按钮，系统将立即为你随机生成一个一次性 <strong>@11231632.xyz</strong> 邮箱并直接打开实时收件箱。
+          </p>
+
+          <ul class="feature-list">
+            <li>
+              <span class="feature-check">✓</span>
+              <span data-i18n="feat_1"><strong>秒级随机分配</strong>：进去直接生成随机用户名并展示实时收件箱</span>
+            </li>
+            <li>
+              <span class="feature-check">✓</span>
+              <span data-i18n="feat_2"><strong>智能提取验证码</strong>：5 秒自动刷新，自动识别 4~8 位验证码一键复制</span>
+            </li>
+            <li>
+              <span class="feature-check">✓</span>
+              <span data-i18n="feat_3"><strong>会话级隐私隔离</strong>：仅在当前浏览器标签页有效，关闭即焚，绝不串号</span>
+            </li>
+          </ul>
+        </div>
+
+        <div style="display:grid;gap:12px;">
+          <button type="button" class="emerald-btn" style="width:100%;" onclick="switchMode('instant')">
+            <svg class="icon" style="width:20px;height:20px;"><use href="#i-dice"/></svg>
+            <span data-i18n="btn_enter_instant">⚡ 免注册 · 随机生成邮箱并直达收件箱</span>
+          </button>
+
+          <form style="display:flex;gap:8px;" onsubmit="handleQuickInstantPrefix(event)">
+            <div class="glass-input-wrap" style="flex:1;background:rgba(255,255,255,.88);">
+              <input id="quick-instant-prefix" class="glass-input" style="height:40px;font-size:13px;" type="text" placeholder="或指定临时前缀 (如 test01)" maxlength="32" pattern="[a-zA-Z0-9._-]+">
+              <span class="input-suffix" style="color:var(--green);font-size:12px;">@11231632.xyz</span>
+            </div>
+            <button type="submit" class="action-btn" style="height:40px;color:var(--green);border-color:rgba(18,128,76,.35);" data-i18n="btn_quick_go">
+              直接收码 →
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW B: ADMIN UNLOCK GATE -->
+    <div id="admin-gate" class="gate-wrap" style="min-height:400px" hidden>
+      <section class="gate-card liquid">
+        <p class="gate-eyebrow">SYSTEM CONSOLE</p>
+        <h1 data-i18n="admin_gate_title">系统管理</h1>
+        <p class="gate-desc" data-i18n="admin_gate_desc">请输入管理密码以继续。</p>
+        <form onsubmit="handleAdminUnlock(event)">
+          <div class="glass-input-wrap">
+            <input id="admin-pass-input" class="glass-input" type="password" placeholder="请输入管理密码" required autocomplete="current-password">
+          </div>
+          <p id="admin-gate-err" style="color:var(--red);font-size:12px;margin:10px 2px 0;" hidden></p>
+          <div style="display:flex;gap:10px;margin-top:18px;">
+            <button type="submit" class="primary-btn" style="flex:1;">
+              <svg class="icon"><use href="#i-shield"/></svg>
+              <span data-i18n="admin_gate_btn">验证登录</span>
+            </button>
+            <button type="button" class="glass-btn" onclick="switchMode('personal')" style="padding:10px 16px;">
+              <span data-i18n="admin_gate_back">返回</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- VIEW B2: COMPREHENSIVE GLOBAL ADMIN CONSOLE (Liquid Glass 6-Tab Full Management) -->
+    <div id="admin-console-wrap" hidden>
+      <!-- Admin Sub-Navigation Bar -->
+      <div class="admin-nav-bar liquid">
+        <div class="admin-tabs-group">
+          <button type="button" class="admin-tab-btn active" id="atab-btn-overview" onclick="switchAdminTab('overview')">
+            📊 数据总览与系统配置
+          </button>
+          <button type="button" class="admin-tab-btn" id="atab-btn-addresses" onclick="switchAdminTab('addresses')">
+            👥 邮箱账号管理
+          </button>
+          <button type="button" class="admin-tab-btn" id="atab-btn-mails" onclick="switchAdminTab('mails')">
+            📬 全域名收件箱 &amp; 无主邮件
+          </button>
+          <button type="button" class="admin-tab-btn" id="atab-btn-sendbox" onclick="switchAdminTab('sendbox')">
+            📤 发件箱与发信权限
+          </button>
+          <button type="button" class="admin-tab-btn" id="atab-btn-security" onclick="switchAdminTab('security')">
+            🛡️ 安全风控与黑白名单
+          </button>
+          <button type="button" class="admin-tab-btn" id="atab-btn-maintenance" onclick="switchAdminTab('maintenance')">
+            🧹 数据清理与 Webhook
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="mini-btn blue" onclick="openAdminComposeModal()">
+            <svg class="icon" style="width:14px;height:14px;"><use href="#i-send"/></svg>
+            发信
+          </button>
+          <button type="button" class="mini-btn" onclick="switchMode('personal')" style="background:rgba(255,255,255,0.72);border:1px solid rgba(255,255,255,0.9);">
+            返回邮箱
+          </button>
+          <a href="/legacy#/zh/admin" target="_blank" rel="noopener" class="mini-btn purple" title="打开原版 Vue 后台页面">
+            原版后台 ↗
+          </a>
+          <button type="button" class="mini-btn red" onclick="logoutAdmin()">
+            退出管理
+          </button>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 1: OVERVIEW & SYSTEM CONFIGS -->
+      <div id="admin-panel-overview">
+        <div class="admin-stats-grid">
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>📬 全域收件总数</span><span class="mode-pill-tag blue">D1 Raw Mails</span></div>
+            <div class="stat-value" id="stat-mail-count">-</div>
+            <div class="stat-sub">所有发往 *@11231632.xyz 的邮件总数</div>
+          </div>
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>📮 已创建邮箱总数</span><span class="mode-pill-tag purple">Addresses</span></div>
+            <div class="stat-value" id="stat-address-count">-</div>
+            <div class="stat-sub">含专属密码邮箱与临时创建的邮箱</div>
+          </div>
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>🔥 7 天活跃邮箱</span><span class="mode-pill-tag green">7d Active</span></div>
+            <div class="stat-value" id="stat-active-7d">-</div>
+            <div class="stat-sub">最近 7 天内有登录或活动的邮箱</div>
+          </div>
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>📅 30 天活跃邮箱</span><span class="mode-pill-tag green">30d Active</span></div>
+            <div class="stat-value" id="stat-active-30d">-</div>
+            <div class="stat-sub">最近 30 天内有登录或活动的邮箱</div>
+          </div>
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>📤 全域发件总数</span><span class="mode-pill-tag blue">Sendbox</span></div>
+            <div class="stat-value" id="stat-send-count">-</div>
+            <div class="stat-sub">通过 Cloudflare Email Routing 发出的邮件</div>
+          </div>
+          <div class="stat-glass-card">
+            <div class="stat-label"><span>👤 注册用户账户</span><span class="mode-pill-tag purple">Users</span></div>
+            <div class="stat-value" id="stat-user-count">-</div>
+            <div class="stat-sub">绑定多邮箱的全局用户表记录</div>
+          </div>
+        </div>
+
+        <div class="admin-grid-2">
+          <!-- Brute-Force Security Guard Real-Time Card -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div>
+                <h3 style="margin:0;font-size:16.5px;font-weight:700;">🚨 密码防暴力破解监控引擎</h3>
+                <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">
+                  同一 IP 连续密码错误满 <strong id="bf-threshold-val">10</strong> 次，自动通过 Cloudflare 发信至 <strong id="bf-alert-email" style="color:var(--blue);">管理员告警信箱</strong>
+                </p>
+              </div>
+              <button type="button" class="mini-btn blue" onclick="loadAdminOverview()">🔄 刷新状态</button>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>来源 IP</th>
+                    <th>近期连续失败次数</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="bf-guard-tbody">
+                  <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:18px;">正在加载防暴破实时状态...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Site Access Password Gate Switch & Quick Navigation Card -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div>
+                <h3 style="margin:0;font-size:16.5px;font-weight:700;">🔐 前端访问密码门禁开关</h3>
+                <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">随时一键开启/关闭进入邮箱主页前的「前端通行密码」拦截，或修改密码</p>
+              </div>
+              <span class="mode-pill-tag green" id="site-gate-status-badge">读取中...</span>
+            </div>
+
+            <form onsubmit="saveAdminSiteGate(event)" style="margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.68);border:1px solid var(--line);">
+              <div class="switch-row" style="margin-bottom:10px;">
+                <span>启用前端访问密码门禁（关闭时访客免站点密码直接进入主页）</span>
+                <input type="checkbox" id="sg-enabled-chk" style="width:18px;height:18px;">
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <div class="glass-input-wrap" style="flex:1;height:38px;border-radius:11px;background:#fff;">
+                  <input type="text" id="sg-password-input" class="glass-input" style="height:36px;font-size:13px;" placeholder="设置前端访问密码 (如 111)" value="111" required>
+                </div>
+                <button type="submit" class="primary-btn" style="padding:8px 16px;border-radius:11px;font-size:12.5px;">
+                  💾 保存开关与密码
+                </button>
+              </div>
+            </form>
+
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px;">
+              <button type="button" class="action-btn" style="justify-content:flex-start;padding:9px 12px;font-size:12px;" onclick="switchAdminTab('addresses')">
+                <span>👥 管理所有邮箱地址与改密</span>
+              </button>
+              <button type="button" class="action-btn" style="justify-content:flex-start;padding:9px 12px;font-size:12px;" onclick="switchAdminTab('mails')">
+                <span>📬 查看全域名邮件</span>
+              </button>
+              <button type="button" class="action-btn" style="justify-content:flex-start;padding:9px 12px;font-size:12px;" onclick="switchAdminTab('security')">
+                <span>🛡️ 配置 IP 黑名单与收发拦截</span>
+              </button>
+              <button type="button" class="action-btn" style="justify-content:flex-start;padding:9px 12px;font-size:12px;" onclick="switchAdminTab('maintenance')">
+                <span>🧹 清理历史数据与配置 Webhook</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Worker Runtime Configurations -->
+        <section class="admin-panel-card liquid">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div>
+              <h3 style="margin:0;font-size:16.5px;font-weight:700;">⚙️ 后端环境配置总览</h3>
+              <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">当前线上 Worker 绑定的环境变量、功能特性开关与域名路由状态</p>
+            </div>
+          </div>
+          <div class="kv-grid" id="worker-config-grid">
+            <div class="kv-item"><span class="kv-key">LOADING</span><span class="kv-val">正在读取配置...</span></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ADMIN TAB 2: ADDRESS MANAGEMENT -->
+      <div id="admin-panel-addresses" hidden>
+        <section class="admin-panel-card liquid">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div>
+              <h3 style="margin:0;font-size:17px;font-weight:700;">
+                👥 全域名邮箱账号管理
+                <span class="count-badge" id="admin-addr-total-badge" style="margin-left:8px;">0</span>
+              </h3>
+              <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">
+                查看所有已创建的 @11231632.xyz 邮箱，支持新建邮箱、重置独立密码、提取 JWT 凭证、清空收件箱与删除账号
+              </p>
+            </div>
+
+            <!-- Admin Create New Address Inline Form -->
+            <form onsubmit="handleAdminCreateAddress(event)" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div class="glass-input-wrap" style="height:38px;border-radius:12px;background:#fff;">
+                <input id="admin-new-addr-prefix" class="glass-input" style="height:36px;width:140px;font-size:12.5px;padding:0 10px;" type="text" placeholder="新邮箱前缀 (如 vip)" required>
+                <span class="input-suffix" style="font-size:11.5px;padding-right:10px;">@11231632.xyz</span>
+              </div>
+              <div class="glass-input-wrap" style="height:38px;border-radius:12px;background:#fff;">
+                <input id="admin-new-addr-pass" class="glass-input" style="height:36px;width:135px;font-size:12.5px;padding:0 10px;" type="password" placeholder="初始密码 (可选)">
+              </div>
+              <button type="submit" class="primary-btn" style="padding:8px 14px;border-radius:12px;font-size:12.5px;">
+                ➕ 新建邮箱
+              </button>
+            </form>
+          </div>
+
+          <!-- Search & Pagination Bar -->
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;">
+            <form onsubmit="event.preventDefault();adminAddrOffset=0;loadAdminAddresses();" style="display:flex;gap:8px;flex:1;max-width:420px;">
+              <div class="glass-input-wrap" style="flex:1;height:36px;border-radius:11px;background:#fff;">
+                <input id="admin-addr-search" class="glass-input" style="height:34px;font-size:12.5px;padding:0 10px;" type="text" placeholder="输入邮箱地址或前缀模糊搜索...">
+              </div>
+              <button type="submit" class="action-btn" style="padding:6px 12px;font-size:12px;">🔍 搜索</button>
+              <button type="button" class="action-btn" style="padding:6px 12px;font-size:12px;" onclick="document.getElementById('admin-addr-search').value='';adminAddrOffset=0;loadAdminAddresses();">重置</button>
+            </form>
+
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button type="button" class="mini-btn" id="addr-prev-btn" onclick="changeAdminAddrPage(-1)">← 上一页</button>
+              <span style="font-size:12px;color:var(--secondary);font-variant-numeric:tabular-nums;" id="addr-page-info">第 1 页</span>
+              <button type="button" class="mini-btn" id="addr-next-btn" onclick="changeAdminAddrPage(1)">下一页 →</button>
+              <button type="button" class="mini-btn blue" onclick="loadAdminAddresses()">🔄 刷新</button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>邮箱地址</th>
+                  <th>创建来源</th>
+                  <th>收件数</th>
+                  <th>发件数</th>
+                  <th>创建时间 (UTC)</th>
+                  <th>最后活跃 (UTC)</th>
+                  <th>管理操作</th>
+                </tr>
+              </thead>
+              <tbody id="admin-addr-tbody">
+                <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted);">正在加载邮箱列表...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- ADMIN TAB 3: GLOBAL MAILS & UNKNOWN MAILS TOOLBAR (Sits right above #active-inbox-container) -->
+      <div id="admin-panel-mails-toolbar" hidden>
+        <section class="hero-dock liquid" style="margin-top:14px;padding:16px 20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <button type="button" class="action-btn copy-main" id="btn-admin-mail-all" onclick="switchAdminMailSource('all')">
+                📥 全域名全部收件 (/admin/parsed_mails)
+              </button>
+              <button type="button" class="action-btn" id="btn-admin-mail-unknow" onclick="switchAdminMailSource('unknow')">
+                👻 无主/未注册地址收件 (/admin/parsed_mails_unknow)
+              </button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <form onsubmit="event.preventDefault();adminMailOffset=0;refreshMails(true);" style="display:flex;gap:6px;">
+                <div class="glass-input-wrap" style="height:36px;border-radius:11px;background:#fff;">
+                  <input id="admin-mail-address-query" class="glass-input" style="height:34px;width:195px;font-size:12px;padding:0 10px;" type="text" placeholder="按指定收件箱查询 (如 admin@...)">
+                </div>
+                <button type="submit" class="action-btn" style="padding:6px 12px;font-size:12px;">查询该收件箱</button>
+                <button type="button" class="action-btn" style="padding:6px 10px;font-size:12px;" onclick="document.getElementById('admin-mail-address-query').value='';adminMailOffset=0;refreshMails(true);">显示全部</button>
+              </form>
+              <button type="button" class="mini-btn" onclick="changeAdminMailPage(-1)">← 上一页</button>
+              <span style="font-size:12px;color:var(--secondary);font-variant-numeric:tabular-nums;" id="admin-mail-page-info">第 1 页</span>
+              <button type="button" class="mini-btn" onclick="changeAdminMailPage(1)">下一页 →</button>
+              <button type="button" class="action-btn" style="padding:6px 12px;font-size:12px;" onclick="refreshMails(true)">🔄 刷新</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ADMIN TAB 4: SENDBOX & SEND ACCESS PERMISSIONS -->
+      <div id="admin-panel-sendbox" hidden>
+        <section class="admin-panel-card liquid">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div>
+              <h3 style="margin:0;font-size:17px;font-weight:700;">
+                📤 全域发件箱历史记录 (/admin/sendbox)
+                <span class="count-badge" id="admin-sendbox-badge" style="margin-left:8px;">0</span>
+              </h3>
+              <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">查看所有通过域名对外发送的邮件记录与原始内容</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input id="admin-sendbox-filter" type="text" placeholder="按发件邮箱筛选..." style="height:34px;border-radius:10px;border:1px solid var(--line);padding:0 10px;font-size:12px;background:#fff;">
+              <button type="button" class="mini-btn blue" onclick="loadAdminSendbox()">🔍 筛选 / 刷新</button>
+              <button type="button" class="primary-btn" style="padding:7px 14px;border-radius:11px;font-size:12px;" onclick="openAdminComposeModal()">
+                ✉️ 管理员对外发信
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>发件邮箱 (Address)</th>
+                  <th>发送时间 (UTC)</th>
+                  <th>邮件内容摘要 / Raw</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="admin-sendbox-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">正在加载发件箱记录...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-panel-card liquid">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div>
+              <h3 style="margin:0;font-size:17px;font-weight:700;">
+                🪪 邮箱发信权限与额度管理 (/admin/address_sender)
+                <span class="count-badge" id="admin-sender-badge" style="margin-left:8px;">0</span>
+              </h3>
+              <p style="margin:4px 0 0;font-size:12px;color:var(--secondary);">审批普通邮箱的对外发信申请、调整剩余发信额度 (Balance) 或停用发信权限</p>
+            </div>
+            <button type="button" class="mini-btn blue" onclick="loadAdminSenders()">🔄 刷新权限列表</button>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>邮箱地址</th>
+                  <th>启用状态</th>
+                  <th>剩余发信额度 (Balance)</th>
+                  <th>申请时间 (UTC)</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="admin-sender-tbody">
+                <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted);">正在加载发信权限列表...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- ADMIN TAB 5: SECURITY, IP BLACKLIST & ACCOUNT BLOCKLIST SETTINGS -->
+      <div id="admin-panel-security" hidden>
+        <div class="admin-grid-2">
+          <!-- Module A: IP / ASN / Fingerprint Blacklist & Daily Rate Limit -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <h3 style="margin:0 0 6px;font-size:17px;font-weight:700;">🛡️ 黑名单与限流配置</h3>
+            <p style="margin:0 0 14px;font-size:12px;color:var(--secondary);">拦截恶意 IP、机房 ASN 或高频请求，防止恶意刷取邮箱</p>
+
+            <form onsubmit="saveAdminIpBlacklist(event)">
+              <div class="switch-row">
+                <span>启用 IP / ASN / 指纹黑名单拦截</span>
+                <input type="checkbox" id="ipb-enabled" style="width:18px;height:18px;">
+              </div>
+              <div class="switch-row">
+                <span>启用每日创建/请求上限限流</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="checkbox" id="ipb-daily-enable" style="width:18px;height:18px;">
+                  <input type="number" id="ipb-daily-limit" min="1" max="1000000" value="100" style="width:90px;height:30px;border-radius:8px;border:1px solid var(--line);padding:0 8px;font-size:12px;">
+                  <span style="font-size:11.5px;color:var(--muted);">次/天</span>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">IP 黑名单 (每行一个 IP 或正则表达式)</label>
+                <textarea id="ipb-ips" class="glass-textarea" style="min-height:85px;font-family:ui-monospace,monospace;font-size:12px;" placeholder="例如：1.2.3.4 或 ^192\.0\.2\."></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">ASN 运营商黑名单 (每行一个，如 AS13335)</label>
+                <textarea id="ipb-asns" class="glass-textarea" style="min-height:65px;font-family:ui-monospace,monospace;font-size:12px;" placeholder="例如：AS13335"></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">浏览器指纹黑名单 (每行一个)</label>
+                <textarea id="ipb-fps" class="glass-textarea" style="min-height:60px;font-family:ui-monospace,monospace;font-size:12px;"></textarea>
+              </div>
+              <div class="switch-row">
+                <span>启用 IP 白名单豁免</span>
+                <input type="checkbox" id="ipb-wl-enable" style="width:18px;height:18px;">
+              </div>
+              <div class="field-group">
+                <label class="field-label">IP 白名单列表 (每行一个)</label>
+                <textarea id="ipb-wl" class="glass-textarea" style="min-height:60px;font-family:ui-monospace,monospace;font-size:12px;"></textarea>
+              </div>
+              <button type="submit" class="primary-btn" style="width:100%;">💾 保存 IP 黑名单与限流配置</button>
+            </form>
+          </section>
+
+          <!-- Module B: Account & Mail Blocklist / Verified Senders -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <h3 style="margin:0 0 6px;font-size:17px;font-weight:700;">🚧 收发信拦截与外发白名单</h3>
+            <p style="margin:0 0 14px;font-size:12px;color:var(--secondary);">配置保留前缀、收信发件人黑名单、免限额发信地址与已验证外部收件箱</p>
+
+            <form onsubmit="saveAdminAccountSettings(event)">
+              <div class="field-group">
+                <label class="field-label">禁止普通用户抢注的邮箱前缀黑名单 (blockList，每行一个)</label>
+                <textarea id="acc-block-list" class="glass-textarea" style="min-height:70px;font-family:ui-monospace,monospace;font-size:12px;" placeholder="例如：root&#10;security&#10;postmaster"></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">禁止对外发信的地址黑名单 (sendBlockList，每行一个)</label>
+                <textarea id="acc-send-block" class="glass-textarea" style="min-height:65px;font-family:ui-monospace,monospace;font-size:12px;"></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">拒收外部发件人黑名单 (fromBlockList，每行一个邮箱或域名)</label>
+                <textarea id="acc-from-block" class="glass-textarea" style="min-height:65px;font-family:ui-monospace,monospace;font-size:12px;" placeholder="例如：spam@example.com"></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">免配额限制发信邮箱列表 (noLimitSendAddressList，每行一个)</label>
+                <textarea id="acc-nolimit-send" class="glass-textarea" style="min-height:65px;font-family:ui-monospace,monospace;font-size:12px;" placeholder="例如：admin@11231632.xyz&#10;minglu@11231632.xyz"></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Cloudflare 已验证外部收件地址列表 (verifiedAddressList，每行一个)</label>
+                <textarea id="acc-verified-list" class="glass-textarea" style="min-height:65px;font-family:ui-monospace,monospace;font-size:12px;"></textarea>
+              </div>
+              <button type="submit" class="primary-btn" style="width:100%;">💾 保存收发信规则配置</button>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 6: DATABASE CLEANUP, CRON AUTO-CLEANUP & WEBHOOK / AI -->
+      <div id="admin-panel-maintenance" hidden>
+        <div class="admin-grid-2">
+          <!-- Module A: Manual & Scheduled D1 Cleanup -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <h3 style="margin:0 0 6px;font-size:17px;font-weight:700;">🧹 数据库清理与维护</h3>
+            <p style="margin:0 0 14px;font-size:12px;color:var(--secondary);">手动清理过期邮件、无主邮件或僵尸临时邮箱，释放 Cloudflare D1 存储空间</p>
+
+            <form onsubmit="handleAdminManualCleanup(event)" style="padding:14px;border-radius:16px;background:rgba(255,255,255,.65);border:1px solid var(--line);margin-bottom:18px;">
+              <div class="field-group">
+                <label class="field-label">选择清理对象 (cleanType)</label>
+                <select id="clean-type-select" class="glass-input" style="width:100%;border-radius:11px;border:1px solid var(--line);background:#fff;height:40px;">
+                  <option value="mails">📬 收件箱邮件 (raw_mails)</option>
+                  <option value="mails_unknow">👻 无主/未注册地址邮件 (mails_unknow)</option>
+                  <option value="sendbox">📤 发件箱记录 (sendbox)</option>
+                  <option value="inactiveAddress">💤 长期未活跃的邮箱地址 (inactiveAddress)</option>
+                  <option value="emptyAddress">📭 无任何邮件的空邮箱地址 (emptyAddress)</option>
+                  <option value="addressCreated">📅 按创建时间清理邮箱地址 (addressCreated)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">清理多少天以前的数据 (填 0 表示清理该类别全部当前数据)</label>
+                <div class="glass-input-wrap" style="background:#fff;">
+                  <input type="number" id="clean-days-input" class="glass-input" min="0" max="1000" value="30" required>
+                  <span class="input-suffix">天前</span>
+                </div>
+              </div>
+              <button type="submit" class="primary-btn" style="width:100%;background:linear-gradient(135deg,#d92d20,#f97316);">
+                🗑️ 立即执行数据库清理
+              </button>
+            </form>
+
+            <h4 style="margin:0 0 10px;font-size:14.5px;font-weight:700;">⏰ 定时自动清理配置</h4>
+            <form onsubmit="saveAdminAutoCleanup(event)">
+              <div class="switch-row">
+                <span>自动清理收件箱历史邮件 (天)</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="checkbox" id="ac-mails-en" style="width:16px;height:16px;">
+                  <input type="number" id="ac-mails-days" min="1" max="1000" value="30" style="width:70px;height:28px;border-radius:7px;border:1px solid var(--line);padding:0 6px;">
+                </div>
+              </div>
+              <div class="switch-row">
+                <span>自动清理无主未注册邮件 (天)</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="checkbox" id="ac-unknow-en" style="width:16px;height:16px;">
+                  <input type="number" id="ac-unknow-days" min="1" max="1000" value="7" style="width:70px;height:28px;border-radius:7px;border:1px solid var(--line);padding:0 6px;">
+                </div>
+              </div>
+              <div class="switch-row">
+                <span>自动清理未活跃邮箱地址 (天)</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="checkbox" id="ac-inactive-en" style="width:16px;height:16px;">
+                  <input type="number" id="ac-inactive-days" min="1" max="1000" value="30" style="width:70px;height:28px;border-radius:7px;border:1px solid var(--line);padding:0 6px;">
+                </div>
+              </div>
+              <div class="switch-row">
+                <span>自动清理无邮件的空邮箱 (天)</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="checkbox" id="ac-empty-en" style="width:16px;height:16px;">
+                  <input type="number" id="ac-empty-days" min="1" max="1000" value="7" style="width:70px;height:28px;border-radius:7px;border:1px solid var(--line);padding:0 6px;">
+                </div>
+              </div>
+              <button type="submit" class="primary-btn" style="width:100%;">💾 保存定时自动清理策略</button>
+            </form>
+          </section>
+
+          <!-- Module B: Global Mail Webhook & AI Extraction Settings -->
+          <section class="admin-panel-card liquid" style="margin:0;">
+            <h3 style="margin:0 0 6px;font-size:17px;font-weight:700;">🤖 全局邮件 Webhook 转发与 AI 提取设置</h3>
+            <p style="margin:0 0 14px;font-size:12px;color:var(--secondary);">新邮件到达时自动推送到外部 Webhook (如飞书/钉钉/Bark/自建服务)</p>
+
+            <form onsubmit="saveAdminWebhookSettings(event)">
+              <div class="switch-row">
+                <span>启用全局新邮件 Webhook 自动推送</span>
+                <input type="checkbox" id="wh-enabled" style="width:18px;height:18px;">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Webhook 目标 URL</label>
+                <div class="glass-input-wrap"><input type="url" id="wh-url" class="glass-input" placeholder="https://example.com/webhook"></div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">请求方法 (Method)</label>
+                <div class="glass-input-wrap"><input type="text" id="wh-method" class="glass-input" value="POST"></div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">请求 Headers (JSON 格式)</label>
+                <textarea id="wh-headers" class="glass-textarea" style="min-height:60px;font-family:ui-monospace,monospace;font-size:12px;" placeholder='{"Content-Type": "application/json"}'></textarea>
+              </div>
+              <div class="field-group">
+                <label class="field-label">请求 Body 模板 (支持 ${from}, ${to}, ${subject}, ${text}, ${html})</label>
+                <textarea id="wh-body" class="glass-textarea" style="min-height:80px;font-family:ui-monospace,monospace;font-size:12px;" placeholder='{"from":"${from}","to":"${to}","subject":"${subject}","text":"${text}"}'></textarea>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button type="submit" class="primary-btn" style="flex:1;">💾 保存 Webhook 配置</button>
+                <button type="button" class="action-btn" onclick="testAdminWebhook()">🧪 发送测试推送</button>
+              </div>
+            </form>
+
+            <form onsubmit="saveAdminAiExtractSettings(event)" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line);">
+              <h4 style="margin:0 0 10px;font-size:14.5px;font-weight:700;">✨ 验证码与链接智能提取配置</h4>
+              <div class="switch-row">
+                <span>仅对白名单域名启用提取 (关闭则全域名自动提取验证码)</span>
+                <input type="checkbox" id="ai-allow-en" style="width:18px;height:18px;">
+              </div>
+              <div class="field-group">
+                <label class="field-label">允许提取的发件域名白名单 (每行一个，支持通配符)</label>
+                <textarea id="ai-allow-list" class="glass-textarea" style="min-height:55px;font-family:ui-monospace,monospace;font-size:12px;"></textarea>
+              </div>
+              <button type="submit" class="action-btn" style="width:100%;">💾 保存智能提取设置</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW C: ACTIVE INBOX WORKSPACE (Used by logged-in Personal Mailbox, Instant Disposable Mailbox, and Admin Mail Tab) -->
+    <div id="active-inbox-container" hidden>
+      <!-- Top Address & Action Dock -->
+      <section class="hero-dock liquid" id="hero-dock">
+        <div class="address-stage">
+          <div class="stage-label-row">
+            <span class="stage-eyebrow" id="current-mode-label">🔐 专属密码邮箱 · 已安全登录</span>
+            <span id="latest-otp-pill" class="otp-quick-banner" hidden onclick="copyLatestOtp()">
+              <span>🔑 <span data-i18n="latest_otp">最新验证码</span>: <strong id="latest-otp-val">------</strong></span>
+              <span style="font-size:11px;opacity:.85" data-i18n="click_copy">[点击复制]</span>
+            </span>
+          </div>
+
+          <div class="address-box">
+            <div class="address-text" id="active-address-display" onclick="copyCurrentAddress()" title="点击复制邮箱地址">
+              ---<span class="address-domain">@11231632.xyz</span>
+            </div>
+
+            <!-- Actions for PERSONAL Mode -->
+            <div class="address-actions" id="actions-personal" hidden>
+              <button type="button" class="action-btn copy-main" onclick="copyCurrentAddress()">
+                <svg class="icon"><use href="#i-copy"/></svg>
+                <span data-i18n="btn_copy_addr">复制邮箱</span>
+              </button>
+              <button type="button" class="action-btn" onclick="openComposeModal()">
+                <svg class="icon"><use href="#i-send"/></svg>
+                <span data-i18n="btn_compose">写信</span>
+              </button>
+              <button type="button" class="action-btn" onclick="openCredModal()">
+                <svg class="icon"><use href="#i-lock"/></svg>
+                <span data-i18n="btn_cred">改密 / 凭证</span>
+              </button>
+              <button type="button" class="action-btn" onclick="refreshMails(true)">
+                <svg class="icon" id="refresh-icon-p"><use href="#i-refresh"/></svg>
+                <span data-i18n="btn_refresh">刷新</span>
+              </button>
+              <button type="button" class="action-btn" style="color:var(--red);" onclick="logoutPersonalMailbox()">
+                <svg class="icon"><use href="#i-logout"/></svg>
+                <span data-i18n="btn_logout">退出邮箱</span>
+              </button>
+            </div>
+
+            <!-- Actions for INSTANT DISPOSABLE Mode -->
+            <div class="address-actions" id="actions-instant" hidden>
+              <button type="button" class="action-btn green-main" onclick="copyCurrentAddress()">
+                <svg class="icon"><use href="#i-copy"/></svg>
+                <span data-i18n="btn_copy_addr">复制临时邮箱</span>
+              </button>
+              <button type="button" class="action-btn" onclick="createRandomDisposableMailbox(false)">
+                <svg class="icon"><use href="#i-dice"/></svg>
+                <span data-i18n="btn_random">随机换一个</span>
+              </button>
+              <form style="display:inline-flex;gap:6px;" onsubmit="handleInstantCustomPrefix(event)">
+                <div class="glass-input-wrap" style="height:36px;border-radius:11px;background:#fff;">
+                  <input id="instant-custom-input" class="glass-input" style="height:34px;width:125px;padding:0 9px;font-size:12.5px;" type="text" placeholder="自定义临时前缀" maxlength="32" pattern="[a-zA-Z0-9._-]+">
+                </div>
+                <button type="submit" class="action-btn" style="padding:6px 11px;" data-i18n="btn_use_prefix">切换</button>
+              </form>
+              <button type="button" class="action-btn" onclick="refreshMails(true)">
+                <svg class="icon" id="refresh-icon-i"><use href="#i-refresh"/></svg>
+                <span data-i18n="btn_refresh">刷新</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ephemeral Session Bar (ONLY shown in Instant Mode for current tab session, 100% isolated) -->
+          <div id="instant-session-wrap" hidden>
+            <div class="session-bar">
+              <span style="font-size:11px;color:var(--muted);" data-i18n="session_temp_label">本次标签页创建的临时邮箱（关闭窗口即清空）：</span>
+              <div id="instant-session-chips" style="display:inline-flex;gap:6px;flex-wrap:wrap;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Split-Pane Inbox & Mail Reader -->
+      <section class="workspace">
+        <!-- Left: Mail List -->
+        <div class="pane liquid">
+          <div class="pane-header">
+            <div class="pane-title">
+              <span id="list-pane-title" data-i18n="inbox_list_title">收件箱列表</span>
+              <span class="count-badge" id="mail-count-badge">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <input id="admin-filter-input" type="text" placeholder="按收件人或主题筛选..." hidden
+                style="height:30px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.85);padding:0 9px;font-size:11.5px;width:155px;"
+                oninput="renderMailList()">
+            </div>
+          </div>
+          <div class="mail-list" id="mail-list-container"></div>
+        </div>
+
+        <!-- Right: Mail Reader -->
+        <div class="pane liquid">
+          <div class="reader-empty" id="reader-empty">
+            <div>
+              <svg class="icon" style="width:42px;height:42px;color:#8aa4c3;margin-bottom:10px;"><use href="#i-mail"/></svg>
+              <p style="margin:0;font-weight:600;font-size:15px;" data-i18n="empty_reader_title">实时收件箱已就绪</p>
+              <small style="display:block;margin-top:6px;font-size:12.5px;color:var(--muted);" data-i18n="empty_reader_sub">
+                新邮件到达后将每 5 秒自动同步显示，并自动提取邮件内的验证码
+              </small>
+            </div>
+          </div>
+
+          <div id="reader-content" style="display:flex;flex-direction:column;height:100%;" hidden>
+            <div class="reader-head">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+                <h2 class="reader-subject" id="r-subject"></h2>
+                <div style="display:flex;gap:6px;flex-shrink:0;">
+                  <button type="button" class="action-btn" style="padding:5px 10px;font-size:11.5px;" onclick="toggleReaderRaw()">
+                    <span id="r-raw-btn-text">源码 / 纯文本</span>
+                  </button>
+                  <button type="button" class="action-btn" style="padding:5px 10px;font-size:11.5px;color:var(--red);" onclick="deleteCurrentMail()">
+                    <svg class="icon" style="width:14px;height:14px;"><use href="#i-trash"/></svg>
+                    <span data-i18n="btn_delete">删除</span>
+                  </button>
+                </div>
+              </div>
+              <div class="reader-meta">
+                <div>
+                  <strong data-i18n="lbl_from">发件人：</strong><span id="r-from"></span>
+                  <span style="margin-inline:8px;color:var(--line)">|</span>
+                  <strong data-i18n="lbl_to">收件箱：</strong><span id="r-to" style="font-family:ui-monospace,monospace;color:var(--blue);"></span>
+                </div>
+                <span id="r-date" style="font-variant-numeric:tabular-nums;"></span>
+              </div>
+
+              <!-- Auto-extracted OTP Banner inside Reader -->
+              <div class="reader-otp-bar" id="r-otp-bar" hidden>
+                <div>
+                  <span style="font-size:12px;font-weight:650;color:var(--secondary);" data-i18n="detected_otp_label">✨ 智能识别到验证码 (OTP)：</span>
+                  <span class="reader-otp-code" id="r-otp-code"></span>
+                </div>
+                <button type="button" class="action-btn green-main" style="padding:6px 14px;" onclick="copyReaderOtp()">
+                  <svg class="icon" style="width:15px;height:15px;"><use href="#i-copy"/></svg>
+                  <span data-i18n="btn_copy_otp">一键复制验证码</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="reader-body">
+              <iframe id="r-html-frame" class="reader-iframe" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+              <pre id="r-raw-pre" class="reader-pre" hidden></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- MODAL 1: Compose Email (Liquid Glass) -->
+  <div id="compose-modal" class="modal-backdrop" hidden onclick="if(event.target===this)this.hidden=true">
+    <section class="modal-card liquid">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h3 style="margin:0;font-size:18px;font-weight:650;" data-i18n="compose_title">✉️ 发送邮件</h3>
+        <button type="button" class="action-btn" style="padding:4px 10px;" onclick="document.getElementById('compose-modal').hidden=true">✕</button>
+      </div>
+      <form style="display:grid;gap:12px;" onsubmit="handleSendMail(event)">
+        <div>
+          <label class="field-label" data-i18n="compose_from">发件邮箱</label>
+          <div class="glass-input-wrap"><input id="c-from" class="glass-input" type="email" required></div>
+        </div>
+        <div>
+          <label class="field-label" data-i18n="compose_to">收件人邮箱</label>
+          <div class="glass-input-wrap"><input id="c-to" class="glass-input" type="email" placeholder="请输入收件人邮箱 (如 example@qq.com)" required></div>
+        </div>
+        <div>
+          <label class="field-label" data-i18n="compose_subject">主题</label>
+          <div class="glass-input-wrap"><input id="c-subject" class="glass-input" type="text" required></div>
+        </div>
+        <div>
+          <label class="field-label" data-i18n="compose_body">正文 (HTML 或纯文本)</label>
+          <textarea id="c-body" class="glass-textarea" required></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+          <button type="button" class="action-btn" onclick="document.getElementById('compose-modal').hidden=true">取消</button>
+          <button type="submit" id="c-send-btn" class="primary-btn">
+            <svg class="icon"><use href="#i-send"/></svg>
+            <span data-i18n="compose_submit">立即发送</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- MODAL 2: Change Password & View JWT Credential (Liquid Glass) -->
+  <div id="cred-modal" class="modal-backdrop" hidden onclick="if(event.target===this)this.hidden=true">
+    <section class="modal-card liquid">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h3 style="margin:0;font-size:18px;font-weight:650;">🔐 邮箱安全凭证与修改密码</h3>
+        <button type="button" class="action-btn" style="padding:4px 10px;" onclick="document.getElementById('cred-modal').hidden=true">✕</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label">当前登录邮箱</label>
+        <div id="cred-addr-text" style="font-family:ui-monospace,monospace;font-weight:700;font-size:15px;color:var(--blue);"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">专属 JWT 凭证密钥（可用于跨设备免密恢复或 API 调用）</label>
+        <div style="display:flex;gap:8px;">
+          <div class="glass-input-wrap" style="flex:1;"><input id="cred-jwt-text" class="glass-input" type="text" readonly></div>
+          <button type="button" class="action-btn" onclick="navigator.clipboard.writeText(document.getElementById('cred-jwt-text').value);showToast('✅ 已复制 JWT 凭证')">复制</button>
+        </div>
+      </div>
+      <form onsubmit="handleChangeMailboxPassword(event)" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line);">
+        <label class="field-label">修改此邮箱的独立登录密码</label>
+        <div style="display:flex;gap:8px;">
+          <div class="glass-input-wrap" style="flex:1;">
+            <input id="new-mailbox-pass" class="glass-input" type="password" placeholder="输入新密码" minlength="3" required>
+          </div>
+          <button type="submit" class="primary-btn">保存新密码</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- MODAL 3: Admin Manage Specific Address (JWT & Password Reset) -->
+  <div id="admin-addr-modal" class="modal-backdrop" hidden onclick="if(event.target===this)this.hidden=true">
+    <section class="modal-card liquid">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h3 style="margin:0;font-size:18px;font-weight:650;">🛡️ 管理员 · 邮箱凭证与密码管理</h3>
+        <button type="button" class="action-btn" style="padding:4px 10px;" onclick="document.getElementById('admin-addr-modal').hidden=true">✕</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label">目标邮箱地址 (ID: <span id="adm-modal-id"></span>)</label>
+        <div id="adm-modal-email" style="font-family:ui-monospace,monospace;font-weight:700;font-size:16px;color:var(--purple);"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">专属 JWT 登录凭证 (/admin/show_password/:id)</label>
+        <div style="display:flex;gap:8px;">
+          <div class="glass-input-wrap" style="flex:1;"><input id="adm-modal-jwt" class="glass-input" type="text" readonly></div>
+          <button type="button" class="action-btn" onclick="navigator.clipboard.writeText(document.getElementById('adm-modal-jwt').value);showToast('✅ 已复制该邮箱的 JWT 凭证')">复制</button>
+        </div>
+      </div>
+      <form onsubmit="handleAdminResetAddrPassword(event)" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line);">
+        <label class="field-label">强制重置该邮箱的独立登录密码 (/admin/address/:id/reset_password)</label>
+        <div style="display:flex;gap:8px;">
+          <div class="glass-input-wrap" style="flex:1;">
+            <input id="adm-modal-newpass" class="glass-input" type="password" placeholder="输入新的邮箱登录密码" minlength="3" required>
+          </div>
+          <button type="submit" class="primary-btn">确认重置密码</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- MODAL 4: Admin View Sendbox Content -->
+  <div id="admin-raw-modal" class="modal-backdrop" hidden onclick="if(event.target===this)this.hidden=true">
+    <section class="modal-card liquid" style="max-width:680px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="margin:0;font-size:17px;font-weight:650;">📤 发件箱邮件原文详情</h3>
+        <button type="button" class="action-btn" style="padding:4px 10px;" onclick="document.getElementById('admin-raw-modal').hidden=true">✕</button>
+      </div>
+      <pre id="admin-raw-modal-pre" class="reader-pre" style="max-height:420px;overflow-y:auto;"></pre>
+    </section>
+  </div>
+
+  <footer class="footer shell">
+    <span>© 2026 Minglu Lin · 11231632.xyz Cloud Mail</span>
+    <div style="display:flex;gap:14px;align-items:center;">
+      <a href="https://status-k9x2.11231632.xyz" target="_blank" rel="noopener" style="text-decoration:none;opacity:0.8;" data-i18n="probe_link">集群探针 ↗</a>
+      <a href="#admin" onclick="switchMode('admin');return false;" style="text-decoration:none;opacity:0.35;font-size:12px;color:var(--muted);transition:opacity 0.2s;" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=0.35" data-i18n="admin_link">管理</a>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    // Unregister any old service worker & purge legacy shared localStorage mailbox lists for strict privacy isolation!
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
+    }
+    localStorage.removeItem("cf_mail_saved_list");
+    localStorage.removeItem("cf_mail_active_address");
+    localStorage.removeItem("jwt");
+
+    const I18N = {
+      zh: {
+        back_home: "个人主页 ↗",
+        gate_title: "解锁域名邮箱",
+        gate_desc: "首次访问请输入通行密码以继续。",
+        gate_btn: "解锁进入邮箱系统",
+        gate_sec_note: "🔒 安全防线已启用：连续密码错误 10 次将自动触发邮件告警",
+        m1_title: "🔐 专属密码邮箱",
+        m1_desc: "独立密码保护 · 严格会话隔离",
+        tag_default: "专属模式",
+        tag_instant: "即开即用 →",
+        m2_title: "⚡ 免注册 · 极速一次性邮箱",
+        m2_desc: "免注册免密 · 自动分配前缀并直达收件箱",
+        admin_gate_title: "系统管理",
+        admin_gate_desc: "请输入管理密码以继续。",
+        admin_gate_btn: "验证登录",
+        admin_gate_back: "返回",
+        admin_link: "管理",
+        sub_login: "🔑 登录已有邮箱",
+        sub_register: "✨ 注册新专属邮箱",
+        sub_jwt: "🎫 凭证登录",
+        login_h2: "登录你的专属域名邮箱",
+        login_p: "输入你的邮箱前缀与独立密码，即可进入受密码保护的私人收件箱（与其他人完全物理隔离）。",
+        lbl_email_addr: "邮箱账号",
+        lbl_email_pass: "邮箱独立密码",
+        btn_do_login: "安全登录专属邮箱",
+        reg_h2: "注册全新专属密码邮箱",
+        reg_p: "自定义专属前缀并设置独立密码。注册后仅凭你的密码方可登录，其他人无法抢注或查看。",
+        lbl_reg_prefix: "自定义邮箱前缀",
+        lbl_reg_pass: "设置独立登录密码",
+        btn_do_reg: "立即注册并进入专属收件箱",
+        promo_badge: "⚡ 免注册 · 零配置即开即用",
+        promo_h2: "只需要临时接收一两次验证码？",
+        promo_p: "无需注册账号、无需设置密码！点击下方按钮，系统将立即为你随机生成一个一次性 @11231632.xyz 邮箱并直接打开实时收件箱。",
+        btn_enter_instant: "⚡ 免注册 · 随机生成邮箱并直达收件箱",
+        btn_quick_go: "直接收码 →",
+        latest_otp: "最新验证码",
+        click_copy: "[点击复制]",
+        btn_copy_addr: "复制邮箱",
+        btn_compose: "写信",
+        btn_cred: "改密 / 凭证",
+        btn_refresh: "刷新",
+        btn_logout: "退出邮箱",
+        btn_random: "随机换一个",
+        btn_use_prefix: "切换",
+        session_temp_label: "本次标签页创建的临时邮箱（关闭窗口即清空，完全隔离）：",
+        inbox_list_title: "收件箱列表",
+        empty_reader_title: "实时收件箱已就绪",
+        empty_reader_sub: "新邮件到达后将每 5 秒自动同步显示，并自动提取邮件内的验证码",
+        btn_delete: "删除",
+        lbl_from: "发件人：",
+        lbl_to: "收件箱：",
+        detected_otp_label: "✨ 智能识别到验证码 (OTP)：",
+        btn_copy_otp: "一键复制验证码",
+        probe_link: "集群探针 ↗"
+      },
+      en: {
+        back_home: "Homepage ↗",
+        gate_title: "Unlock Cloud Mail",
+        gate_desc: "Enter site access password to proceed.",
+        gate_btn: "Unlock Mail System",
+        gate_sec_note: "🔒 Brute-Force Guard Active: 10 failed attempts trigger an alert",
+        m1_title: "🔐 Personal Mailbox",
+        m1_desc: "Password-protected · Isolated sessions",
+        tag_default: "Personal",
+        tag_instant: "Instant →",
+        m2_title: "⚡ Instant Disposable Mail",
+        m2_desc: "No signup · Random address & live inbox",
+        admin_gate_title: "System Console",
+        admin_gate_desc: "Please enter management credentials to proceed.",
+        admin_gate_btn: "Authenticate",
+        admin_gate_back: "Back",
+        admin_link: "Console",
+        sub_login: "🔑 Sign In",
+        sub_register: "✨ Register Mailbox",
+        sub_jwt: "🎫 JWT Token",
+        login_h2: "Sign In to Your Personal Mailbox",
+        login_p: "Enter your mailbox username and password to open your isolated private inbox.",
+        lbl_email_addr: "Email Address",
+        lbl_email_pass: "Mailbox Password",
+        btn_do_login: "Sign In to Inbox",
+        reg_h2: "Register a Password-Protected Mailbox",
+        reg_p: "Choose a custom prefix and set your private password. Only you can sign in.",
+        lbl_reg_prefix: "Custom Username Prefix",
+        lbl_reg_pass: "Set Mailbox Password",
+        btn_do_reg: "Register & Open Inbox",
+        promo_badge: "⚡ NO SIGN-UP · INSTANT OTP INBOX",
+        promo_h2: "Just need a quick email for verification codes?",
+        promo_p: "Skip registration! Click below to instantly generate a random @11231632.xyz address and jump straight to the live inbox.",
+        btn_enter_instant: "⚡ No Sign-Up · Generate Random Email & Open Inbox",
+        btn_quick_go: "Open →",
+        latest_otp: "Latest Code",
+        click_copy: "[Click to Copy]",
+        btn_copy_addr: "Copy Email",
+        btn_compose: "Compose",
+        btn_cred: "Password / Key",
+        btn_refresh: "Refresh",
+        btn_logout: "Sign Out",
+        btn_random: "New Random",
+        btn_use_prefix: "Switch",
+        session_temp_label: "Ephemeral addresses in this tab (cleared when tab closes):",
+        inbox_list_title: "Messages",
+        empty_reader_title: "Your Live Inbox is Ready",
+        empty_reader_sub: "Incoming emails appear automatically every 5 seconds with instant OTP extraction.",
+        btn_delete: "Delete",
+        lbl_from: "From: ",
+        lbl_to: "To: ",
+        detected_otp_label: "✨ Verification Code Detected:",
+        btn_copy_otp: "Copy Code",
+        probe_link: "Fleet Status ↗"
+      }
+    };
+
+    let lang = localStorage.getItem("cf_mail_lang") || "zh";
+    let siteAuth = localStorage.getItem("cf_mail_site_auth") || "";
+    let adminAuth = sessionStorage.getItem("cf_mail_admin_auth") || "";
+
+    // Default mode is 'personal' (requires registration/login), unless URL is /admin or #admin
+    let currentMode = (location.pathname.startsWith("/admin") || location.hash === "#admin") ? "admin" : "personal";
+
+    // Strictly isolated session states (stored in sessionStorage only!)
+    let personalMailbox = null; // { address, jwt }
+    try {
+      personalMailbox = JSON.parse(sessionStorage.getItem("cf_mail_personal_session") || "null");
+    } catch (_) {}
+
+    let instantSessionList = []; // Ephemeral disposable addresses created in THIS tab only
+    let activeInstantMailbox = null;
+    try {
+      instantSessionList = JSON.parse(sessionStorage.getItem("cf_mail_instant_session_list") || "[]");
+      activeInstantMailbox = instantSessionList[0] || null;
+    } catch (_) {}
+
+    let mails = [];
+    let selectedMailId = null;
+    let showRawMode = false;
+    let pollSeconds = 5;
+    let pollInterval = null;
+    let toastTimer = null;
+
+    // Interactive Liquid Glass Pointer Specular Highlight
+    document.addEventListener("pointermove", (e) => {
+      document.querySelectorAll(".liquid").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty("--glass-x", `${Math.max(0, Math.min(100, x)).toFixed(1)}%`);
+        el.style.setProperty("--glass-y", `${Math.max(0, Math.min(100, y)).toFixed(1)}%`);
+      });
+    }, { passive: true });
+
+    window.showToast = function(msg) {
+      const el = document.getElementById("toast");
+      clearTimeout(toastTimer);
+      el.textContent = msg;
+      el.classList.add("visible");
+      toastTimer = setTimeout(() => el.classList.remove("visible"), 3000);
+    };
+
+    function applyLang() {
+      const d = I18N[lang] || I18N.zh;
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      document.getElementById("lang-btn").textContent = lang === "zh" ? "🌐 EN" : "🌐 中文";
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const k = el.dataset.i18n;
+        if (d[k]) el.textContent = d[k];
+      });
+      renderMailList();
+    }
+
+    window.toggleLang = function() {
+      lang = lang === "zh" ? "en" : "zh";
+      localStorage.setItem("cf_mail_lang", lang);
+      applyLang();
+    };
+
+    async function sha256Hex(text) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function generateRandomPrefix(len = 7) {
+      const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+      const arr = new Uint8Array(len);
+      crypto.getRandomValues(arr);
+      return Array.from(arr, b => chars[b % chars.length]).join("");
+    }
+
+    function normalizeEmailAddress(raw) {
+      const clean = raw.trim().toLowerCase();
+      return clean.includes("@") ? clean : `${clean}@11231632.xyz`;
+    }
+
+    function extractOtpFromMail(mail) {
+      if (mail.metadata) {
+        try {
+          const meta = typeof mail.metadata === "string" ? JSON.parse(mail.metadata) : mail.metadata;
+          if (meta?.ai_extract?.result) return String(meta.ai_extract.result);
+        } catch (_) {}
+      }
+      const content = `${mail.subject || ""} ${(mail.text || "").slice(0, 1500)} ${(mail.html || "").replace(/<[^>]+>/g, " ").slice(0, 1500)}`;
+      const kwRegex = /(?:验证码|校验码|确认码|动态码|安全码|verification\s*code|security\s*code|auth\s*code|passcode|otp|code\s*is|pin)[:：\sis]*([0-9]{4,8})\b/i;
+      const m1 = content.match(kwRegex);
+      if (m1) return m1[1];
+      const m2 = content.match(/\b([0-9]{6})\b/);
+      if (m2 && /(?:验证|code|verify|login|登录|注册|auth|otp)/i.test(content)) return m2[1];
+      return null;
+    }
+
+    // STEP 1: Site Unlock (111)
+    window.handleSiteUnlock = async function(e) {
+      e.preventDefault();
+      const input = document.getElementById("site-pass-input");
+      const errEl = document.getElementById("site-gate-err");
+      const btn = document.getElementById("site-gate-btn");
+      const val = input.value.trim();
+      if (!val) return;
+      errEl.hidden = true;
+      btn.disabled = true;
+      try {
+        const hashed = await sha256Hex(val);
+        const res = await fetch("/open_api/site_login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: hashed, cf_token: "" })
+        });
+        if (res.status === 200) {
+          siteAuth = val;
+          localStorage.setItem("cf_mail_site_auth", val);
+          await enterMainApp();
+        } else {
+          errEl.textContent = "通行密码错误，请重试（连续失败 10 次将自动发送告警邮件）。";
+          errEl.hidden = false;
+        }
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    // Sub-tabs inside Personal Auth Portal
+    window.switchAuthSubTab = function(sub) {
+      document.getElementById("subtab-login").classList.toggle("active", sub === "login");
+      document.getElementById("subtab-register").classList.toggle("active", sub === "register");
+      document.getElementById("subtab-jwt").classList.toggle("active", sub === "jwt");
+      document.getElementById("form-personal-login").hidden = sub !== "login";
+      document.getElementById("form-personal-register").hidden = sub !== "register";
+      document.getElementById("form-personal-jwt").hidden = sub !== "jwt";
+    };
+
+    // Personal Mode: Login with Email + Password
+    window.handlePersonalLogin = async function(e) {
+      e.preventDefault();
+      const emailRaw = document.getElementById("login-email-input").value;
+      const passRaw = document.getElementById("login-pass-input").value;
+      const errEl = document.getElementById("login-err-msg");
+      const btn = document.getElementById("btn-personal-login");
+      const email = normalizeEmailAddress(emailRaw);
+      errEl.hidden = true;
+      btn.disabled = true;
+      try {
+        const passHash = await sha256Hex(passRaw);
+        const res = await fetch("/api/address_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth
+          },
+          body: JSON.stringify({ email, password: passHash, cf_token: "" })
+        });
+        if (res.status === 200) {
+          const data = await res.json();
+          personalMailbox = { address: data.address || email, jwt: data.jwt };
+          sessionStorage.setItem("cf_mail_personal_session", JSON.stringify(personalMailbox));
+          document.getElementById("login-pass-input").value = "";
+          showToast(`🔐 已安全登录专属邮箱：${personalMailbox.address}`);
+          await switchMode("personal");
+        } else {
+          const txt = await res.text();
+          errEl.textContent = `登录失败：邮箱不存在或密码错误 (${txt})`;
+          errEl.hidden = false;
+        }
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    // Personal Mode: Register a new Password-Protected Mailbox
+    window.handlePersonalRegister = async function(e) {
+      e.preventDefault();
+      const prefix = document.getElementById("reg-prefix-input").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+      const passRaw = document.getElementById("reg-pass-input").value;
+      const errEl = document.getElementById("reg-err-msg");
+      const btn = document.getElementById("btn-personal-reg");
+      if (!prefix || !passRaw) return;
+      errEl.hidden = true;
+      btn.disabled = true;
+      try {
+        // 1. Create the address
+        const res = await fetch("/api/new_address", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth
+          },
+          body: JSON.stringify({ name: prefix, domain: "11231632.xyz" })
+        });
+        if (res.status !== 200) {
+          const txt = await res.text();
+          errEl.textContent = `注册失败：该前缀已被注册或不可用 (${txt})`;
+          errEl.hidden = false;
+          return;
+        }
+        const data = await res.json();
+        // 2. Immediately set the user's custom password on this new mailbox
+        const passHash = await sha256Hex(passRaw);
+        await fetch("/api/address_change_password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth,
+            "Authorization": `Bearer ${data.jwt}`
+          },
+          body: JSON.stringify({ new_password: passHash })
+        });
+
+        personalMailbox = { address: data.address, jwt: data.jwt };
+        sessionStorage.setItem("cf_mail_personal_session", JSON.stringify(personalMailbox));
+        document.getElementById("reg-prefix-input").value = "";
+        document.getElementById("reg-pass-input").value = "";
+        showToast(`🎉 注册成功！已进入专属密码邮箱：${personalMailbox.address}`);
+        await switchMode("personal");
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    // Personal Mode: Login with JWT Token
+    window.handleJwtLogin = async function(e) {
+      e.preventDefault();
+      const token = document.getElementById("jwt-token-input").value.trim();
+      const errEl = document.getElementById("jwt-err-msg");
+      if (!token) return;
+      errEl.hidden = true;
+      try {
+        const res = await fetch("/open_api/credential_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth
+          },
+          body: JSON.stringify({ credential: token, cf_token: "" })
+        });
+        if (res.status === 200) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          personalMailbox = { address: payload.address, jwt: token };
+          sessionStorage.setItem("cf_mail_personal_session", JSON.stringify(personalMailbox));
+          document.getElementById("jwt-token-input").value = "";
+          showToast(`🎫 凭证验证成功：${personalMailbox.address}`);
+          await switchMode("personal");
+        } else {
+          errEl.textContent = "无效的 JWT 凭证密钥";
+          errEl.hidden = false;
+        }
+      } catch (err) {
+        errEl.textContent = "JWT 格式错误";
+        errEl.hidden = false;
+      }
+    };
+
+    window.logoutPersonalMailbox = function() {
+      personalMailbox = null;
+      sessionStorage.removeItem("cf_mail_personal_session");
+      mails = [];
+      selectedMailId = null;
+      showToast("🚪 已安全退出专属邮箱");
+      switchMode("personal");
+    };
+
+    // Quick Instant Prefix from Portal Right Card
+    window.handleQuickInstantPrefix = async function(e) {
+      e.preventDefault();
+      const prefix = document.getElementById("quick-instant-prefix").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+      if (!prefix) {
+        await switchMode("instant");
+        return;
+      }
+      document.getElementById("quick-instant-prefix").value = "";
+      await createDisposableByPrefix(prefix);
+      await switchMode("instant");
+    };
+
+    window.handleInstantCustomPrefix = async function(e) {
+      e.preventDefault();
+      const input = document.getElementById("instant-custom-input");
+      const prefix = input.value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+      if (!prefix) return;
+      input.value = "";
+      await createDisposableByPrefix(prefix);
+    };
+
+    window.createRandomDisposableMailbox = async function(silent = false) {
+      const prefix = generateRandomPrefix(7);
+      await createDisposableByPrefix(prefix, silent);
+    };
+
+    async function createDisposableByPrefix(prefix, silent = false) {
+      const fullAddr = `${prefix}@11231632.xyz`;
+      const existing = instantSessionList.find(m => m.address === fullAddr);
+      if (existing) {
+        activeInstantMailbox = existing;
+        updateActiveHeaderUI();
+        await refreshMails(true);
+        return;
+      }
+      try {
+        const res = await fetch("/api/new_address", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth
+          },
+          body: JSON.stringify({ name: prefix, domain: "11231632.xyz" })
+        });
+        if (res.status === 200) {
+          const data = await res.json();
+          const entry = { address: data.address || fullAddr, jwt: data.jwt };
+          instantSessionList.unshift(entry);
+          sessionStorage.setItem("cf_mail_instant_session_list", JSON.stringify(instantSessionList.slice(0, 8)));
+          activeInstantMailbox = entry;
+          selectedMailId = null;
+          updateActiveHeaderUI();
+          await refreshMails(true);
+          if (!silent) showToast(`🎲 已启用免注册临时邮箱：${entry.address}`);
+        } else {
+          showToast("⚠️ 该前缀已被密码保护注册，请换一个临时前缀或在「专属密码邮箱」中登录");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    }
+
+    // Admin Console State
+    let currentAdminTab = "overview"; // 'overview' | 'addresses' | 'mails' | 'sendbox' | 'security' | 'maintenance'
+    let adminMailSource = "all"; // 'all' | 'unknow'
+    let adminMailOffset = 0;
+    const ADMIN_MAIL_LIMIT = 40;
+    let adminAddrOffset = 0;
+    const ADMIN_ADDR_LIMIT = 20;
+    let adminSendboxCache = [];
+    let currentAdminModalAddrId = null;
+
+    function adminHeaders(isJson = false) {
+      const h = {
+        "x-custom-auth": siteAuth,
+        "x-admin-auth": adminAuth
+      };
+      if (isJson) h["Content-Type"] = "application/json";
+      return h;
+    }
+
+    // TOP-LEVEL MODE SWITCHER ('personal' | 'instant' | 'admin')
+    window.switchMode = async function(mode) {
+      currentMode = mode;
+      const btnPersonal = document.getElementById("mode-btn-personal");
+      const btnInstant = document.getElementById("mode-btn-instant");
+      const btnAdmin = document.getElementById("mode-btn-admin");
+      if (btnPersonal) btnPersonal.className = "mode-card-btn" + (mode === "personal" ? " active-personal" : "");
+      if (btnInstant) btnInstant.className = "mode-card-btn" + (mode === "instant" ? " active-instant" : "");
+      if (btnAdmin) btnAdmin.className = "mode-card-btn" + (mode === "admin" ? " active-admin" : "");
+
+      const portal = document.getElementById("personal-auth-portal");
+      const adminGate = document.getElementById("admin-gate");
+      const adminConsoleWrap = document.getElementById("admin-console-wrap");
+      const inboxContainer = document.getElementById("active-inbox-container");
+      const heroDock = document.getElementById("hero-dock");
+      const filterInput = document.getElementById("admin-filter-input");
+
+      if (mode === "personal") {
+        adminGate.hidden = true;
+        adminConsoleWrap.hidden = true;
+        filterInput.hidden = true;
+        if (!personalMailbox) {
+          portal.hidden = false;
+          inboxContainer.hidden = true;
+          document.getElementById("live-status-pill").hidden = true;
+          return;
+        }
+        portal.hidden = true;
+        inboxContainer.hidden = false;
+        heroDock.hidden = false;
+        document.getElementById("live-status-pill").hidden = false;
+        selectedMailId = null;
+        updateActiveHeaderUI();
+        await refreshMails(true);
+      } else if (mode === "instant") {
+        portal.hidden = true;
+        adminGate.hidden = true;
+        adminConsoleWrap.hidden = true;
+        filterInput.hidden = true;
+        inboxContainer.hidden = false;
+        heroDock.hidden = false;
+        document.getElementById("live-status-pill").hidden = false;
+        if (!activeInstantMailbox) {
+          await createRandomDisposableMailbox(false);
+        } else {
+          selectedMailId = null;
+          updateActiveHeaderUI();
+          await refreshMails(true);
+        }
+      } else if (mode === "admin") {
+        portal.hidden = true;
+        if (!adminAuth) {
+          adminGate.hidden = false;
+          adminConsoleWrap.hidden = true;
+          inboxContainer.hidden = true;
+          return;
+        }
+        adminGate.hidden = true;
+        adminConsoleWrap.hidden = false;
+        heroDock.hidden = true;
+        document.getElementById("live-status-pill").hidden = false;
+        await switchAdminTab(currentAdminTab);
+      }
+    };
+
+    // Switch between the 6 Global Admin Console Sub-Tabs
+    window.switchAdminTab = async function(tab) {
+      currentAdminTab = tab;
+      const tabs = ["overview", "addresses", "mails", "sendbox", "security", "maintenance"];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`atab-btn-${t}`);
+        if (btn) btn.classList.toggle("active", t === tab);
+      });
+
+      document.getElementById("admin-panel-overview").hidden = tab !== "overview";
+      document.getElementById("admin-panel-addresses").hidden = tab !== "addresses";
+      document.getElementById("admin-panel-mails-toolbar").hidden = tab !== "mails";
+      document.getElementById("admin-panel-sendbox").hidden = tab !== "sendbox";
+      document.getElementById("admin-panel-security").hidden = tab !== "security";
+      document.getElementById("admin-panel-maintenance").hidden = tab !== "maintenance";
+
+      const inboxContainer = document.getElementById("active-inbox-container");
+      const filterInput = document.getElementById("admin-filter-input");
+      if (tab === "mails") {
+        inboxContainer.hidden = false;
+        filterInput.hidden = false;
+        selectedMailId = null;
+        await refreshMails(true);
+      } else {
+        inboxContainer.hidden = true;
+        filterInput.hidden = true;
+      }
+
+      if (tab === "overview") await loadAdminOverview();
+      else if (tab === "addresses") await loadAdminAddresses();
+      else if (tab === "sendbox") {
+        await Promise.all([loadAdminSendbox(), loadAdminSenders()]);
+      } else if (tab === "security") await loadAdminSecuritySettings();
+      else if (tab === "maintenance") await loadAdminMaintenanceSettings();
+    };
+
+    window.logoutAdmin = function() {
+      adminAuth = "";
+      sessionStorage.removeItem("cf_mail_admin_auth");
+      showToast("🔒 已锁定全域管理后台");
+      switchMode("personal");
+    };
+
+    window.openAdminComposeModal = function(defaultFrom = "admin@11231632.xyz") {
+      document.getElementById("c-from").value = defaultFrom;
+      document.getElementById("compose-modal").hidden = false;
+    };
+
+    // =========================================================================
+    // ADMIN TAB 1: OVERVIEW, BRUTE-FORCE GUARD & WORKER CONFIGS
+    // =========================================================================
+    window.loadAdminOverview = async function() {
+      if (!adminAuth) return;
+      try {
+        const [statRes, cfgRes, bfRes, sgRes] = await Promise.all([
+          fetch("/admin/statistics", { headers: adminHeaders() }),
+          fetch("/admin/worker/configs", { headers: adminHeaders() }),
+          fetch("/admin/security_guard/status", { headers: adminHeaders() }).catch(() => null),
+          fetch("/admin/site_gate/settings", { headers: adminHeaders() }).catch(() => null)
+        ]);
+
+        if (sgRes && sgRes.status === 200) {
+          const sg = await sgRes.json();
+          const chk = document.getElementById("sg-enabled-chk");
+          const inp = document.getElementById("sg-password-input");
+          const badge = document.getElementById("site-gate-status-badge");
+          if (chk) chk.checked = Boolean(sg.enabled);
+          if (inp) inp.value = sg.password || "111";
+          if (badge) {
+            badge.className = "mode-pill-tag " + (sg.enabled ? "blue" : "green");
+            badge.textContent = sg.enabled ? `🔒 已启用密码 (${sg.password})` : "🔓 当前免前端密码直入";
+          }
+        }
+
+        if (statRes && statRes.status === 200) {
+          const st = await statRes.json();
+          document.getElementById("stat-mail-count").textContent = st.mailCount ?? 0;
+          document.getElementById("stat-address-count").textContent = st.addressCount ?? 0;
+          document.getElementById("stat-active-7d").textContent = st.activeAddressCount7days ?? 0;
+          document.getElementById("stat-active-30d").textContent = st.activeAddressCount30days ?? 0;
+          document.getElementById("stat-send-count").textContent = st.sendMailCount ?? 0;
+          document.getElementById("stat-user-count").textContent = st.userCount ?? 0;
+        }
+
+        if (bfRes && bfRes.status === 200) {
+          const bf = await bfRes.json();
+          document.getElementById("bf-threshold-val").textContent = bf.threshold || 10;
+          document.getElementById("bf-alert-email").textContent = bf.alertEmail || "管理员告警信箱";
+          const tbody = document.getElementById("bf-guard-tbody");
+          tbody.innerHTML = "";
+          const items = bf.items || [];
+          if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--green);font-weight:600;padding:18px;">✅ 当前无异常密码试探 IP · 全域防暴破状态健康</td></tr>`;
+          } else {
+            items.forEach(item => {
+              const isAlerted = item.count >= 10;
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td style="font-family:ui-monospace,monospace;font-weight:700;">${escapeHtml(item.ip)}</td>
+                <td><strong style="color:${isAlerted ? 'var(--red)' : 'var(--ink)'};">${item.count} 次</strong></td>
+                <td>${isAlerted ? '<span class="mode-pill-tag" style="background:rgba(217,45,32,.14);color:var(--red);">🚨 已触发邮件告警</span>' : '<span class="mode-pill-tag blue">监控计数中</span>'}</td>
+                <td>
+                  <div style="display:flex;gap:6px;">
+                    <button type="button" class="mini-btn red" onclick="quickBlockIp('${escapeHtml(item.ip)}')">🚫 加入黑名单</button>
+                    <button type="button" class="mini-btn" onclick="clearBruteForceIp('${escapeHtml(item.ip)}')">🧹 清零计数</button>
+                  </div>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+        }
+
+        if (cfgRes && cfgRes.status === 200) {
+          const cfg = await cfgRes.json();
+          const grid = document.getElementById("worker-config-grid");
+          grid.innerHTML = "";
+          const entries = [
+            ["VERSION (系统版本)", cfg.VERSION || "v1.13.0"],
+            ["DOMAINS (收信域名)", (cfg.DOMAINS || []).join(", ")],
+            ["DEFAULT_DOMAINS (默认域名)", (cfg.DEFAULT_DOMAINS || []).join(", ")],
+            ["MIN / MAX_ADDRESS_LEN", `${cfg.MIN_ADDRESS_LEN || 1} ~ ${cfg.MAX_ADDRESS_LEN || 32} 字符`],
+            ["HAS_PASSWORD (前端访问密码)", cfg.HAS_PASSWORD ? `已启用 (${cfg.HAS_PASSWORD} 个)` : "未启用"],
+            ["HAS_ADMIN_PASSWORDS (后台管理密码)", cfg.HAS_ADMIN_PASSWORDS ? `已启用 (${cfg.HAS_ADMIN_PASSWORDS} 个)` : "未启用"],
+            ["ENABLE_USER_CREATE_EMAIL", cfg.ENABLE_USER_CREATE_EMAIL ? "✅ 允许创建" : "❌ 禁止"],
+            ["ENABLE_USER_DELETE_EMAIL", cfg.ENABLE_USER_DELETE_EMAIL ? "✅ 允许删除" : "❌ 禁止"],
+            ["ENABLE_MAIL_READ_STATUS", cfg.ENABLE_MAIL_READ_STATUS ? "✅ 已启用已读状态" : "关闭"],
+            ["ENABLE_WEBHOOK", cfg.ENABLE_WEBHOOK ? "✅ 已启用 Webhook" : "关闭"],
+            ["HAS_JWT_SECRET", cfg.HAS_JWT_SECRET ? "✅ 已配置" : "❌ 未配置"],
+            ["COPYRIGHT", cfg.COPYRIGHT || "-"]
+          ];
+          entries.forEach(([k, v]) => {
+            const div = document.createElement("div");
+            div.className = "kv-item";
+            div.innerHTML = `<span class="kv-key">${escapeHtml(k)}</span><span class="kv-val">${escapeHtml(String(v))}</span>`;
+            grid.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    window.saveAdminSiteGate = async function(e) {
+      e.preventDefault();
+      const enabled = document.getElementById("sg-enabled-chk").checked;
+      const password = document.getElementById("sg-password-input").value.trim() || "111";
+      try {
+        const res = await fetch("/admin/site_gate/settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ enabled, password })
+        });
+        if (res.status === 200) {
+          siteAuth = password;
+          localStorage.setItem("cf_mail_site_auth", password);
+          showToast(enabled ? `🔒 已启用前端访问密码门禁 (密码: ${password})` : "🔓 已关闭前端访问密码门禁，访客可直接进入主页！");
+          await loadAdminOverview();
+        } else {
+          showToast("保存失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.clearBruteForceIp = async function(ip) {
+      try {
+        await fetch("/admin/security_guard/clear", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ ip })
+        });
+        showToast(`✅ 已清除 IP ${ip} 的失败计数`);
+        await loadAdminOverview();
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.quickBlockIp = async function(ip) {
+      try {
+        const res = await fetch("/admin/ip_blacklist/settings", { headers: adminHeaders() });
+        const cur = res.status === 200 ? await res.json() : {};
+        const list = Array.isArray(cur.blacklist) ? cur.blacklist : [];
+        if (!list.includes(ip)) list.push(ip);
+        const payload = {
+          enabled: true,
+          blacklist: list,
+          asnBlacklist: Array.isArray(cur.asnBlacklist) ? cur.asnBlacklist : [],
+          fingerprintBlacklist: Array.isArray(cur.fingerprintBlacklist) ? cur.fingerprintBlacklist : [],
+          enableWhitelist: Boolean(cur.enableWhitelist),
+          whitelist: Array.isArray(cur.whitelist) ? cur.whitelist : [],
+          enableDailyLimit: Boolean(cur.enableDailyLimit),
+          dailyRequestLimit: Number(cur.dailyRequestLimit) || 100
+        };
+        const sr = await fetch("/admin/ip_blacklist/settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (sr.status === 200) {
+          showToast(`🚫 已将 IP ${ip} 加入黑名单并开启拦截！`);
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    // =========================================================================
+    // ADMIN TAB 2: ADDRESS MANAGEMENT
+    // =========================================================================
+    window.loadAdminAddresses = async function() {
+      if (!adminAuth) return;
+      const q = (document.getElementById("admin-addr-search")?.value || "").trim();
+      const tbody = document.getElementById("admin-addr-tbody");
+      try {
+        const url = `/admin/address?limit=${ADMIN_ADDR_LIMIT}&offset=${adminAddrOffset}${q ? `&query=${encodeURIComponent(q)}` : ""}`;
+        const res = await fetch(url, { headers: adminHeaders() });
+        if (res.status !== 200) return;
+        const data = await res.json();
+        const list = data.results || [];
+        if (adminAddrOffset === 0 && typeof data.count === "number") {
+          document.getElementById("admin-addr-total-badge").textContent = data.count;
+        }
+        const pageNum = Math.floor(adminAddrOffset / ADMIN_ADDR_LIMIT) + 1;
+        document.getElementById("addr-page-info").textContent = `第 ${pageNum} 页`;
+
+        tbody.innerHTML = "";
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted);">未查询到匹配的邮箱账号</td></tr>`;
+          return;
+        }
+
+        list.forEach(item => {
+          const tr = document.createElement("tr");
+          const created = (item.created_at || "").replace("T", " ").slice(0, 16);
+          const updated = (item.updated_at || "").replace("T", " ").slice(0, 16);
+          const src = item.source_meta || "web";
+          tr.innerHTML = `
+            <td style="font-family:ui-monospace,monospace;color:var(--muted);">#${item.id}</td>
+            <td>
+              <span style="font-family:ui-monospace,monospace;font-weight:700;color:var(--ink);cursor:pointer;" onclick="navigator.clipboard.writeText('${escapeHtml(item.name)}');showToast('✅ 已复制：${escapeHtml(item.name)}')">
+                ${escapeHtml(item.name)}
+              </span>
+            </td>
+            <td><span class="mode-pill-tag ${src === 'admin' ? 'purple' : 'blue'}">${escapeHtml(src)}</span></td>
+            <td><strong style="color:var(--blue);">${item.mail_count ?? 0}</strong> 封</td>
+            <td><strong style="color:var(--green);">${item.send_count ?? 0}</strong> 封</td>
+            <td style="font-variant-numeric:tabular-nums;color:var(--secondary);">${escapeHtml(created)}</td>
+            <td style="font-variant-numeric:tabular-nums;color:var(--secondary);">${escapeHtml(updated)}</td>
+            <td>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <button type="button" class="mini-btn blue" onclick="adminViewAddressMails('${escapeHtml(item.name)}')" title="在全域名收件箱中查看该邮箱的邮件">📬 查收件</button>
+                <button type="button" class="mini-btn green" onclick="adminSwitchIntoAddress(${item.id}, '${escapeHtml(item.name)}')" title="以该邮箱身份直接进入收件箱">🚀 切入邮箱</button>
+                <button type="button" class="mini-btn purple" onclick="adminOpenAddrModal(${item.id}, '${escapeHtml(item.name)}')" title="查看 JWT 凭证或重置登录密码">🔑 改密/凭证</button>
+                <button type="button" class="mini-btn" onclick="adminClearInbox(${item.id}, '${escapeHtml(item.name)}')" title="清空该邮箱收件箱">🧹 清空收件</button>
+                <button type="button" class="mini-btn red" onclick="adminDeleteAddress(${item.id}, '${escapeHtml(item.name)}')" title="彻底删除该邮箱账号">🗑️ 删除</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.changeAdminAddrPage = function(dir) {
+      const next = adminAddrOffset + dir * ADMIN_ADDR_LIMIT;
+      if (next < 0) return;
+      adminAddrOffset = next;
+      loadAdminAddresses();
+    };
+
+    window.handleAdminCreateAddress = async function(e) {
+      e.preventDefault();
+      const prefix = document.getElementById("admin-new-addr-prefix").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+      const rawPass = document.getElementById("admin-new-addr-pass").value;
+      if (!prefix) return;
+      try {
+        const res = await fetch("/admin/new_address", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ name: prefix, domain: "11231632.xyz", enablePrefix: false })
+        });
+        if (res.status !== 200) {
+          const msg = await res.text();
+          showToast(`创建失败: ${msg}`);
+          return;
+        }
+        const data = await res.json();
+        if (rawPass && data.jwt) {
+          const passHash = await sha256Hex(rawPass);
+          await fetch("/api/address_change_password", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-custom-auth": siteAuth,
+              "Authorization": `Bearer ${data.jwt}`
+            },
+            body: JSON.stringify({ new_password: passHash })
+          });
+        }
+        document.getElementById("admin-new-addr-prefix").value = "";
+        document.getElementById("admin-new-addr-pass").value = "";
+        showToast(`✅ 已成功创建邮箱：${data.address}${rawPass ? " (已设置独立密码)" : ""}`);
+        adminAddrOffset = 0;
+        await loadAdminAddresses();
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.adminOpenAddrModal = async function(id, email) {
+      currentAdminModalAddrId = id;
+      document.getElementById("adm-modal-id").textContent = id;
+      document.getElementById("adm-modal-email").textContent = email;
+      document.getElementById("adm-modal-jwt").value = "正在获取...";
+      document.getElementById("adm-modal-newpass").value = "";
+      document.getElementById("admin-addr-modal").hidden = false;
+      try {
+        const res = await fetch(`/admin/show_password/${id}`, { headers: adminHeaders() });
+        if (res.status === 200) {
+          const data = await res.json();
+          document.getElementById("adm-modal-jwt").value = data.jwt || "";
+        }
+      } catch (err) {
+        document.getElementById("adm-modal-jwt").value = err.message;
+      }
+    };
+
+    window.handleAdminResetAddrPassword = async function(e) {
+      e.preventDefault();
+      if (!currentAdminModalAddrId) return;
+      const newPass = document.getElementById("adm-modal-newpass").value;
+      if (!newPass) return;
+      try {
+        const passHash = await sha256Hex(newPass);
+        const res = await fetch(`/admin/address/${currentAdminModalAddrId}/reset_password`, {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ password: passHash })
+        });
+        if (res.status === 200) {
+          document.getElementById("adm-modal-newpass").value = "";
+          document.getElementById("admin-addr-modal").hidden = true;
+          showToast("✅ 已成功重置该邮箱的独立登录密码！");
+        } else {
+          showToast("重置密码失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.adminSwitchIntoAddress = async function(id, email) {
+      try {
+        const res = await fetch(`/admin/show_password/${id}`, { headers: adminHeaders() });
+        if (res.status === 200) {
+          const data = await res.json();
+          personalMailbox = { address: email, jwt: data.jwt };
+          sessionStorage.setItem("cf_mail_personal_session", JSON.stringify(personalMailbox));
+          showToast(`🚀 已切入邮箱：${email}`);
+          await switchMode("personal");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.adminViewAddressMails = async function(email) {
+      adminMailSource = "all";
+      adminMailOffset = 0;
+      document.getElementById("admin-mail-address-query").value = email;
+      await switchAdminTab("mails");
+    };
+
+    window.adminClearInbox = async function(id, email) {
+      if (!confirm(`确定要清空 ${email} 的所有收件箱邮件吗？`)) return;
+      try {
+        const res = await fetch(`/admin/clear_inbox/${id}`, { method: "DELETE", headers: adminHeaders() });
+        if (res.status === 200) {
+          showToast(`🧹 已清空 ${email} 的收件箱`);
+          await loadAdminAddresses();
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.adminDeleteAddress = async function(id, email) {
+      if (!confirm(`确定要彻底删除邮箱账号 ${email} 及其所有收发邮件吗？此操作不可恢复。`)) return;
+      try {
+        const res = await fetch(`/admin/delete_address/${id}`, { method: "DELETE", headers: adminHeaders() });
+        if (res.status === 200) {
+          showToast(`🗑️ 已彻底删除邮箱账号：${email}`);
+          await loadAdminAddresses();
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    // =========================================================================
+    // ADMIN TAB 3: GLOBAL MAILS & UNKNOWN MAILS AUDIT
+    // =========================================================================
+    window.switchAdminMailSource = async function(src) {
+      adminMailSource = src;
+      adminMailOffset = 0;
+      document.getElementById("btn-admin-mail-all").className = "action-btn" + (src === "all" ? " copy-main" : "");
+      document.getElementById("btn-admin-mail-unknow").className = "action-btn" + (src === "unknow" ? " copy-main" : "");
+      selectedMailId = null;
+      await refreshMails(true);
+    };
+
+    window.changeAdminMailPage = function(dir) {
+      const next = adminMailOffset + dir * ADMIN_MAIL_LIMIT;
+      if (next < 0) return;
+      adminMailOffset = next;
+      const pageNum = Math.floor(adminMailOffset / ADMIN_MAIL_LIMIT) + 1;
+      document.getElementById("admin-mail-page-info").textContent = `第 ${pageNum} 页`;
+      refreshMails(true);
+    };
+
+    // =========================================================================
+    // ADMIN TAB 4: SENDBOX & SEND ACCESS PERMISSIONS
+    // =========================================================================
+    window.loadAdminSendbox = async function() {
+      if (!adminAuth) return;
+      const addrFilter = (document.getElementById("admin-sendbox-filter")?.value || "").trim();
+      const tbody = document.getElementById("admin-sendbox-tbody");
+      try {
+        const url = `/admin/sendbox?limit=50&offset=0${addrFilter ? `&address=${encodeURIComponent(addrFilter)}` : ""}`;
+        const res = await fetch(url, { headers: adminHeaders() });
+        if (res.status !== 200) return;
+        const data = await res.json();
+        adminSendboxCache = data.results || [];
+        document.getElementById("admin-sendbox-badge").textContent = data.count ?? adminSendboxCache.length;
+        tbody.innerHTML = "";
+        if (adminSendboxCache.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">暂无发件箱记录</td></tr>`;
+          return;
+        }
+        adminSendboxCache.forEach((item, idx) => {
+          const tr = document.createElement("tr");
+          const snippet = String(item.raw || "").replace(/\s+/g, " ").slice(0, 110);
+          tr.innerHTML = `
+            <td style="font-family:ui-monospace,monospace;color:var(--muted);">#${item.id}</td>
+            <td style="font-family:ui-monospace,monospace;font-weight:700;color:var(--blue);">${escapeHtml(item.address || "")}</td>
+            <td style="font-variant-numeric:tabular-nums;">${escapeHtml((item.created_at || "").replace("T", " ").slice(0, 16))}</td>
+            <td style="max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--secondary);">${escapeHtml(snippet)}</td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="mini-btn blue" onclick="viewAdminSendboxRaw(${idx})">📄 查看全文</button>
+                <button type="button" class="mini-btn red" onclick="deleteAdminSendboxItem(${item.id})">🗑️ 删除</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.viewAdminSendboxRaw = function(idx) {
+      const item = adminSendboxCache[idx];
+      if (!item) return;
+      let display = item.raw || "";
+      try {
+        const parsed = JSON.parse(item.raw);
+        display = JSON.stringify(parsed, null, 2);
+      } catch (_) {}
+      document.getElementById("admin-raw-modal-pre").textContent = display;
+      document.getElementById("admin-raw-modal").hidden = false;
+    };
+
+    window.deleteAdminSendboxItem = async function(id) {
+      if (!confirm(`确定删除发件记录 #${id} 吗？`)) return;
+      try {
+        const res = await fetch(`/admin/sendbox/${id}`, { method: "DELETE", headers: adminHeaders() });
+        if (res.status === 200) {
+          showToast("🗑️ 发件记录已删除");
+          await loadAdminSendbox();
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.loadAdminSenders = async function() {
+      if (!adminAuth) return;
+      const tbody = document.getElementById("admin-sender-tbody");
+      try {
+        const res = await fetch("/admin/address_sender?limit=50&offset=0", { headers: adminHeaders() });
+        if (res.status !== 200) return;
+        const data = await res.json();
+        const list = data.results || [];
+        document.getElementById("admin-sender-badge").textContent = data.count ?? list.length;
+        tbody.innerHTML = "";
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted);">暂无发信权限申请记录（管理员可直接使用右上角「管理员发信」无限制发信）</td></tr>`;
+          return;
+        }
+        list.forEach(item => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>#${item.id}</td>
+            <td style="font-family:ui-monospace,monospace;font-weight:700;">${escapeHtml(item.address)}</td>
+            <td>
+              <input type="checkbox" id="snd-en-${item.id}" ${item.enabled ? "checked" : ""} style="width:16px;height:16px;">
+              <span style="font-size:12px;">${item.enabled ? "✅ 已启用" : "❌ 禁用"}</span>
+            </td>
+            <td>
+              <input type="number" id="snd-bal-${item.id}" value="${item.balance ?? 0}" style="width:85px;height:28px;border-radius:7px;border:1px solid var(--line);padding:0 6px;">
+            </td>
+            <td>${escapeHtml((item.created_at || "").slice(0, 16))}</td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="mini-btn green" onclick="updateAdminSender(${item.id}, '${escapeHtml(item.address)}')">💾 保存</button>
+                <button type="button" class="mini-btn red" onclick="deleteAdminSender(${item.id})">🗑️ 删除</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.updateAdminSender = async function(id, address) {
+      const enabled = document.getElementById(`snd-en-${id}`).checked;
+      const balance = Number(document.getElementById(`snd-bal-${id}`).value) || 0;
+      try {
+        const res = await fetch("/admin/address_sender", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ address, address_id: id, enabled, balance })
+        });
+        if (res.status === 200) {
+          showToast(`✅ 已更新 ${address} 的发信权限与额度`);
+          await loadAdminSenders();
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.deleteAdminSender = async function(id) {
+      try {
+        const res = await fetch(`/admin/address_sender/${id}`, { method: "DELETE", headers: adminHeaders() });
+        if (res.status === 200) {
+          showToast("🗑️ 已删除该发信权限规则");
+          await loadAdminSenders();
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    // =========================================================================
+    // ADMIN TAB 5: SECURITY, IP BLACKLIST & ACCOUNT SETTINGS
+    // =========================================================================
+    window.loadAdminSecuritySettings = async function() {
+      if (!adminAuth) return;
+      try {
+        const [ipRes, accRes] = await Promise.all([
+          fetch("/admin/ip_blacklist/settings", { headers: adminHeaders() }),
+          fetch("/admin/account_settings", { headers: adminHeaders() })
+        ]);
+        if (ipRes.status === 200) {
+          const ipd = await ipRes.json() || {};
+          document.getElementById("ipb-enabled").checked = Boolean(ipd.enabled);
+          document.getElementById("ipb-daily-enable").checked = Boolean(ipd.enableDailyLimit);
+          document.getElementById("ipb-daily-limit").value = ipd.dailyRequestLimit || 100;
+          document.getElementById("ipb-ips").value = (ipd.blacklist || []).join("\n");
+          document.getElementById("ipb-asns").value = (ipd.asnBlacklist || []).join("\n");
+          document.getElementById("ipb-fps").value = (ipd.fingerprintBlacklist || []).join("\n");
+          document.getElementById("ipb-wl-enable").checked = Boolean(ipd.enableWhitelist);
+          document.getElementById("ipb-wl").value = (ipd.whitelist || []).join("\n");
+        }
+        if (accRes.status === 200) {
+          const acc = await accRes.json() || {};
+          document.getElementById("acc-block-list").value = (acc.blockList || []).join("\n");
+          document.getElementById("acc-send-block").value = (acc.sendBlockList || []).join("\n");
+          document.getElementById("acc-from-block").value = (acc.fromBlockList || []).join("\n");
+          document.getElementById("acc-nolimit-send").value = (acc.noLimitSendAddressList || []).join("\n");
+          document.getElementById("acc-verified-list").value = (acc.verifiedAddressList || []).join("\n");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    function splitLines(id) {
+      return (document.getElementById(id)?.value || "")
+        .split(/\r?\n/)
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    window.saveAdminIpBlacklist = async function(e) {
+      e.preventDefault();
+      try {
+        const payload = {
+          enabled: document.getElementById("ipb-enabled").checked,
+          enableDailyLimit: document.getElementById("ipb-daily-enable").checked,
+          dailyRequestLimit: Number(document.getElementById("ipb-daily-limit").value) || 100,
+          blacklist: splitLines("ipb-ips"),
+          asnBlacklist: splitLines("ipb-asns"),
+          fingerprintBlacklist: splitLines("ipb-fps"),
+          enableWhitelist: document.getElementById("ipb-wl-enable").checked,
+          whitelist: splitLines("ipb-wl")
+        };
+        const res = await fetch("/admin/ip_blacklist/settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (res.status === 200) {
+          showToast("✅ IP 黑名单与每日限流配置已保存生效！");
+        } else {
+          showToast("保存失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.saveAdminAccountSettings = async function(e) {
+      e.preventDefault();
+      try {
+        const payload = {
+          blockList: splitLines("acc-block-list"),
+          sendBlockList: splitLines("acc-send-block"),
+          fromBlockList: splitLines("acc-from-block"),
+          noLimitSendAddressList: splitLines("acc-nolimit-send"),
+          verifiedAddressList: splitLines("acc-verified-list"),
+          emailRuleSettings: {},
+          addressCreationSettings: {}
+        };
+        const res = await fetch("/admin/account_settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (res.status === 200) {
+          showToast("✅ 收发信拦截规则与外发白名单已保存！");
+        } else {
+          showToast("保存失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    // =========================================================================
+    // ADMIN TAB 6: DATABASE CLEANUP, CRON & WEBHOOK / AI
+    // =========================================================================
+    window.loadAdminMaintenanceSettings = async function() {
+      if (!adminAuth) return;
+      try {
+        const [acRes, whRes, aiRes] = await Promise.all([
+          fetch("/admin/auto_cleanup", { headers: adminHeaders() }),
+          fetch("/admin/mail_webhook/settings", { headers: adminHeaders() }),
+          fetch("/admin/ai_extract/settings", { headers: adminHeaders() })
+        ]);
+        if (acRes.status === 200) {
+          const ac = await acRes.json() || {};
+          document.getElementById("ac-mails-en").checked = Boolean(ac.enableMailsAutoCleanup);
+          document.getElementById("ac-mails-days").value = ac.cleanMailsDays || 30;
+          document.getElementById("ac-unknow-en").checked = Boolean(ac.enableUnknowMailsAutoCleanup);
+          document.getElementById("ac-unknow-days").value = ac.cleanUnknowMailsDays || 7;
+          document.getElementById("ac-inactive-en").checked = Boolean(ac.enableInactiveAddressAutoCleanup);
+          document.getElementById("ac-inactive-days").value = ac.cleanInactiveAddressDays || 30;
+          document.getElementById("ac-empty-en").checked = Boolean(ac.enableEmptyAddressAutoCleanup);
+          document.getElementById("ac-empty-days").value = ac.cleanEmptyAddressDays || 7;
+        }
+        if (whRes.status === 200) {
+          const wh = await whRes.json() || {};
+          document.getElementById("wh-enabled").checked = Boolean(wh.enabled);
+          document.getElementById("wh-url").value = wh.url || "";
+          document.getElementById("wh-method").value = wh.method || "POST";
+          document.getElementById("wh-headers").value = typeof wh.headers === "string" ? wh.headers : JSON.stringify(wh.headers || {}, null, 2);
+          document.getElementById("wh-body").value = typeof wh.body === "string" ? wh.body : JSON.stringify(wh.body || {}, null, 2);
+        }
+        if (aiRes.status === 200) {
+          const ai = await aiRes.json() || {};
+          document.getElementById("ai-allow-en").checked = Boolean(ai.enableAllowList);
+          document.getElementById("ai-allow-list").value = (ai.allowList || []).join("\n");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.handleAdminManualCleanup = async function(e) {
+      e.preventDefault();
+      const cleanType = document.getElementById("clean-type-select").value;
+      const cleanDays = Number(document.getElementById("clean-days-input").value);
+      if (isNaN(cleanDays) || cleanDays < 0) return;
+      if (!confirm(`确定要立即清理【${cleanType}】中 ${cleanDays} 天前的数据吗？`)) return;
+      try {
+        const res = await fetch("/admin/cleanup", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify({ cleanType, cleanDays })
+        });
+        if (res.status === 200) {
+          showToast("🧹 数据库清理执行成功！");
+        } else {
+          showToast("清理失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.saveAdminAutoCleanup = async function(e) {
+      e.preventDefault();
+      try {
+        const payload = {
+          enableMailsAutoCleanup: document.getElementById("ac-mails-en").checked,
+          cleanMailsDays: Number(document.getElementById("ac-mails-days").value) || 30,
+          enableUnknowMailsAutoCleanup: document.getElementById("ac-unknow-en").checked,
+          cleanUnknowMailsDays: Number(document.getElementById("ac-unknow-days").value) || 7,
+          enableInactiveAddressAutoCleanup: document.getElementById("ac-inactive-en").checked,
+          cleanInactiveAddressDays: Number(document.getElementById("ac-inactive-days").value) || 30,
+          enableEmptyAddressAutoCleanup: document.getElementById("ac-empty-en").checked,
+          cleanEmptyAddressDays: Number(document.getElementById("ac-empty-days").value) || 7
+        };
+        const res = await fetch("/admin/auto_cleanup", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (res.status === 200) {
+          showToast("✅ 定时自动清理策略已保存！");
+        } else {
+          showToast("保存失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    function getWebhookPayloadFromForm() {
+      return {
+        enabled: document.getElementById("wh-enabled").checked,
+        url: document.getElementById("wh-url").value.trim(),
+        method: document.getElementById("wh-method").value.trim() || "POST",
+        headers: document.getElementById("wh-headers").value.trim() || "{}",
+        body: document.getElementById("wh-body").value.trim() || "{}"
+      };
+    }
+
+    window.saveAdminWebhookSettings = async function(e) {
+      e.preventDefault();
+      try {
+        const res = await fetch("/admin/mail_webhook/settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(getWebhookPayloadFromForm())
+        });
+        if (res.status === 200) {
+          showToast("✅ 全局邮件 Webhook 配置已保存！");
+        } else {
+          showToast("保存失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.testAdminWebhook = async function() {
+      try {
+        const res = await fetch("/admin/mail_webhook/test", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(getWebhookPayloadFromForm())
+        });
+        if (res.status === 200) {
+          showToast("🧪 测试 Webhook 已成功发送！");
+        } else {
+          showToast("测试失败: " + await res.text());
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.saveAdminAiExtractSettings = async function(e) {
+      e.preventDefault();
+      try {
+        const payload = {
+          enableAllowList: document.getElementById("ai-allow-en").checked,
+          allowList: splitLines("ai-allow-list")
+        };
+        const res = await fetch("/admin/ai_extract/settings", {
+          method: "POST",
+          headers: adminHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (res.status === 200) {
+          showToast("✅ 智能提取设置已保存！");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    function getCurrentActiveMailbox() {
+      return currentMode === "personal" ? personalMailbox : activeInstantMailbox;
+    }
+
+    function updateActiveHeaderUI() {
+      const mb = getCurrentActiveMailbox();
+      const addrEl = document.getElementById("active-address-display");
+      const labelEl = document.getElementById("current-mode-label");
+      const actPersonal = document.getElementById("actions-personal");
+      const actInstant = document.getElementById("actions-instant");
+      const sessionWrap = document.getElementById("instant-session-wrap");
+
+      if (mb && mb.address) {
+        const [u, dom] = mb.address.split("@");
+        addrEl.innerHTML = `${u}<span class="address-domain">@${dom}</span>`;
+      }
+
+      if (currentMode === "personal") {
+        labelEl.className = "stage-eyebrow";
+        labelEl.textContent = lang === "zh" ? "🔐 专属密码邮箱 · 独立加密会话（已严格隔离）" : "🔐 PERSONAL PASSWORD-PROTECTED MAILBOX";
+        actPersonal.hidden = false;
+        actInstant.hidden = true;
+        sessionWrap.hidden = true;
+      } else if (currentMode === "instant") {
+        labelEl.className = "stage-eyebrow green";
+        labelEl.textContent = lang === "zh" ? "⚡ 免注册一次性临时邮箱 · 即用即焚模式" : "⚡ NO-SIGNUP INSTANT DISPOSABLE INBOX";
+        actPersonal.hidden = true;
+        actInstant.hidden = false;
+        sessionWrap.hidden = instantSessionList.length <= 1;
+        renderInstantSessionChips();
+      }
+    }
+
+    function renderInstantSessionChips() {
+      const container = document.getElementById("instant-session-chips");
+      if (!container) return;
+      container.innerHTML = "";
+      instantSessionList.forEach(item => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "saved-chip" + (activeInstantMailbox && activeInstantMailbox.address === item.address ? " active" : "");
+        btn.textContent = item.address;
+        btn.onclick = async () => {
+          activeInstantMailbox = item;
+          selectedMailId = null;
+          updateActiveHeaderUI();
+          await refreshMails(true);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // Admin Unlock
+    window.handleAdminUnlock = async function(e) {
+      e.preventDefault();
+      const val = document.getElementById("admin-pass-input").value.trim();
+      const errEl = document.getElementById("admin-gate-err");
+      if (!val) return;
+      errEl.hidden = true;
+      try {
+        const hashed = await sha256Hex(val);
+        const res = await fetch("/open_api/admin_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth
+          },
+          body: JSON.stringify({ password: hashed, cf_token: "" })
+        });
+        if (res.status === 200) {
+          adminAuth = val;
+          sessionStorage.setItem("cf_mail_admin_auth", val);
+          await switchMode("admin");
+        } else {
+          errEl.textContent = "管理员密码错误（连续错误 10 次将自动向管理员发送告警邮件）。";
+          errEl.hidden = false;
+        }
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+      }
+    };
+
+    window.copyCurrentAddress = async function() {
+      const mb = getCurrentActiveMailbox();
+      if (!mb) return;
+      await navigator.clipboard.writeText(mb.address);
+      showToast(`✅ 已复制邮箱地址：${mb.address}`);
+    };
+
+    window.refreshMails = async function(manual = false) {
+      try {
+        let url = "/api/parsed_mails?limit=30&offset=0";
+        const headers = { "x-custom-auth": siteAuth };
+        if (currentMode === "admin") {
+          if (!adminAuth || currentAdminTab !== "mails") return;
+          const addrQ = (document.getElementById("admin-mail-address-query")?.value || "").trim();
+          const normalizedAddr = addrQ ? normalizeEmailAddress(addrQ) : "";
+          if (adminMailSource === "unknow") {
+            url = `/admin/parsed_mails_unknow?limit=${ADMIN_MAIL_LIMIT}&offset=${adminMailOffset}`;
+          } else {
+            url = `/admin/parsed_mails?limit=${ADMIN_MAIL_LIMIT}&offset=${adminMailOffset}${normalizedAddr ? `&address=${encodeURIComponent(normalizedAddr)}` : ""}`;
+          }
+          headers["x-admin-auth"] = adminAuth;
+        } else {
+          const mb = getCurrentActiveMailbox();
+          if (!mb || !mb.jwt) return;
+          headers["Authorization"] = `Bearer ${mb.jwt}`;
+        }
+
+        const res = await fetch(url, { headers });
+        if (res.status === 200) {
+          const data = await res.json();
+          mails = (data.results || []).map(m => ({
+            ...m,
+            otp: extractOtpFromMail(m)
+          }));
+          updateLatestOtpBanner();
+          renderMailList();
+          if (mails.length > 0 && !selectedMailId) {
+            selectMailItem(mails[0].id);
+          } else if (mails.length === 0) {
+            clearReader();
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    function updateLatestOtpBanner() {
+      const pill = document.getElementById("latest-otp-pill");
+      const valEl = document.getElementById("latest-otp-val");
+      const firstWithOtp = mails.find(m => m.otp);
+      if (firstWithOtp) {
+        valEl.textContent = firstWithOtp.otp;
+        pill.hidden = false;
+      } else {
+        pill.hidden = true;
+      }
+    }
+
+    window.copyLatestOtp = async function() {
+      const val = document.getElementById("latest-otp-val").textContent;
+      if (!val) return;
+      await navigator.clipboard.writeText(val);
+      showToast(`🔑 已复制验证码：${val}`);
+    };
+
+    window.renderMailList = function() {
+      const container = document.getElementById("mail-list-container");
+      const badge = document.getElementById("mail-count-badge");
+      if (!container || !badge) return;
+      const filterVal = (document.getElementById("admin-filter-input")?.value || "").trim().toLowerCase();
+
+      const filtered = mails.filter(m => {
+        if (currentMode === "admin" && filterVal) {
+          return (m.address || "").toLowerCase().includes(filterVal) ||
+                 (m.subject || "").toLowerCase().includes(filterVal) ||
+                 (m.source || "").toLowerCase().includes(filterVal);
+        }
+        return true;
+      });
+
+      badge.textContent = String(filtered.length);
+      container.innerHTML = "";
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="padding:42px 18px;text-align:center;color:var(--muted);font-size:12.5px;">暂无邮件 · 正在实时监听新邮件 (每 5 秒自动刷新)...</div>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "mail-item" + (m.id === selectedMailId ? " selected" : "");
+        const sender = m.sender || m.source || "Unknown Sender";
+        const subj = m.subject || "(无主题)";
+        const plainSnippet = (m.text || (m.html || "").replace(/<[^>]+>/g, " ") || "").replace(/\s+/g, " ").trim().slice(0, 90);
+        const timeStr = (m.created_at || "").replace("T", " ").slice(5, 16);
+
+        let badgesHtml = "";
+        if (currentMode === "admin" && m.address) {
+          badgesHtml += `<span class="to-badge">→ ${escapeHtml(m.address)}</span>`;
+        }
+        if (m.otp) {
+          badgesHtml += `<span class="otp-badge" onclick="event.stopPropagation();navigator.clipboard.writeText('${m.otp}');showToast('🔑 已复制验证码：${m.otp}')">🔑 验证码: ${m.otp}</span>`;
+        }
+
+        card.innerHTML = `
+          <div class="mail-item-top">
+            <span class="mail-sender">
+              ${m.is_unread ? '<span class="unread-dot"></span>' : ''}
+              <span>${escapeHtml(sender)}</span>
+            </span>
+            <span class="mail-time">${escapeHtml(timeStr)}</span>
+          </div>
+          <div class="mail-subject">${escapeHtml(subj)}</div>
+          <div class="mail-snippet">${escapeHtml(plainSnippet || "点击查看邮件正文...")}</div>
+          ${badgesHtml ? `<div class="mail-badges">${badgesHtml}</div>` : ""}
+        `;
+        card.onclick = () => selectMailItem(m.id);
+        container.appendChild(card);
+      });
+    };
+
+    function selectMailItem(id) {
+      selectedMailId = id;
+      showRawMode = false;
+      const m = mails.find(item => item.id === id);
+      renderMailList();
+      if (!m) {
+        clearReader();
+        return;
+      }
+      document.getElementById("reader-empty").hidden = true;
+      document.getElementById("reader-content").hidden = false;
+      document.getElementById("r-subject").textContent = m.subject || "(无主题)";
+      document.getElementById("r-from").textContent = m.sender || m.source || "";
+      document.getElementById("r-to").textContent = m.address || "";
+      document.getElementById("r-date").textContent = (m.created_at || "") + " UTC";
+
+      const otpBar = document.getElementById("r-otp-bar");
+      if (m.otp) {
+        document.getElementById("r-otp-code").textContent = m.otp;
+        otpBar.hidden = false;
+      } else {
+        otpBar.hidden = true;
+      }
+      renderReaderBody(m);
+    }
+
+    function renderReaderBody(m) {
+      const iframe = document.getElementById("r-html-frame");
+      const pre = document.getElementById("r-raw-pre");
+      if (showRawMode || (!m.html && m.text)) {
+        iframe.hidden = true;
+        pre.hidden = false;
+        pre.textContent = m.text || m.html || "";
+      } else {
+        iframe.hidden = false;
+        pre.hidden = true;
+        const htmlContent = m.html || `<pre style="font-family:sans-serif;white-space:pre-wrap;">${escapeHtml(m.text || "")}</pre>`;
+        iframe.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><base target="_blank"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif;color:#1e293b;line-height:1.65;padding:16px;margin:0;word-break:break-word;}img{max-width:100%;height:auto;}</style></head><body>${htmlContent}</body></html>`;
+      }
+    }
+
+    window.toggleReaderRaw = function() {
+      const m = mails.find(item => item.id === selectedMailId);
+      if (!m) return;
+      showRawMode = !showRawMode;
+      renderReaderBody(m);
+    };
+
+    window.copyReaderOtp = async function() {
+      const code = document.getElementById("r-otp-code").textContent;
+      if (!code) return;
+      await navigator.clipboard.writeText(code);
+      showToast(`🔑 已复制验证码：${code}`);
+    };
+
+    window.deleteCurrentMail = async function() {
+      if (!selectedMailId) return;
+      const id = selectedMailId;
+      try {
+        const url = currentMode === "admin" ? `/admin/mails/${id}` : `/api/mails/${id}`;
+        const headers = { "x-custom-auth": siteAuth };
+        if (currentMode === "admin") {
+          headers["x-admin-auth"] = adminAuth;
+        } else {
+          const mb = getCurrentActiveMailbox();
+          if (mb) headers["Authorization"] = `Bearer ${mb.jwt}`;
+        }
+        const res = await fetch(url, { method: "DELETE", headers });
+        if (res.status === 200) {
+          mails = mails.filter(m => m.id !== id);
+          selectedMailId = mails[0]?.id || null;
+          renderMailList();
+          if (selectedMailId) selectMailItem(selectedMailId);
+          else clearReader();
+          showToast("🗑️ 邮件已删除");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.openComposeModal = function() {
+      const mb = getCurrentActiveMailbox();
+      if (mb) document.getElementById("c-from").value = mb.address;
+      document.getElementById("compose-modal").hidden = false;
+    };
+
+    window.openCredModal = function() {
+      const mb = getCurrentActiveMailbox();
+      if (!mb) return;
+      document.getElementById("cred-addr-text").textContent = mb.address;
+      document.getElementById("cred-jwt-text").value = mb.jwt;
+      document.getElementById("cred-modal").hidden = false;
+    };
+
+    window.handleChangeMailboxPassword = async function(e) {
+      e.preventDefault();
+      const mb = getCurrentActiveMailbox();
+      const newPass = document.getElementById("new-mailbox-pass").value;
+      if (!mb || !newPass) return;
+      try {
+        const passHash = await sha256Hex(newPass);
+        const res = await fetch("/api/address_change_password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-custom-auth": siteAuth,
+            "Authorization": `Bearer ${mb.jwt}`
+          },
+          body: JSON.stringify({ new_password: passHash })
+        });
+        if (res.status === 200) {
+          document.getElementById("new-mailbox-pass").value = "";
+          document.getElementById("cred-modal").hidden = true;
+          showToast("✅ 邮箱登录密码已更新！");
+        } else {
+          showToast("修改密码失败");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    };
+
+    window.handleSendMail = async function(e) {
+      e.preventDefault();
+      const from = document.getElementById("c-from").value.trim();
+      const to = document.getElementById("c-to").value.trim();
+      const subject = document.getElementById("c-subject").value.trim();
+      const body = document.getElementById("c-body").value.trim();
+      const btn = document.getElementById("c-send-btn");
+      if (!from || !to || !subject || !body) return;
+
+      const mb = getCurrentActiveMailbox();
+      const isHtml = body.includes("<");
+      const content = isHtml ? body : `<div style="font-family:sans-serif;line-height:1.6;white-space:pre-wrap;">${escapeHtml(body)}</div>`;
+
+      btn.disabled = true;
+      try {
+        let res;
+        if (currentMode === "admin" || adminAuth) {
+          res = await fetch("/admin/send_mail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-custom-auth": siteAuth,
+              "x-admin-auth": adminAuth
+            },
+            body: JSON.stringify({
+              from_name: from.split("@")[0],
+              from_mail: from,
+              to_name: to.split("@")[0],
+              to_mail: to,
+              subject,
+              content,
+              is_html: true
+            })
+          });
+        } else if (mb && mb.jwt) {
+          res = await fetch("/api/send_mail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-custom-auth": siteAuth,
+              "Authorization": `Bearer ${mb.jwt}`
+            },
+            body: JSON.stringify({
+              from_name: from.split("@")[0],
+              to_name: to.split("@")[0],
+              to_mail: to,
+              subject,
+              content,
+              is_html: true
+            })
+          });
+        } else {
+          showToast("请先登录邮箱或解锁管理后台后再发信");
+          return;
+        }
+
+        if (res.status === 200) {
+          showToast("✅ 邮件已成功发送！");
+          document.getElementById("compose-modal").hidden = true;
+          document.getElementById("c-to").value = "";
+          document.getElementById("c-subject").value = "";
+          document.getElementById("c-body").value = "";
+          if (currentMode === "admin" && currentAdminTab === "sendbox") {
+            await loadAdminSendbox();
+          }
+        } else {
+          const msg = await res.text();
+          showToast(`发送失败: ${msg}`);
+        }
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    function clearReader() {
+      document.getElementById("reader-empty").hidden = false;
+      document.getElementById("reader-content").hidden = true;
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function enterMainApp() {
+      document.getElementById("site-gate").hidden = true;
+      document.getElementById("app-main").hidden = false;
+      await switchMode(currentMode);
+
+      if (pollInterval) clearInterval(pollInterval);
+      pollSeconds = 5;
+      pollInterval = setInterval(() => {
+        if (document.getElementById("active-inbox-container").hidden) return;
+        pollSeconds--;
+        if (pollSeconds <= 0) {
+          pollSeconds = 5;
+          refreshMails(false);
+        }
+        const el = document.getElementById("poll-countdown");
+        if (el) el.textContent = `${lang === "zh" ? "实时监听中" : "Live Polling"} (${pollSeconds}s)`;
+      }, 1000);
+    }
+
+    async function initApp() {
+      applyLang();
+      try {
+        const res = await fetch("/open_api/site_gate_status", { cache: "no-store" });
+        if (res.status === 200) {
+          const data = await res.json();
+          if (!data.enabled) {
+            await enterMainApp();
+            return;
+          }
+        }
+      } catch (_) {}
+
+      if (siteAuth) {
+        try {
+          const hashed = await sha256Hex(siteAuth);
+          const vRes = await fetch("/open_api/site_login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: hashed, cf_token: "" })
+          });
+          if (vRes.status === 200) {
+            await enterMainApp();
+            return;
+          }
+        } catch (_) {}
+      }
+      document.getElementById("site-gate").hidden = false;
+      document.getElementById("app-main").hidden = true;
+    }
+
+    window.addEventListener("hashchange", () => {
+      if (window.location.hash === "#admin") {
+        switchMode("admin");
+      }
+    });
+
+    initApp();
+  })();
+  </script>
+</body>
+</html>

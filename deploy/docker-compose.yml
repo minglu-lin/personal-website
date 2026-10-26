@@ -1,0 +1,26 @@
+version: '3.8'
+
+# ==============================================================================
+# Master Web Services Docker Compose Stack
+# ==============================================================================
+
+services:
+  # 1. MyIP All-in-One IP Toolbox
+  myip:
+    image: jason5ng32/myip:latest
+    container_name: web-myip
+    restart: always
+    ports:
+      - "127.0.0.1:18966:18966"
+    environment:
+      - PORT=18966
+      - MAXMIND_ACCOUNT_ID=${MAXMIND_ACCOUNT_ID:-}
+      - MAXMIND_LICENSE_KEY=${MAXMIND_LICENSE_KEY:-}
+      - MAXMIND_AUTO_UPDATE=true
+      - ALLOWED_DOMAINS=${MYIP_ALLOWED_DOMAINS:-ip.lmlu.de,ip.11231632.xyz,localhost}
+    volumes:
+      - ./data/myip:/app/data
+
+networks:
+  default:
+    name: personal-web-net

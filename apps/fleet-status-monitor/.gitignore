@@ -1,0 +1,21 @@
+# Secrets and environment
+.env
+*.local.env
+*.local.json
+config/nodes.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Logs & Temp
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

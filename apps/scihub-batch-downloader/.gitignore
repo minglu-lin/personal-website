@@ -1,0 +1,28 @@
+# Environment & local credentials
+.env
+*.local.env
+*.local.json
+
+# Downloads & generated archives
+downloads/
+archives/
+tasks/
+*.pdf
+*.zip
+*.tar
+*.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.pytest_cache/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
